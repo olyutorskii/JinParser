@@ -166,7 +166,7 @@ public class DecodeErrorInfo{
         /**
          * コンストラクタ。
          */
-        public PosComparator(){
+        private PosComparator(){
             super();
             return;
         }
