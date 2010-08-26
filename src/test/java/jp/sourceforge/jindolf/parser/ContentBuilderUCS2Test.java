@@ -1,6 +1,6 @@
 /*
+ * License : The MIT License
  * Copyright(c) 2010 olyutorskii
- * $Id: ContentBuilderUCS2Test.java 988 2010-03-13 12:46:22Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
