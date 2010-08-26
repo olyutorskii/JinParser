@@ -1,8 +1,8 @@
 /*
  * handler for parse talk-part
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: TalkHandler.java 989 2010-03-13 17:17:20Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;

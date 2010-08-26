@@ -1,8 +1,8 @@
 /*
  * stream decoder for Shift_JIS
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: SjisDecoder.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;

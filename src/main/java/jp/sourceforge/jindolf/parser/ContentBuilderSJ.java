@@ -1,8 +1,8 @@
 /*
  * content builder for Shift_JIS
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: ContentBuilderSJ.java 991 2010-03-14 10:22:35Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;

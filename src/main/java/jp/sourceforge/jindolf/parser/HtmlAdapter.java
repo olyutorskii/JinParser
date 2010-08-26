@@ -1,8 +1,8 @@
 /*
  * html handler adapter
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: HtmlAdapter.java 1014 2010-03-16 10:43:28Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;

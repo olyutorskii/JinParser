@@ -6,8 +6,8 @@
  * このファイルはソースコードを含まず、
  * パッケージコメントとパッケージ宣言のみが含まれます。
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: package-info.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 /**
@@ -101,3 +101,5 @@
  */
 
 package jp.sourceforge.jindolf.parser;
+
+/* EOF */

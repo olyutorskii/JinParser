@@ -1,8 +1,8 @@
 /*
  * XHTML parser
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: HtmlParser.java 1021 2010-03-24 16:03:21Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;

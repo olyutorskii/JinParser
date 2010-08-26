@@ -1,8 +1,8 @@
 /*
  * content builder for UTF-8 (UCS2 only)
  *
+ * License : The MIT License
  * Copyright(c) 2010 olyutorskii
- * $Id: ContentBuilderUCS2.java 1001 2010-03-15 12:09:35Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;

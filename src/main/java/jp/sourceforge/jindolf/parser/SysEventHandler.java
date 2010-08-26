@@ -1,8 +1,8 @@
 /*
  * System event handler
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: SysEventHandler.java 1014 2010-03-16 10:43:28Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;

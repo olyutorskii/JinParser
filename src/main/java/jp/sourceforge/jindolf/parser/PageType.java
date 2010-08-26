@@ -1,8 +1,8 @@
 /*
  * page type
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: PageType.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
