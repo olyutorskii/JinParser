@@ -139,7 +139,11 @@ public class SysEventParser extends AbstractParser{
               "全ては終わったかのように見えた。<br />"
              +"だが、奴が生き残っていた……。");
     private static final Pattern PANIC_PATTERN =
-            compile("……。");
+             compile("……。");
+    private static final Pattern SHORTMEMBER_PATTERN =
+             compile(
+             "まだ村人達は揃っていないようだ。"
+            +"(?:<br />)?");
 
     private static Object[][] simpleRegexToType = {
         { STARTENTRY_PATTERN,   SysEventType.STARTENTRY   },
@@ -150,6 +154,7 @@ public class SysEventParser extends AbstractParser{
         { WINWOLF_PATTERN,      SysEventType.WINWOLF      },
         { WINHAMSTER_PATTERN,   SysEventType.WINHAMSTER   },
         { PANIC_PATTERN,        SysEventType.PANIC        },
+        { SHORTMEMBER_PATTERN,  SysEventType.SHORTMEMBER  },
     };
 
     /**
