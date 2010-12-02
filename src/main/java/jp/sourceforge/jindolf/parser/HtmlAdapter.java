@@ -390,6 +390,18 @@ public abstract class HtmlAdapter implements HtmlHandler{
     /**
      * {@inheritDoc}
      * @param content {@inheritDoc}
+     * @param avatarRange {@inheritDoc}
+     * @throws HtmlParseException {@inheritDoc}
+     */
+    public void sysEventCheckout(DecodedContent content,
+                                   SeqRange avatarRange )
+            throws HtmlParseException{
+        return;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param content {@inheritDoc}
      * @param judgeByRange {@inheritDoc}
      * @param judgeToRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}

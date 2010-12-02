@@ -196,6 +196,17 @@ public interface SysEventHandler{
         throws HtmlParseException;
 
     /**
+     * CHECKOUTイベントの詳細の通知を受け取る。
+     * @param content パース対象の文字列
+     * @param avatarRange 失踪したAvatar名の範囲
+     * @throws HtmlParseException パースエラー
+     * @see jp.sourceforge.jindolf.corelib.SysEventType#CHECKOUT
+     */
+    void sysEventCheckout(DecodedContent content,
+                            SeqRange avatarRange )
+        throws HtmlParseException;
+
+    /**
      * JUDGEイベントの詳細の通知を受け取る。
      * @param content パース対象の文字列。
      * @param judgeByRange 占師Avatar名の範囲

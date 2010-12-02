@@ -78,6 +78,7 @@ public class SysEventParser extends AbstractParser{
                 || probePlayerList()
                 || probeExecution()
                 || probeVanish()
+                || probeCheckout()
                 ;
         if( ! result ){
             throw buildParseException();
@@ -785,6 +786,55 @@ public class SysEventParser extends AbstractParser{
         }
 
         if( ! hasVanish ){
+            popRegion();
+            return false;
+        }
+
+        sweepSpace();
+
+        return true;
+    }
+
+    private static final Pattern CHECKOUT_PATTERN =
+            compile(
+                 "(?:<br />)*"
+                +"(" + AVATAR_REGEX + ")"
+                +"\u0020は、宿を去った。"
+                +"(?:<br />)*"
+            );
+
+    /**
+     * CHECKOUTメッセージのパースを試みる。
+     * @return マッチしたらtrue
+     * @throws HtmlParseException パースエラー
+     */
+    private boolean probeCheckout() throws HtmlParseException{
+        SeqRange avatarRange  = this.rangepool_1;
+
+        pushRegion();
+
+        sweepSpace();
+
+        boolean hasCheckout = false;
+
+        for(;;){
+            if( ! lookingAtProbe(CHECKOUT_PATTERN)){
+                break;
+            }
+
+            if( ! hasCheckout ){
+                hasCheckout = true;
+                this.sysEventHandler.sysEventType(SysEventType.CHECKOUT);
+            }
+            avatarRange.setLastMatchedGroupRange(getMatcher(), 1);
+
+            shrinkRegion();
+
+            this.sysEventHandler
+                .sysEventCheckout(getContent(), avatarRange);
+        }
+
+        if( ! hasCheckout ){
             popRegion();
             return false;
         }
