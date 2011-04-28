@@ -476,5 +476,4 @@ public class DecodedContent
         return this.rawContent.toString();
     }
 
-    // TODO Windows-31Jへの再デコード処理など
 }

@@ -127,11 +127,4 @@ public interface BasicHandler{
      */
     void endParse() throws HtmlParseException;
 
-    // TODO 「全て表示」リンクの検出メソッドは必要？
-    // TODO 表示モード切り替え(人狼墓全)リンクの検出メソッドは必要？
-    // TODO 「次の日へ」リンクの検出メソッドは必要？
-    // TODO 投票先、襲撃先プルダウンリストの検出メソッドは必要？
-    // TODO 霊能結果の検出メソッドは必要？
-    // TODO 発言フォームの検出メソッドは必要？
-
 }

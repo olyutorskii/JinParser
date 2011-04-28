@@ -117,6 +117,4 @@ public interface TalkHandler{
     void talkBreak()
             throws HtmlParseException;
 
-    // TODO 「発言取り消し」リンクの検出メソッドは必要？
-
 }
