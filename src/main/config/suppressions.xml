@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<!--
+    Checkstyle用警告抑止設定
+    ※ SuppressionFilter モジュール用
+
+    [ http://checkstyle.sourceforge.net/ ]
+
+    Copyright(c) 2010 olyutorskii
+-->
+
+
+<suppressions>
+
+    <suppress files="HtmlParser.java" checks="DeclarationOrder" />
+    <suppress files="SysEventParser.java" checks="DeclarationOrder" />
+    <suppress files="TalkParser.java" checks="DeclarationOrder" />
+
+</suppressions>
+
+
+<!-- EOF -->
