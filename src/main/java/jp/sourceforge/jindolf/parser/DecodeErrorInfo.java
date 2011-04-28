@@ -160,7 +160,7 @@ public class DecodeErrorInfo{
     /**
      * 出現位置で順序づける比較子。
      */
-    private static class PosComparator
+    private static final class PosComparator
             implements Comparator<DecodeErrorInfo> {
 
         /**
