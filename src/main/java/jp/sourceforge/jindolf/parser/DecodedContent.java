@@ -42,6 +42,47 @@ public class DecodedContent
         assert ALTCHAR != '\\';
     }
 
+
+    private final StringBuilder rawContent = new StringBuilder();
+
+    private List<DecodeErrorInfo> decodeError;
+
+
+    /**
+     * コンストラクタ。
+     */
+    public DecodedContent(){
+        this("");
+        return;
+    }
+
+    /**
+     * コンストラクタ。
+     * @param seq 初期化文字列
+     * @throws NullPointerException 引数がnull
+     */
+    public DecodedContent(CharSequence seq) throws NullPointerException{
+        super();
+        if(seq == null) throw new NullPointerException();
+        initImpl();
+        this.rawContent.append(seq);
+        return;
+    }
+
+    /**
+     * コンストラクタ。
+     * @param capacity 文字数の初期容量
+     * @throws NegativeArraySizeException 容量が負の値
+     */
+    public DecodedContent(int capacity) throws NegativeArraySizeException{
+        super();
+        if(capacity < 0) throw new NegativeArraySizeException();
+        initImpl();
+        this.rawContent.ensureCapacity(capacity);
+        return;
+    }
+
+
     /**
      * 与えられた文字位置を含むか、またはそれ以降で最も小さな位置情報を持つ
      * デコードエラーのインデックス位置を返す。※リニアサーチ版。
@@ -170,44 +211,6 @@ public class DecodedContent
 
     static{
         assert createErrorList() instanceof RandomAccess;
-    }
-
-    private final StringBuilder rawContent = new StringBuilder();
-
-    private List<DecodeErrorInfo> decodeError;
-
-    /**
-     * コンストラクタ。
-     */
-    public DecodedContent(){
-        this("");
-        return;
-    }
-
-    /**
-     * コンストラクタ。
-     * @param seq 初期化文字列
-     * @throws NullPointerException 引数がnull
-     */
-    public DecodedContent(CharSequence seq) throws NullPointerException{
-        super();
-        if(seq == null) throw new NullPointerException();
-        initImpl();
-        this.rawContent.append(seq);
-        return;
-    }
-
-    /**
-     * コンストラクタ。
-     * @param capacity 文字数の初期容量
-     * @throws NegativeArraySizeException 容量が負の値
-     */
-    public DecodedContent(int capacity) throws NegativeArraySizeException{
-        super();
-        if(capacity < 0) throw new NegativeArraySizeException();
-        initImpl();
-        this.rawContent.ensureCapacity(capacity);
-        return;
     }
 
     /**

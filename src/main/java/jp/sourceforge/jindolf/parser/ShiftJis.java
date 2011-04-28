@@ -26,6 +26,16 @@ public final class ShiftJis{
     /** char1文字をエンコードした時の最大バイト数。 */
     public static final int MAX_BYTES_PER_CHAR = 2;
 
+
+    /**
+     * 隠しコンストラクタ。
+     */
+    private ShiftJis(){
+        super();
+        return;
+    }
+
+
     /**
      * 任意のバイト値がシフトJISの1バイト目でありうるか否か判定する。
      * 文字集合の判定は行わない。
@@ -67,14 +77,6 @@ public final class ShiftJis{
             return true;
         }
         return false;
-    }
-
-    /**
-     * 隠しコンストラクタ。
-     */
-    private ShiftJis(){
-        super();
-        return;
     }
 
 }

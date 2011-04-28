@@ -29,23 +29,13 @@ public abstract class AbstractParser implements ChainedParser{
 
     private static final Pattern DUMMY_PATTERN = compile("\u0000");
 
-    /**
-     * 正規表現のコンパイルを行う。
-     * デフォルトで{@link java.util.regex.Pattern#DOTALL}が
-     * オプション指定される。
-     * @param regex 正規表現文字列
-     * @return マッチエンジン
-     */
-    protected static Pattern compile(CharSequence regex){
-        Pattern result = Pattern.compile(regex.toString(), Pattern.DOTALL);
-        return result;
-    }
 
     private final ChainedParser parent;
 
     private DecodedContent content;
     private Matcher matcher;
     private String contextErrorMessage;
+
 
     /**
      * コンストラクタ。
@@ -64,6 +54,19 @@ public abstract class AbstractParser implements ChainedParser{
         this.parent = parent;
         resetImpl();
         return;
+    }
+
+
+    /**
+     * 正規表現のコンパイルを行う。
+     * デフォルトで{@link java.util.regex.Pattern#DOTALL}が
+     * オプション指定される。
+     * @param regex 正規表現文字列
+     * @return マッチエンジン
+     */
+    protected static Pattern compile(CharSequence regex){
+        Pattern result = Pattern.compile(regex.toString(), Pattern.DOTALL);
+        return result;
     }
 
     /**
@@ -88,10 +91,6 @@ public abstract class AbstractParser implements ChainedParser{
         return;
     }
 
-    /**
-     * {@inheritDoc}
-     * @param content {@inheritDoc}
-     */
     /**
      * パース対象文字列をセットする。
      * パースが終わるまでこの文字列の内容を変更してはならない。

@@ -16,19 +16,6 @@ package jp.sourceforge.jindolf.parser;
 public class ContentBuilderUCS2 extends ContentBuilder{
 
     /**
-     * サロゲートペア文字(上位,下位)をUTF-16BEバイト列に変換する。
-     * @param ch 文字
-     * @return UTF-8バイト列
-     */
-    public static byte[] charToUTF16(char ch){
-        byte[] result = new byte[2];
-        result[0] = (byte)(ch >> 8);
-        result[1] = (byte)(ch & 0xff);
-
-        return result;
-    }
-
-    /**
      * コンストラクタ。
      * 長さ0で空の{@link DecodedContent}がセットされる。
      */
@@ -49,6 +36,21 @@ public class ContentBuilderUCS2 extends ContentBuilder{
         initImpl();
         return;
     }
+
+
+    /**
+     * サロゲートペア文字(上位,下位)をUTF-16BEバイト列に変換する。
+     * @param ch 文字
+     * @return UTF-8バイト列
+     */
+    public static byte[] charToUTF16(char ch){
+        byte[] result = new byte[2];
+        result[0] = (byte)(ch >> 8);
+        result[1] = (byte)(ch & 0xff);
+
+        return result;
+    }
+
 
     /**
      * デコード処理の初期化下請。
