@@ -28,6 +28,8 @@ public class DecodedContent
      */
     public static final char ALTCHAR = '?';
 
+    private static final String NULLTEXT = "null";
+
     private static final List<DecodeErrorInfo> EMPTY_LIST =
             Collections.emptyList();
 
@@ -354,7 +356,7 @@ public class DecodedContent
      */
     public DecodedContent append(CharSequence seq){
         if(seq == null){
-            this.rawContent.append("null");
+            this.rawContent.append(NULLTEXT);
         }else if(seq instanceof DecodedContent){
             append((DecodedContent)seq, 0, seq.length());
         }else{
@@ -375,7 +377,7 @@ public class DecodedContent
                                   int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(seq == null){
-            this.rawContent.append("null", startPos, endPos);
+            this.rawContent.append(NULLTEXT, startPos, endPos);
         }else if(seq instanceof DecodedContent){
             append((DecodedContent)seq, startPos, endPos);
         }else{
@@ -397,7 +399,7 @@ public class DecodedContent
                                   int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(source == null){
-            return append("null", startPos, endPos);
+            return append(NULLTEXT, startPos, endPos);
         }
 
         int gap = startPos - this.rawContent.length();
