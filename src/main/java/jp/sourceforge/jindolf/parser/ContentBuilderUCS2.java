@@ -59,7 +59,7 @@ public class ContentBuilderUCS2 extends ContentBuilder{
      * デコード処理の初期化下請。
      */
     private void initImpl(){
-        this.content.init();
+        this.getContent().init();
         return;
     }
 
@@ -95,19 +95,19 @@ public class ContentBuilderUCS2 extends ContentBuilder{
 
             if(startPos < pos){
                 CharSequence chopped = seq.subSequence(startPos, pos);
-                this.content.append(chopped);
+                getContent().append(chopped);
                 startPos = pos + 1;
             }
 
             byte[] barr = charToUTF16(ch);
             for(byte bval : barr){
-                this.content.addDecodeError(bval);
+                getContent().addDecodeError(bval);
             }
         }
 
         if(startPos < length){
             CharSequence chopped = seq.subSequence(startPos, length);
-            this.content.append(chopped);
+            getContent().append(chopped);
         }
 
         return;
@@ -127,7 +127,7 @@ public class ContentBuilderUCS2 extends ContentBuilder{
 
         for(int bpos = offset; bpos < limit; bpos++){
             byte bval = errorArray[bpos];
-            this.content.addDecodeError(bval);
+            getContent().addDecodeError(bval);
         }
 
         return;

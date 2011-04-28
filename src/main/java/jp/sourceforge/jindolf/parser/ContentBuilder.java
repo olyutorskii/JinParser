@@ -15,7 +15,8 @@ import java.nio.charset.CharsetDecoder;
 public abstract class ContentBuilder implements DecodeHandler{
 
     /** 文字列内容。 */
-    protected DecodedContent content;
+    private final DecodedContent content;
+
 
     /**
      * コンストラクタ。

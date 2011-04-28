@@ -46,7 +46,7 @@ public class ContentBuilderSJ extends ContentBuilder{
      * デコード処理の初期化下請。
      */
     private void initImpl(){
-        this.content.init();
+        getContent().init();
         this.hasByte1st = false;
         this.byte1st = 0x00;
         return;
@@ -67,7 +67,7 @@ public class ContentBuilderSJ extends ContentBuilder{
     @Override
     protected void flushError(){
         if(this.hasByte1st){
-            this.content.addDecodeError(this.byte1st);
+            getContent().addDecodeError(this.byte1st);
             this.hasByte1st = false;
         }
         return;
@@ -82,7 +82,7 @@ public class ContentBuilderSJ extends ContentBuilder{
     public void charContent(CharSequence seq)
             throws DecodeException{
         flushError();
-        this.content.append(seq);
+        getContent().append(seq);
         return;
     }
 
@@ -104,19 +104,19 @@ public class ContentBuilderSJ extends ContentBuilder{
                     this.byte1st = bval;
                     this.hasByte1st = true;
                 }else{
-                    this.content.addDecodeError(bval);
+                    getContent().addDecodeError(bval);
                 }
             }else{
                 if(ShiftJis.isShiftJIS2ndByte(bval)){   // 文字集合エラー
-                    this.content.addDecodeError(this.byte1st, bval);
+                    getContent().addDecodeError(this.byte1st, bval);
                     this.hasByte1st = false;
                 }else if(ShiftJis.isShiftJIS1stByte(bval)){
-                    this.content.addDecodeError(this.byte1st);
+                    getContent().addDecodeError(this.byte1st);
                     this.byte1st = bval;
                     this.hasByte1st = true;
                 }else{
-                    this.content.addDecodeError(this.byte1st);
-                    this.content.addDecodeError(bval);
+                    getContent().addDecodeError(this.byte1st);
+                    getContent().addDecodeError(bval);
                     this.hasByte1st = false;
                 }
             }
