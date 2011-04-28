@@ -34,17 +34,21 @@ public class StreamDecoder{
     /** デフォルト出力バッファサイズ(={@value}chars)。 */
     public static final int CHARBUF_DEFSZ = 4 * 1024;
 
+
     private final CharsetDecoder decoder;
 
     private ReadableByteChannel channel;
     private final ByteBuffer byteBuffer;
     private final CharBuffer charBuffer;
 
-    private boolean isEndOfInput = false;
-    private boolean isFlushing = false;
+    private boolean isEndOfInput;
+    private boolean isFlushing;
 
     private DecodeHandler decodeHandler;
+
+    // エンコーディングによっては長さに見直しが必要
     private byte[] errorData = new byte[4];
+
 
     /**
      * コンストラクタ。
