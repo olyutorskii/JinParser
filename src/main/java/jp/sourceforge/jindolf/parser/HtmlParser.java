@@ -16,6 +16,9 @@ import jp.sourceforge.jindolf.corelib.VillageState;
  */
 public class HtmlParser extends AbstractParser{
 
+    private static final String SP = "\u0020";
+
+
     private BasicHandler basicHandler;
     private final TalkParser     talkParser     = new TalkParser(this);
     private final SysEventParser sysEventParser = new SysEventParser(this);
@@ -103,13 +106,13 @@ public class HtmlParser extends AbstractParser{
             compile(
                   "("
                     +"<form"
-                    +"\u0020" + "action=\"index\\.rb\""
-                    +"\u0020" + "method=\"post\""
-                    +"\u0020" + "class=\"login_form\""
+                    +SP + "action=\"index\\.rb\""
+                    +SP + "method=\"post\""
+                    +SP + "class=\"login_form\""
                     +">"
                 + ")|("
                     +"<div"
-                    +"\u0020" + "class=\"login_form\""
+                    +SP + "class=\"login_form\""
                     +">"
                 + ")"
             );
@@ -123,7 +126,7 @@ public class HtmlParser extends AbstractParser{
     private static final Pattern USERID_PATTERN =
             compile(
                   "name=\"user_id\""
-                + "\u0020"
+                + SP
                 + "value=\"([^\"]*)\""
             );
     private static final Pattern C_FORM_PATTERN =
@@ -177,7 +180,7 @@ public class HtmlParser extends AbstractParser{
                     +"([0-9]+)"                       // 月
                     +"/"
                     +"([0-9]+)"                       // 日
-                    +"\u0020"
+                    +SP
                     +"(?:(?:(午前)|(午後))\u0020)?"  // AMPM
                     +"([0-9]+)"                       // 時
                     +"(?:時\u0020|\\:)"
@@ -331,8 +334,6 @@ public class HtmlParser extends AbstractParser{
     private void parseMessage() throws HtmlParseException{
         setContextErrorMessage("lost message");
 
-        SeqRange nameRange = this.rangepool_1;
-
         boolean skipGarbage = true;
 
         for(;;){
@@ -357,33 +358,45 @@ public class HtmlParser extends AbstractParser{
             }
             shrinkRegion();
 
-            sweepSpace();
-
-            lookingAtAffirm(O_MSGKIND_PATTERN);
-            if(isGroupMatched(1)){
-                shrinkRegion();
-                this.sysEventParser.parseAnnounce();
-            }else if(isGroupMatched(2)){
-                shrinkRegion();
-                this.sysEventParser.parseOrder();
-            }else if(isGroupMatched(3)){
-                shrinkRegion();
-                this.sysEventParser.parseExtra();
-            }else if(isGroupMatched(5)){
-                nameRange.setLastMatchedGroupRange(getMatcher(), 5);
-                int talkNo = -1;
-                if(isGroupMatched(4)){
-                    talkNo = parseGroupedInt(4);
-                }
-                shrinkRegion();
-                this.talkParser.parseTalk(talkNo, nameRange);
-            }else{
-                assert false;
-                throw buildParseException();
-            }
+            dispatchFamily();
 
             lookingAtAffirm(C_DIV_PATTERN);
             shrinkRegion();
+        }
+
+        return;
+    }
+
+    /**
+     * イベント種別によって処理を振り分ける。
+     * @throws HtmlParseException パースエラー
+     */
+    private void dispatchFamily() throws HtmlParseException{
+        sweepSpace();
+
+        SeqRange nameRange = this.rangepool_1;
+
+        lookingAtAffirm(O_MSGKIND_PATTERN);
+        if(isGroupMatched(1)){
+            shrinkRegion();
+            this.sysEventParser.parseAnnounce();
+        }else if(isGroupMatched(2)){
+            shrinkRegion();
+            this.sysEventParser.parseOrder();
+        }else if(isGroupMatched(3)){
+            shrinkRegion();
+            this.sysEventParser.parseExtra();
+        }else if(isGroupMatched(5)){
+            nameRange.setLastMatchedGroupRange(getMatcher(), 5);
+            int talkNo = -1;
+            if(isGroupMatched(4)){
+                talkNo = parseGroupedInt(4);
+            }
+            shrinkRegion();
+            this.talkParser.parseTalk(talkNo, nameRange);
+        }else{
+            assert false;
+            throw buildParseException();
         }
 
         return;
