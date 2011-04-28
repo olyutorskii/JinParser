@@ -74,6 +74,7 @@ public class ContentBuilderSJ extends ContentBuilder{
      * @param seq {@inheritDoc}
      * @throws DecodeException {@inheritDoc}
      */
+    @Override
     public void charContent(CharSequence seq)
             throws DecodeException{
         flushError();
@@ -88,6 +89,7 @@ public class ContentBuilderSJ extends ContentBuilder{
      * @param length {@inheritDoc}
      * @throws DecodeException {@inheritDoc}
      */
+    @Override
     public void decodingError(byte[] errorArray, int offset, int length)
             throws DecodeException{
         int limit = offset + length;

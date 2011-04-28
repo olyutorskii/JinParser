@@ -177,6 +177,7 @@ public class DecodeErrorInfo{
          * @param info2 {@inheritDoc}
          * @return {@inheritDoc}
          */
+        @Override
         public int compare(DecodeErrorInfo info1, DecodeErrorInfo info2){
             int pos1;
             int pos2;

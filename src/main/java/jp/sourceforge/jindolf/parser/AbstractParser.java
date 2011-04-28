@@ -114,6 +114,7 @@ public abstract class AbstractParser implements ChainedParser{
      * {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public DecodedContent getContent(){
         if(this.parent != null){
             return this.parent.getContent();
@@ -126,6 +127,7 @@ public abstract class AbstractParser implements ChainedParser{
      * {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public Matcher getMatcher(){
         if(this.parent != null){
             return this.parent.getMatcher();

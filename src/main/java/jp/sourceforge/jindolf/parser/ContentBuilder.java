@@ -48,6 +48,7 @@ public abstract class ContentBuilder implements DecodeHandler{
      * @param decoder {@inheritDoc}
      * @throws DecodeException {@inheritDoc}
      */
+    @Override
     public void startDecoding(CharsetDecoder decoder)
             throws DecodeException{
         init();
@@ -58,6 +59,7 @@ public abstract class ContentBuilder implements DecodeHandler{
      * {@inheritDoc}
      * @throws DecodeException {@inheritDoc}
      */
+    @Override
     public void endDecoding()
             throws DecodeException{
         flushError();

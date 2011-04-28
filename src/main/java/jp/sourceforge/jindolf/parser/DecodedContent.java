@@ -291,6 +291,7 @@ public class DecodedContent
      * @param index {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public char charAt(int index){
         return this.rawContent.charAt(index);
     }
@@ -299,6 +300,7 @@ public class DecodedContent
      * {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public int length(){
         return this.rawContent.length();
     }
@@ -309,6 +311,7 @@ public class DecodedContent
      * @param end {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public CharSequence subSequence(int start, int end){
         return this.rawContent.subSequence(start, end);
     }
