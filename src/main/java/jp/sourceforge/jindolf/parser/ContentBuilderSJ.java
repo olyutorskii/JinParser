@@ -14,15 +14,19 @@ package jp.sourceforge.jindolf.parser;
  */
 public class ContentBuilderSJ extends ContentBuilder{
 
+    private static final int DEF_BUF_SZ = 128;
+
+
     private boolean hasByte1st;
     private byte byte1st;
+
 
     /**
      * コンストラクタ。
      * 長さ0で空の{@link DecodedContent}がセットされる。
      */
     public ContentBuilderSJ(){
-        this(128);
+        this(DEF_BUF_SZ);
         return;
     }
 

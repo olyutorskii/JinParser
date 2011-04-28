@@ -15,12 +15,15 @@ package jp.sourceforge.jindolf.parser;
  */
 public class ContentBuilderUCS2 extends ContentBuilder{
 
+    private static final int DEF_BUF_SZ = 128;
+
+
     /**
      * コンストラクタ。
      * 長さ0で空の{@link DecodedContent}がセットされる。
      */
     public ContentBuilderUCS2(){
-        this(128);
+        this(DEF_BUF_SZ);
         return;
     }
 
