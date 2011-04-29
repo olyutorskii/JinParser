@@ -72,8 +72,6 @@
 
     <module name="TreeWalker">
 
-        <property name="tabWidth" value="4" />
-
         <module name="FileContentsHolder" />
 
 
@@ -156,12 +154,12 @@
         <module name="PackageDeclaration" />
         <module name="JUnitTestCase" />
         <module name="ReturnCount">
-            <property name="max" value="3" />
+            <property name="max" value="5" />
         </module>
         <module name="IllegalType" />
         <module name="DeclarationOrder" />
         <module name="ParameterAssignment" />
-        <module name="ExplicitInitialization" />
+<!--    <module name="ExplicitInitialization" />  -->
         <module name="DefaultComesLast" />
         <module name="MissingCtor" />
         <module name="FallThrough" />
@@ -372,7 +370,6 @@
 <!-- バグ？
         <module name="RequireThis" />
 -->
-
 <!-- 5.2 or later
         <module name="InnerTypeLast" />
 -->
@@ -389,6 +386,7 @@
 -->
 
     </module>
+
 </module>
 
 <!-- EOF -->

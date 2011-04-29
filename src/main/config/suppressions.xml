@@ -20,13 +20,20 @@
     <suppress files="SysEventParser.java" checks="DeclarationOrder" />
     <suppress files="TalkParser.java"     checks="DeclarationOrder" />
 
-    <suppress files="HtmlParser.java"     checks="MagicNumber" />
-    <suppress files="ShiftJis.java"       checks="MagicNumber" />
-    <suppress files="SysEventParser.java" checks="MagicNumber" />
-    <suppress files="TalkParser.java"     checks="MagicNumber" />
+<!--
+    <suppress files="" checks="ExecutableStatementCount" />
 
-    <suppress files="HtmlParser.java"     checks="MultipleStringLiterals" />
-    <suppress files="SysEventParser.java" checks="MultipleStringLiterals" />
+    <suppress files="" checks="ClassDataAbstractionCoupling" />
+    <suppress files="" checks="ClassFanOutComplexity" />
+    <suppress files="" checks="CyclomaticComplexity" />
+    <suppress files="" checks="NPathComplexity" />
+    <suppress files="" checks="JavaNCSS" />
+-->
+
+<!--
+    <suppress files="" checks="MagicNumber" />
+    <suppress files="" checks="MultipleStringLiterals" />
+-->
 
 </suppressions>
 
