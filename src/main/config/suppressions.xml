@@ -16,9 +16,17 @@
 
 <suppressions>
 
-    <suppress files="HtmlParser.java" checks="DeclarationOrder" />
+    <suppress files="HtmlParser.java"     checks="DeclarationOrder" />
     <suppress files="SysEventParser.java" checks="DeclarationOrder" />
-    <suppress files="TalkParser.java" checks="DeclarationOrder" />
+    <suppress files="TalkParser.java"     checks="DeclarationOrder" />
+
+    <suppress files="HtmlParser.java"     checks="MagicNumber" />
+    <suppress files="ShiftJis.java"       checks="MagicNumber" />
+    <suppress files="SysEventParser.java" checks="MagicNumber" />
+    <suppress files="TalkParser.java"     checks="MagicNumber" />
+
+    <suppress files="HtmlParser.java"     checks="MultipleStringLiterals" />
+    <suppress files="SysEventParser.java" checks="MultipleStringLiterals" />
 
 </suppressions>
 
