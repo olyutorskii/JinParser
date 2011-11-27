@@ -1,6 +1,6 @@
 [UTF-8 Japanese]
 
-                             JinParserライブラリ
+                             J i n P a r s e r
                                   README
 
                                               Copyright(c) 2009 olyutorskii
@@ -41,14 +41,6 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
    開発時はMaven等を用いてJinCoreライブラリを用意してください。
 
 
-=== アーカイブ管理体制 ===
-
-  このアーカイブは、UTF-8による開発環境を前提として構成されています。
-  このアーカイブの原本となる開発資産は、
-      http://hg.sourceforge.jp/view/jindolf/JinParser/
-  を上位に持つMercurialリポジトリで管理されています。
-
-
 === 開発プロジェクト運営元 ===
 
   http://sourceforge.jp/projects/jindolf/devel/ まで。
@@ -56,7 +48,7 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 
 === ディレクトリ内訳構成 ===
 
-基本的にはMaven2のmaven-archetype-quickstart構成に準じます。
+基本的にはMaven3のmaven-archetype-quickstart構成に準じます。
 
 ./README.txt
     あなたが今見てるこれ。
@@ -67,11 +59,11 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 ./LICENSE.txt
     ライセンスに関して。
 
-./pom.xml
-    Maven2用プロジェクト構成定義ファイル。
+./SCM.txt
+    ソースコード管理に関して。
 
-./build.xml
-    Ant用追加タスク。
+./pom.xml
+    Maven3用プロジェクト構成定義ファイル。
 
 ./src/main/java/
     Javaのソースコード。
@@ -84,6 +76,9 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 
 ./src/test/java/sample/
     サンプルのパーサ実装。
+
+./src/main/config/
+    各種ビルド・構成管理に必要なファイル群。
 
 ./src/main/config/checks.xml
     Checkstyle用configファイル。
