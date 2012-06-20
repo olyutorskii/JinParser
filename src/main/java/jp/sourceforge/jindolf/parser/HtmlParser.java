@@ -403,7 +403,15 @@ public class HtmlParser extends AbstractParser{
     }
 
     private static final Pattern O_LISTTABLE_PATTERN =
-            compile("<table\u0020class=\"list\">");
+            compile("<table\u0020class=\"list\">"
+                   +"(?:"
+                   +  "<tr>"
+                   +    "<th>村名</th>"
+                   +    "<th>Mode</th>"
+                   +    "<th>更新</th>"
+                   +    "<th>状態</th>"
+                   +  "</tr>"
+                   +")?");
     private static final Pattern ACTIVEVILLAGE =
             compile(
              "("
@@ -411,21 +419,23 @@ public class HtmlParser extends AbstractParser{
             +")|(?:"
                 +"<tr><td>"
                 +"<a\u0020href=\"([^\"]*)\">([^<]*)</a>"
-                +"\u0020<strong>\uff08"
-                    +"(?:(?:(午前)|(午後))\u0020)?"  // AMPM
-                    +"([0-9]+)"                       // 時
+                +"(?:\u0020|</td><td>(?:通常|[^<]*)</td><td>)"
+                +"<strong>"
+                    +"(?:\uff08(?:(午前)|(午後))\u0020)?"  // AMPM
+                    +"([0-9]+)"                              // 時
                     +"(?:時\u0020|\\:)"
-                    +"([0-9]+)"                       // 分
-                    +"分?\u0020更新"
-                +"\uff09</strong>"
-                +"</td><td>(?:"
-                +"[^<]*"
-                    + "(参加者募集中です。)"
-                    +"|(開始待ちです。)"
-                    +"|(進行中です。)"
-                    +"|(勝敗が決定しました。)"
+                    +"([0-9]+)"                              // 分
+                    +"(?:\u0020|分\u0020更新\uff09)"
+                +"</strong>"
+                +"</td><td>"
+                +"(?:"
+                    + "(参加者募集中(?:です。)?)"
+                    +"|(開始待ち(?:です。)?)"
+                    +"|(進行中(?:です。)?)"
+                    +"|(勝敗が決定しました。|エピローグ)"
                     +"|(終了・ログ公開中。)"
-                +")</td></tr>"
+                +")"
+                +"</td></tr>"
             +")"
             );
 
@@ -441,6 +451,7 @@ public class HtmlParser extends AbstractParser{
 
         if( ! findProbe(O_LISTTABLE_PATTERN) ) return;
         shrinkRegion();
+        sweepSpace();
 
         for(;;){
             lookingAtAffirm(ACTIVEVILLAGE);
