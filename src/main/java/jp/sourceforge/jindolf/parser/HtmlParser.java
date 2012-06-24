@@ -419,7 +419,9 @@ public class HtmlParser extends AbstractParser{
             +")|(?:"
                 +"<tr><td>"
                 +"<a\u0020href=\"([^\"]*)\">([^<]*)</a>"
-                +"(?:\u0020|</td><td>(?:通常|[^<]*)</td><td>)"
+                +"(?:\u0020|</td><td>"
+                +"(?:<strong>)?(?:通常|初心者優先|[^<]*)(?:</strong>)?"
+                +"</td><td>)"
                 +"<strong>"
                     +"(?:\uff08(?:(午前)|(午後))\u0020)?"  // AMPM
                     +"([0-9]+)"                              // 時
