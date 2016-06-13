@@ -20,7 +20,7 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 ※ このアーカイブにはJindolfの実行バイナリは含まれていません。
 　 Jindolfを動かしたい方は、jindolfで始まり拡張子が*.jarであるファイルを
 　 別途入手してください。
-※ 人狼BBSのURLは [ http://homepage2.nifty.com/ninjinia/ ] まで
+※ 人狼BBSのURLは [ http://ninjinix.com/ ] まで
 ※ 人狼BBSを主催するninjin氏は、JinParserの製作に一切関与していません。
 　 JinParserに関する問い合わせををninjin氏へ投げかけないように！約束だよ！
 
@@ -31,8 +31,8 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
  - JinParserは他のプログラムに組み込まれて利用されるライブラリです。
    JARファイルによるライブラリ提供や、他プロジェクトのソースツリーへの
    マージの形で利用される事を想定しています。
- - JinParserはJRE1.5に準拠したJava実行環境で利用できるように作られています。
-   原則として、JRE1.5に準拠した実行系であれば、プラットフォームを選びません。
+ - JinParserはJRE1.7に準拠したJava実行環境で利用できるように作られています。
+   原則として、JRE1.7に準拠した実行系であれば、プラットフォームを選びません。
 
 
 === 依存ライブラリ ===
@@ -43,7 +43,7 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 
 === 開発プロジェクト運営元 ===
 
-  http://sourceforge.jp/projects/jindolf/devel/ まで。
+  https://osdn.jp/projects/jindolf/devel/ まで。
 
 
 === ディレクトリ内訳構成 ===
