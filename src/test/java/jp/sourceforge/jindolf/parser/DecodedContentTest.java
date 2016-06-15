@@ -12,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -61,7 +62,7 @@ public class DecodedContentTest {
         assertEquals("abc", content.toString());
 
         try{
-            content = new DecodedContent(-1);
+            new DecodedContent(-1);
             fail();
         }catch(NegativeArraySizeException e){
         }catch(Throwable e){
@@ -125,7 +126,7 @@ public class DecodedContentTest {
         assertFalse(content.hasDecodeError());
 
         content = new DecodedContent();
-        List list = content.getDecodeErrorList();
+        List<DecodeErrorInfo> list = content.getDecodeErrorList();
         assertEquals(0, list.size());
         assertFalse(content.hasDecodeError());
 
@@ -546,7 +547,7 @@ public class DecodedContentTest {
         List<DecodeErrorInfo> errList;
         int result;
 
-        errList = new ArrayList<DecodeErrorInfo>();
+        errList = new ArrayList<>();
         result = DecodedContent.lsearchErrorIndex(errList, 10);
         assertEquals(0, result);
 
@@ -595,7 +596,7 @@ public class DecodedContentTest {
         List<DecodeErrorInfo> errList;
         int result;
 
-        errList = new ArrayList<DecodeErrorInfo>();
+        errList = new ArrayList<>();
         result = DecodedContent.bsearchErrorIndex(errList, 10);
         assertEquals(0, result);
 
@@ -644,7 +645,7 @@ public class DecodedContentTest {
         List<DecodeErrorInfo> errList;
         int result;
 
-        errList = new ArrayList<DecodeErrorInfo>();
+        errList = new ArrayList<>();
 
         errList.clear();
         for(int pos = 0; pos <= 1000; pos += 10){
@@ -695,7 +696,7 @@ public class DecodedContentTest {
         System.out.println("ensureCapacity");
 
         DecodedContent content;
-        
+
         content = new DecodedContent("abc");
         content.ensureCapacity(-1);
         content.ensureCapacity(0);

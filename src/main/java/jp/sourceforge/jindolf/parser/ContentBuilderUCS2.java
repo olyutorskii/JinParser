@@ -48,8 +48,8 @@ public class ContentBuilderUCS2 extends ContentBuilder{
      */
     public static byte[] charToUTF16(char ch){
         byte[] result = new byte[2];
-        result[0] = (byte)(ch >> 8);
-        result[1] = (byte)(ch & 0xff);
+        result[0] = (byte) (ch >> 8);
+        result[1] = (byte) (ch & 0xff);
 
         return result;
     }
@@ -83,21 +83,22 @@ public class ContentBuilderUCS2 extends ContentBuilder{
         flushError();
 
         int length = seq.length();
-        int startPos = 0;
+        int copyDone = 0;
 
         for(int pos = 0; pos < length; pos++){
             char ch = seq.charAt(pos);
 
-            if(   ! Character.isHighSurrogate(ch)
-               && ! Character.isLowSurrogate (ch) ){
+            if(    ! Character.isHighSurrogate(ch)
+                && ! Character.isLowSurrogate (ch) ){
                 continue;
             }
 
-            if(startPos < pos){
-                CharSequence chopped = seq.subSequence(startPos, pos);
+            if(copyDone < pos){
+                CharSequence chopped = seq.subSequence(copyDone, pos);
                 getContent().append(chopped);
-                startPos = pos + 1;
             }
+
+            copyDone = pos + 1;
 
             byte[] barr = charToUTF16(ch);
             for(byte bval : barr){
@@ -105,8 +106,8 @@ public class ContentBuilderUCS2 extends ContentBuilder{
             }
         }
 
-        if(startPos < length){
-            CharSequence chopped = seq.subSequence(startPos, length);
+        if(copyDone < length){
+            CharSequence chopped = seq.subSequence(copyDone, length);
             getContent().append(chopped);
         }
 
