@@ -14,19 +14,27 @@ import jp.sourceforge.jindolf.corelib.VillageState;
  * 人狼BBSの各種XHTMLの基本的な構造をパースするためのハンドラ。
  * このハンドラの全メソッドはパーサ{@link HtmlParser}により呼ばれる。
  *
+ * <p>
  * パーサはパース開始時に{@link #startParse(DecodedContent)}を呼び、
  * パース終了直前に{@link #endParse()}を呼ぶ。
  * その間に他の様々なメソッドが呼び出される。
+ * </p>
  *
+ * <p>
  * 一部のメソッドに渡される{@link DecodedContent}文字列オブジェクトは
  * mutableである。
  * 後々で内容が必要になるならば、ハンドラはSeqRangeで示されたこの内容の
  * 必要な箇所をコピーして保存しなければならない。
+ * </p>
  *
+ * <p>
  * フラグメントや属性値中の文字参照記号列の解釈はハンドラ側の責務とする。
+ * </p>
  *
+ * <p>
  * 各メソッドは、各々の判断で{@link HtmlParseException}をスローする
  * ことにより、パース作業を中断させることができる。
+ * </p>
  */
 public interface BasicHandler{
 

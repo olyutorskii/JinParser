@@ -91,7 +91,7 @@ public class DecodedContent
      * @param errList デコードエラーのリスト
      * @param startPos 文字位置
      * @return 0から始まるリスト内の位置。
-     * 一致する文字位置がなければ挿入ポイント。
+     *     一致する文字位置がなければ挿入ポイント。
      */
     protected static int lsearchErrorIndex(List<DecodeErrorInfo> errList,
                                              int startPos){
@@ -115,7 +115,7 @@ public class DecodedContent
      * @param errList デコードエラーのリスト
      * @param startPos 文字位置
      * @return 0から始まるリスト内の位置。
-     * 一致する文字位置がなければ挿入ポイント。
+     *     一致する文字位置がなければ挿入ポイント。
      */
     protected static int bsearchErrorIndex(List<DecodeErrorInfo> errList,
                                              int startPos){
@@ -145,7 +145,7 @@ public class DecodedContent
      * @param errList デコードエラーのリスト
      * @param startPos 文字位置
      * @return 0から始まるリスト内の位置。
-     * 一致する文字位置がなければ挿入ポイント。
+     *     一致する文字位置がなければ挿入ポイント。
      */
     protected static int searchErrorIndex(List<DecodeErrorInfo> errList,
                                             int startPos){
@@ -207,7 +207,7 @@ public class DecodedContent
      * @return リスト
      */
     private static List<DecodeErrorInfo> createErrorList(){
-        List<DecodeErrorInfo> result = new ArrayList<DecodeErrorInfo>();
+        List<DecodeErrorInfo> result = new ArrayList<>();
         return result;
     }
 
@@ -328,7 +328,8 @@ public class DecodedContent
      * @param end 終了位置
      * @return サブコンテント
      * @throws IndexOutOfBoundsException start または end が負の値の場合、
-     * end が length() より大きい場合、あるいは start が end より大きい場合
+     *     end が length() より大きい場合、
+     *     あるいは start が end より大きい場合
      */
     public DecodedContent subContent(int start, int end)
             throws IndexOutOfBoundsException{
@@ -344,6 +345,7 @@ public class DecodedContent
      * @param letter 追加する文字
      * @return thisオブジェクト
      */
+    @Override
     public DecodedContent append(char letter){
         this.rawContent.append(letter);
         return this;
@@ -354,11 +356,12 @@ public class DecodedContent
      * @param seq 追加する文字列
      * @return thisオブジェクト
      */
+    @Override
     public DecodedContent append(CharSequence seq){
         if(seq == null){
             this.rawContent.append(NULLTEXT);
         }else if(seq instanceof DecodedContent){
-            append((DecodedContent)seq, 0, seq.length());
+            append((DecodedContent) seq, 0, seq.length());
         }else{
             this.rawContent.append(seq);
         }
@@ -373,13 +376,14 @@ public class DecodedContent
      * @return thisオブジェクト
      * @throws IndexOutOfBoundsException 範囲指定が変。
      */
+    @Override
     public DecodedContent append(CharSequence seq,
                                   int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(seq == null){
             this.rawContent.append(NULLTEXT, startPos, endPos);
         }else if(seq instanceof DecodedContent){
-            append((DecodedContent)seq, startPos, endPos);
+            append((DecodedContent) seq, startPos, endPos);
         }else{
             this.rawContent.append(seq, startPos, endPos);
         }

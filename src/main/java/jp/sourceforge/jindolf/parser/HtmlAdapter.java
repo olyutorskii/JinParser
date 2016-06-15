@@ -22,6 +22,15 @@ import jp.sourceforge.jindolf.corelib.VillageState;
 public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
+     * コンストラクタ。
+     */
+    protected HtmlAdapter(){
+        super();
+        return;
+    }
+
+
+    /**
      * {@inheritDoc}
      * @param content {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}

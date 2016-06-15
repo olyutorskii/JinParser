@@ -73,7 +73,7 @@ public class DecodeErrorInfo{
     public DecodeErrorInfo(int charPos,
                              byte rawByte1st)
             throws IndexOutOfBoundsException{
-        this(charPos, false, rawByte1st, (byte)0x00);
+        this(charPos, false, rawByte1st, (byte) 0x00);
         return;
     }
 
@@ -166,7 +166,7 @@ public class DecodeErrorInfo{
         /**
          * コンストラクタ。
          */
-        private PosComparator(){
+        PosComparator(){
             super();
             return;
         }

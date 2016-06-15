@@ -12,23 +12,33 @@ import jp.sourceforge.jindolf.corelib.TalkType;
 /**
  * 人狼BBSの発言部XHTML断片をパースするためのハンドラ。
  *
+ * <p>
  * このハンドラの全メソッドはパーサ{@link HtmlParser}から呼び出される。
+ * </p>
  *
+ * <p>
  * パーサが発言箇所を発見すると、まず最初に
  * {@link #startTalk()}が呼び出される。
  * 発言内容に従い、このハンドラの様々なメソッドが0回以上呼び出される。
  * 最後に{@link #endTalk()}が呼び出される。
  * その後パーサは次の発言を探し始める。
+ * </p>
  *
+ * <p>
  * 一部のメソッドに渡される{@link DecodedContent}文字列オブジェクトは
  * mutableである。
  * 後々で内容が必要になるならば、ハンドラはSeqRangeで示されたこの内容の
  * 必要な箇所をコピーして保存しなければならない。
+ * </p>
  *
+ * <p>
  * フラグメントや属性値中の文字参照記号列の解釈はハンドラ側の責務とする。
+ * </p>
  *
+ * <p>
  * 各メソッドは、各々の判断で{@link HtmlParseException}をスローする
  * ことにより、パース作業を中断させることができる。
+ * </p>
  */
 public interface TalkHandler{
 

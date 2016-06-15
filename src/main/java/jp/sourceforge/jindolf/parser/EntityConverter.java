@@ -132,9 +132,9 @@ public class EntityConverter{
                                   DecodedContent content,
                                   int startPos, int endPos)
             throws IndexOutOfBoundsException{
-        if(   startPos > endPos
-           || startPos < 0
-           || content.length() < endPos){
+        if(    startPos > endPos
+            || startPos < 0
+            || content.length() < endPos){
             throw new IndexOutOfBoundsException();
         }
 

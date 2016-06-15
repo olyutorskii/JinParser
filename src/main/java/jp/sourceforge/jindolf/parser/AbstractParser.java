@@ -222,8 +222,7 @@ public abstract class AbstractParser implements ChainedParser{
      * 残りの検索対象領域からパターンがマッチする部分を探す。
      * 見つからなければ例外をスローする。
      * @param pattern 正規表現パターン
-     * @throws HtmlParseException
-     * マッチしなかった
+     * @throws HtmlParseException マッチしなかった
      */
     protected void findAffirm(Pattern pattern)
             throws HtmlParseException{
@@ -237,8 +236,7 @@ public abstract class AbstractParser implements ChainedParser{
      * 残りの検索対象領域先頭からパターンがマッチする部分を探す。
      * 見つからなければ例外をスローする。
      * @param pattern 正規表現パターン
-     * @throws HtmlParseException
-     * マッチしなかった
+     * @throws HtmlParseException マッチしなかった
      */
     protected void lookingAtAffirm(Pattern pattern)
             throws HtmlParseException{
@@ -252,8 +250,7 @@ public abstract class AbstractParser implements ChainedParser{
      * 残りの検索対象領域全体がパターンにマッチするか調べる。
      * マッチしなければ例外をスローする。
      * @param pattern 正規表現パターン
-     * @throws HtmlParseException
-     * マッチしなかった
+     * @throws HtmlParseException マッチしなかった
      */
     protected void matchesAffirm(Pattern pattern)
             throws HtmlParseException{
@@ -304,20 +301,20 @@ public abstract class AbstractParser implements ChainedParser{
     }
 
     /**
+     * 最後にマッチした全領域の開始位置を得る。
+     * @return 開始位置
+     */
+    protected int matchStart(){
+        return getMatcher().start();
+    }
+
+    /**
      * 最後にマッチした前方参照グループの終了位置を得る。
      * @param group 前方参照識別番号
      * @return 終了位置
      */
     protected int matchEnd(int group){
         return getMatcher().end(group);
-    }
-
-    /**
-     * 最後にマッチした全領域の開始位置を得る。
-     * @return 開始位置
-     */
-    protected int matchStart(){
-        return getMatcher().start();
     }
 
     /**

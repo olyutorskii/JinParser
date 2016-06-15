@@ -146,7 +146,7 @@ public class SysEventParser extends AbstractParser{
              "まだ村人達は揃っていないようだ。"
             +"(?:<br />)?");
 
-    private static Object[][] simpleRegexToType = {
+    private static final Object[][] SIMPLE_REGEX_TO_TYPE = {
         { STARTENTRY_PATTERN,   SysEventType.STARTENTRY   },
         { STARTMIRROR_PATTERN,  SysEventType.STARTMIRROR  },
         { STARTASSAULT_PATTERN, SysEventType.STARTASSAULT },
@@ -170,12 +170,12 @@ public class SysEventParser extends AbstractParser{
 
         SysEventType matchedType = null;
 
-        for(Object[] pair : simpleRegexToType){
-            Pattern pattern = (Pattern)( pair[0] );
+        for(Object[] pair : SIMPLE_REGEX_TO_TYPE){
+            Pattern pattern = (Pattern) pair[0];
 
             if(lookingAtProbe(pattern)){
                 shrinkRegion();
-                matchedType = (SysEventType)( pair[1] );
+                matchedType = (SysEventType) pair[1];
                 break;
             }
         }
@@ -1315,8 +1315,8 @@ public class SysEventParser extends AbstractParser{
             throw new IllegalStateException();
         }
 
-        if(   this.pushedRegionStart != regionStart()
-           || this.pushedRegionEnd   != regionEnd()  ){
+        if(    this.pushedRegionStart != regionStart()
+            || this.pushedRegionEnd   != regionEnd()  ){
             getMatcher().region(this.pushedRegionStart, this.pushedRegionEnd);
         }
 

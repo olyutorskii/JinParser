@@ -37,6 +37,10 @@
     <suppress files="" checks="FinalParameters" />
     <suppress files="" checks="TrailingComment" />
 
+    <suppress files="HtmlParser.java" checks="DeclarationOrder" />
+    <suppress files="SysEventParser.java" checks="DeclarationOrder" />
+    <suppress files="TalkParser.java" checks="DeclarationOrder" />
+
 </suppressions>
 
 
