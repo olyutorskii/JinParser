@@ -16,7 +16,7 @@
     <groupId>jp.sourceforge.jindolf</groupId>
     <artifactId>jinparser</artifactId>
 
-    <version>1.408.6</version>
+    <version>1.408.7-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>JinParser</name>
