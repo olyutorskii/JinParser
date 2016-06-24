@@ -315,8 +315,6 @@ public class ContentBuilderUCS2Test {
         byte[] bdata;
         InputStream is;
         DecodedContent content;
-        List<DecodeErrorInfo> errList;
-        DecodeErrorInfo einfo;
 
         cd = cs.newDecoder();
         decoder = new StreamDecoder(cd);
@@ -327,113 +325,8 @@ public class ContentBuilderUCS2Test {
         decoder.decode(is);
         content = cb.getContent();
 
-//        assertEquals(7, content.length());
-//        assertEquals("A????\udc11B", content.toString());
-        assertEquals(6, content.length());
-        assertEquals("A????B", content.toString());
-        assertTrue(content.hasDecodeError());
-        errList = content.getDecodeErrorList();
-        assertEquals(4, errList.size());
-        einfo = errList.get(0);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0xd8, einfo.getRawByte1st());
-        assertEquals(1, einfo.getCharPosition());
-        einfo = errList.get(1);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0x3d, einfo.getRawByte1st());
-        assertEquals(2, einfo.getCharPosition());
-        einfo = errList.get(2);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0xdc, einfo.getRawByte1st());
-        assertEquals(3, einfo.getCharPosition());
-        einfo = errList.get(3);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0x11, einfo.getRawByte1st());
-        assertEquals(4, einfo.getCharPosition());
-
-
-        cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("d83d:dc11:0042");
-        is = new ByteArrayInputStream(bdata);
-        decoder.decode(is);
-        content = cb.getContent();
-
-        assertEquals(5, content.length());
-        assertEquals("????B", content.toString());
-        assertTrue(content.hasDecodeError());
-        errList = content.getDecodeErrorList();
-        assertEquals(4, errList.size());
-        einfo = errList.get(0);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0xd8, einfo.getRawByte1st());
-        assertEquals(0, einfo.getCharPosition());
-        einfo = errList.get(1);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0x3d, einfo.getRawByte1st());
-        assertEquals(1, einfo.getCharPosition());
-        einfo = errList.get(2);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0xdc, einfo.getRawByte1st());
-        assertEquals(2, einfo.getCharPosition());
-        einfo = errList.get(3);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0x11, einfo.getRawByte1st());
-        assertEquals(3, einfo.getCharPosition());
-
-
-        cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("0041:d83d:dc11");
-        is = new ByteArrayInputStream(bdata);
-        decoder.decode(is);
-        content = cb.getContent();
-
-        assertEquals(5, content.length());
-        assertEquals("A????", content.toString());
-        assertTrue(content.hasDecodeError());
-        errList = content.getDecodeErrorList();
-        assertEquals(4, errList.size());
-        einfo = errList.get(0);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0xd8, einfo.getRawByte1st());
-        assertEquals(1, einfo.getCharPosition());
-        einfo = errList.get(1);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0x3d, einfo.getRawByte1st());
-        assertEquals(2, einfo.getCharPosition());
-        einfo = errList.get(2);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0xdc, einfo.getRawByte1st());
-        assertEquals(3, einfo.getCharPosition());
-        einfo = errList.get(3);
-        assertFalse(einfo.has2nd());
-        assertEquals((byte)0x11, einfo.getRawByte1st());
-        assertEquals(4, einfo.getCharPosition());
-
-
-        return;
-    }
-
-
-    /**
-     * Test of charToUTF8 method, of class ContentBuilderUCS2.
-     */
-    @Test
-    public void testCharToUTF16(){
-        System.out.println("charToUTF16");
-
-        char ch;
-        byte[] result;
-
-        ch = '\ud844';
-        result = ContentBuilderUCS2.charToUTF16(ch);
-
-        assertEquals(2, result.length);
+        assertEquals(4, content.length());
+        assertEquals("A\ud83d\udc11B", content.toString());
 
         return;
     }

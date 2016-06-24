@@ -1,5 +1,5 @@
 /*
- * content builder for UTF-8 (UCS2 only)
+ * content builder for UTF-8
  *
  * License : The MIT License
  * Copyright(c) 2010 olyutorskii
@@ -11,7 +11,6 @@ package jp.sourceforge.jindolf.parser;
  * "UTF-8"エンコーディング用デコードハンドラ。
  * {@link StreamDecoder}からの通知に従い、
  * {@link DecodedContent}へとデコードする。
- * UCS-4はUTF-16エラー扱い。
  */
 public class ContentBuilderUCS2 extends ContentBuilder{
 
@@ -42,20 +41,6 @@ public class ContentBuilderUCS2 extends ContentBuilder{
 
 
     /**
-     * サロゲートペア文字(上位,下位)をUTF-16BEバイト列に変換する。
-     * @param ch 文字
-     * @return UTF-8バイト列
-     */
-    public static byte[] charToUTF16(char ch){
-        byte[] result = new byte[2];
-        result[0] = (byte) (ch >> 8);
-        result[1] = (byte) (ch & 0xff);
-
-        return result;
-    }
-
-
-    /**
      * デコード処理の初期化下請。
      */
     private void initImpl(){
@@ -81,36 +66,7 @@ public class ContentBuilderUCS2 extends ContentBuilder{
     public void charContent(CharSequence seq)
             throws DecodeException{
         flushError();
-
-        int length = seq.length();
-        int copyDone = 0;
-
-        for(int pos = 0; pos < length; pos++){
-            char ch = seq.charAt(pos);
-
-            if(    ! Character.isHighSurrogate(ch)
-                && ! Character.isLowSurrogate (ch) ){
-                continue;
-            }
-
-            if(copyDone < pos){
-                CharSequence chopped = seq.subSequence(copyDone, pos);
-                getContent().append(chopped);
-            }
-
-            copyDone = pos + 1;
-
-            byte[] barr = charToUTF16(ch);
-            for(byte bval : barr){
-                getContent().addDecodeError(bval);
-            }
-        }
-
-        if(copyDone < length){
-            CharSequence chopped = seq.subSequence(copyDone, length);
-            getContent().append(chopped);
-        }
-
+        getContent().append(seq);
         return;
     }
 

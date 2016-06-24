@@ -111,6 +111,44 @@ public class EntityConverterTest {
         result = converter.convert(from, range);
         assertEquals("bcd", result.toString());
 
+        from = new DecodedContent();
+        from.append("abcde");
+        try{
+            converter.convert(from, 4, 1);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // OK
+        }
+
+        from = new DecodedContent();
+        from.append("abcde");
+        try{
+            converter.convert(from, -1, 4);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // OK
+        }
+
+        from = new DecodedContent();
+        from.append("abcde");
+        try{
+            converter.convert(from, 1, 6);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // OK
+        }
+
+        from = new DecodedContent();
+        from.append("a\ud83d\udc11b"); // 🐑
+        result = converter.convert(from);
+        assertEquals("a\ud83d\udc11b", result.toString());
+
+        from = new DecodedContent();
+        from.append("a\ud83d\udc11b"); // 🐑
+        EntityConverter repConverter = new EntityConverter(true);
+        result = repConverter.convert(from);
+        assertEquals("a?b", result.toString());
+
         return;
     }
 
