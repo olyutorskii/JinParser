@@ -232,13 +232,13 @@ public class HtmlParser extends AbstractParser{
             );
     private static final Pattern PERIOD_PATTERN =
             compile(
-                "(プロローグ)" +
-            "|"+
-                "(エピローグ)" +
-            "|"+
-                "(終了)" +
-            "|"+
-                "([0-9]+)日目"
+                  "(プロローグ)"
+            +"|"
+                + "(エピローグ)"
+            +"|"
+                + "(終了)"
+            +"|"
+                + "([0-9]+)日目"
             );
     private static final Pattern C_SPAN_PATTERN   = compile("</span>");
     private static final Pattern C_ANCHOR_PATTERN = compile("</a>");
