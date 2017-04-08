@@ -65,9 +65,9 @@
     <modules/>
 
     <scm>
-        <connection>scm:hg:http://hg.osdn.jp/view/jindolf/JinParser</connection>
-        <developerConnection>scm:hg:ssh://hg.osdn.jp//hgroot/jindolf/JinParser</developerConnection>
-        <url>https://osdn.jp/projects/jindolf/scm/hg/JinParser/</url>
+        <connection>scm:hg:http://hg.osdn.net/view/jindolf/JinParser</connection>
+        <developerConnection>scm:hg:ssh://hg.osdn.net//hgroot/jindolf/JinParser</developerConnection>
+        <url>https://osdn.net/projects/jindolf/scm/hg/JinParser/</url>
     </scm>
 
     <issueManagement>
@@ -349,11 +349,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.0.0</version>
                 <configuration>
-                    <archiveBaseDirectory>.</archiveBaseDirectory>
                     <descriptors>
-                        <descriptor>src/main/assembly/descriptor.xml</descriptor>
+                        <descriptor>src/assembly/src.xml</descriptor>
                     </descriptors>
                 </configuration>
             </plugin>
