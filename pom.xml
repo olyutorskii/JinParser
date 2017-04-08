@@ -89,12 +89,26 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <site.locales>en</site.locales>
+        <javadoc.locale>en</javadoc.locale>
+        <findbugs.jvmArgs>-Duser.language=en</findbugs.jvmArgs>
+
         <jacoco-plugin.version>0.7.9</jacoco-plugin.version>
 
         <project.mainconf>${project.basedir}/src/main/config</project.mainconf>
 
+        <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
+        <checkstyleruntime.version>6.19</checkstyleruntime.version>
         <checkstyle.config.location>${project.mainconf}/checks.xml</checkstyle.config.location>
         <checkstyle.enable.rss>false</checkstyle.enable.rss>
+
+        <pmd-plugin.version>3.7</pmd-plugin.version>
+
+        <findbugs-plugin.version>3.0.4</findbugs-plugin.version>
+        <findbugs.effort>Max</findbugs.effort>
+        <findbugs.threshold>Low</findbugs.threshold>
+        <!-- for Jenkins -->
+        <findbugs.xmlOutput>true</findbugs.xmlOutput>
 
     </properties>
 
@@ -122,9 +136,33 @@
     <pluginRepositories/>
 
     <build>
-        <pluginManagement/>
+
+        <pluginManagement>
+
+            <plugins>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <!--artifactId>checkstyle-backport-jre6</artifactId-->
+                            <version>${checkstyleruntime.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+            </plugins>
+
+        </pluginManagement>
 
         <plugins>
+
+
+            <!-- clean lifecycle -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -246,6 +284,11 @@
                 <version>3.0.2</version>
                 <configuration>
                     <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>
+                                true
+                            </addDefaultImplementationEntries>
+                        </manifest>
                         <manifestEntries>
                             <Built-By>${project.organization.name}</Built-By>
                         </manifestEntries>
@@ -296,10 +339,7 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.6</version>
                 <configuration>
-                    <generateReports>true</generateReports>
-                    <locales>ja</locales>
-                    <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
-                    <outputEncoding>${project.reporting.outputEncoding}</outputEncoding>
+                    <locales>${site.locales}</locales>
                 </configuration>
             </plugin>
 
@@ -321,8 +361,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.15</version>
-                <!-- config from property value -->
+                <version>${checkstyle-plugin.version}</version>
             </plugin>
 
         </plugins>
@@ -421,6 +460,9 @@
                     <notimestamp>true</notimestamp>
                     <quiet>true</quiet>
                     <show>protected</show>
+                    <locale>${javadoc.locale}</locale>
+                    <header>${project.name} ${project.version} API</header>
+                    <version>true</version>
                 </configuration>
                 <reportSets>
                     <reportSet>
@@ -441,16 +483,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.19.1</version>
-                <configuration>
-                    <showSuccess>false</showSuccess>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report-only</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
             </plugin>
 
             <plugin>
@@ -469,11 +501,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.15</version>
-                <configuration>
-                    <skip>false</skip>
-                    <!-- config from property value -->
-                </configuration>
+                <version>${checkstyle-plugin.version}</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -486,10 +514,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.6</version>
+                <version>${pmd-plugin.version}</version>
                 <configuration>
-                    <skip>false</skip>
-                    <targetJdk>${maven.compiler.target}</targetJdk>
                     <rulesets>
                         <ruleset>${project.mainconf}/pmdrules.xml</ruleset>
                     </rulesets>
@@ -507,17 +533,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.4</version>
-                <configuration>
-                    <skip>false</skip>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                    <!-- for Jenkins -->
-                    <findbugsXmlOutput>true</findbugsXmlOutput>
-                    <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-                    <xmlOutput>true</xmlOutput>
-                    <!-- excludeFilterFile/ -->
-                </configuration>
+                <version>${findbugs-plugin.version}</version>
             </plugin>
 
         </plugins>
