@@ -224,7 +224,7 @@ public class EntityConverter{
          * @param regex 置換元パターン正規表現
          * @param altTxt 置換文字列。
          */
-        private RegexRep(String regex, String altTxt){
+        RegexRep(String regex, String altTxt){
             this.regex = regex;
             this.altTxt = altTxt;
             return;

@@ -43,11 +43,10 @@ public final class ShiftJis{
      * @return シフトJISの1バイト目でありうるならtrue
      */
     public static boolean isShiftJIS1stByte(byte bval){
-        if(    (byte) 0x81 <= bval && bval <= (byte) 0x9f
-            || (byte) 0xe0 <= bval && bval <= (byte) 0xfc){
-            return true;
-        }
-        return false;
+        boolean result =
+               (byte) 0x81 <= bval && bval <= (byte) 0x9f
+            || (byte) 0xe0 <= bval && bval <= (byte) 0xfc;
+        return result;
     }
 
     /**
@@ -57,11 +56,10 @@ public final class ShiftJis{
      * @return シフトJISの2バイト目でありうるならtrue
      */
     public static boolean isShiftJIS2ndByte(byte bval){
-        if(    (byte) 0x40 <= bval && bval <= (byte) 0x7e
-            || (byte) 0x80 <= bval && bval <= (byte) 0xfc){
-            return true;
-        }
-        return false;
+        boolean result =
+               (byte) 0x40 <= bval && bval <= (byte) 0x7e
+            || (byte) 0x80 <= bval && bval <= (byte) 0xfc;
+        return result;
     }
 
     /**
@@ -72,11 +70,10 @@ public final class ShiftJis{
      * @return シフトJISならtrue
      */
     public static boolean isShiftJIS(byte b1st, byte b2nd){
-        if(    ShiftJis.isShiftJIS1stByte(b1st)
-            && ShiftJis.isShiftJIS2ndByte(b2nd)){
-            return true;
-        }
-        return false;
+        boolean result =
+               ShiftJis.isShiftJIS1stByte(b1st)
+            && ShiftJis.isShiftJIS2ndByte(b2nd);
+        return result;
     }
 
 }

@@ -60,6 +60,7 @@
 
     <rule ref="rulesets/java/design.xml">
         <exclude name="UnnecessaryLocalBeforeReturn" />
+        <exclude name="FieldDeclarationsShouldBeAtStartOfClass" />
     </rule>
 
     <rule ref="rulesets/java/empty.xml" />
@@ -84,6 +85,7 @@
 
     <rule ref="rulesets/java/naming.xml">
         <exclude name="ShortVariable" />
+        <exclude name="LongVariable" />
     </rule>
 
     <rule ref="rulesets/java/optimizations.xml">

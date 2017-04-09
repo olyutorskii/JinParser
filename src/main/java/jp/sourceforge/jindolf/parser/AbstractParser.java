@@ -192,8 +192,8 @@ public abstract class AbstractParser implements ChainedParser{
      */
     protected boolean findProbe(Pattern pattern){
         switchPattern(pattern);
-        if( getMatcher().find() ) return true;
-        return false;
+        boolean result = getMatcher().find();
+        return result;
     }
 
     /**
@@ -203,8 +203,8 @@ public abstract class AbstractParser implements ChainedParser{
      */
     protected boolean lookingAtProbe(Pattern pattern){
         switchPattern(pattern);
-        if( getMatcher().lookingAt() ) return true;
-        return false;
+        boolean result = getMatcher().lookingAt();
+        return result;
     }
 
     /**
@@ -214,8 +214,8 @@ public abstract class AbstractParser implements ChainedParser{
      */
     protected boolean matchesProbe(Pattern pattern){
         switchPattern(pattern);
-        if( getMatcher().matches() ) return true;
-        return false;
+        boolean result = getMatcher().matches();
+        return result;
     }
 
     /**
@@ -266,8 +266,8 @@ public abstract class AbstractParser implements ChainedParser{
      * @return ヒットしていたらtrue
      */
     protected boolean isGroupMatched(int group){
-        if(matchStart(group) >= 0) return true;
-        return false;
+        boolean result = matchStart(group) >= 0;
+        return result;
     }
 
     /**
@@ -355,18 +355,24 @@ public abstract class AbstractParser implements ChainedParser{
         for( ; regionStart < regionEnd; regionStart++){
             char letter = rawContent.charAt(regionStart);
 
+            boolean spaceCh;
             switch(letter){
             case '\u0020':
             case '\t':
             case '\n':
             case '\r':
-                hasSpace = true;
-                continue;
+                spaceCh = true;
+                break;
             default:
+                spaceCh = false;
                 break;
             }
 
-            break;
+            if(spaceCh){
+                hasSpace = true;
+            }else{
+                break;
+            }
         }
 
         if(hasSpace){
