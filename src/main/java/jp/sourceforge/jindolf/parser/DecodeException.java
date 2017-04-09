@@ -18,6 +18,9 @@ package jp.sourceforge.jindolf.parser;
 @SuppressWarnings("serial")
 public class DecodeException extends Exception{
 
+    private static final char CH_SP = '\u0020';
+
+
     private final int bytePos;
     private final int charPos;
 
@@ -87,15 +90,15 @@ public class DecodeException extends Exception{
      */
     @Override
     public String getMessage(){
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(20);
 
         String message = super.getMessage();
         if(message != null && message.length() > 0){
-            result.append(message).append(' ');
+            result.append(message).append(CH_SP);
         }
 
         result.append("bytePos=").append(this.bytePos);
-        result.append(' ');
+        result.append(CH_SP);
         result.append("charPos=").append(this.charPos);
 
         return result.toString();

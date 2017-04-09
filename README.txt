@@ -43,7 +43,7 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 
 === 開発プロジェクト運営元 ===
 
-  https://osdn.jp/projects/jindolf/devel/ まで。
+  https://ja.osdn.net/projects/jindolf/ まで。
 
 
 === ディレクトリ内訳構成 ===
@@ -65,6 +65,15 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 ./pom.xml
     Maven3用プロジェクト構成定義ファイル。
 
+./checkstyle.xml
+    Checkstyle用configファイル。
+
+./pmdrules.xml
+    PMD用ルール定義ファイル。
+
+./src/assembly/src.xml
+    ソースアーカイブ構成定義ファイル。
+
 ./src/main/java/
     Javaのソースコード。
 
@@ -76,18 +85,5 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 
 ./src/test/java/sample/
     サンプルのパーサ実装。
-
-./src/main/config/
-    各種ビルド・構成管理に必要なファイル群。
-
-./src/main/config/checks.xml
-    Checkstyle用configファイル。
-
-./src/main/config/pmdrules.xml
-    PMD用ルール定義ファイル。
-
-./src/main/assembly/descriptor.xml
-    ソースアーカイブ構成定義ファイル。
-
 
 --- EOF ---
