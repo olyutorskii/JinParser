@@ -189,6 +189,48 @@ public class StreamDecoderTest {
 
     }
 
+    /**
+     * Test of decode method, of class StreamDecoder.
+     * @throws IOException
+     * @throws DecodeException
+     */
+    @Test
+    public void testDecodeUCS4() throws IOException, DecodeException {
+        System.out.println("decode");
+
+        Charset cs;
+        CharsetDecoder decoder;
+
+        StreamDecoder sd;
+        InputStream is;
+        TestHandler handler;
+
+        cs = Charset.forName("UTF-8");
+
+        handler = new TestHandler();
+
+        decoder = cs.newDecoder();
+        sd = new StreamDecoder(decoder, 4, 4);
+        sd.setDecodeHandler(handler);
+        is = byteStream(0x41, 0x42, 0xe3, 0x81, 0x82, 0x46);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]ABあF[EN]", handler.toString());
+
+        // malformed
+        is = byteStream(0x41, 0x42, 0xc2, 0xc0, 0x45);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]AB[ER]c2[ER]c0[CH]E[EN]", handler.toString());
+
+        // SMP character U+1F411 [SHEEP]
+        is = byteStream(0x41, 0x42, 0xf0, 0x9f, 0x90, 0x91, 0x47);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]AB\ud83d\udc11G[EN]", handler.toString());
+
+    }
+
     static ByteArrayInputStream byteStream(int... array){
         byte[] ba = new byte[array.length];
 
