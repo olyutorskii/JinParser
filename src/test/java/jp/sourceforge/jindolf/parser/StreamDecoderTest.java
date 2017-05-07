@@ -113,7 +113,80 @@ public class StreamDecoderTest {
         sd.decode(is);
         assertEquals("[ST][CH]ABCDE[EN]", handler.toString());
 
+        decoder = cs.newDecoder();
+        sd = new StreamDecoder(decoder, 4, 4);
+        sd.setDecodeHandler(handler);
+        is = byteStream(0x41, 0x42, 0x43, 0x44, 0x45);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]ABCDE[EN]", handler.toString());
+
         return;
+    }
+
+    /**
+     * Test of decode method, of class StreamDecoder.
+     * @throws IOException
+     * @throws DecodeException
+     */
+    @Test
+    public void testDecodeSJ() throws IOException, DecodeException {
+        System.out.println("decode");
+
+        Charset cs;
+        CharsetDecoder decoder;
+
+        StreamDecoder sd;
+        InputStream is;
+        TestHandler handler;
+
+        cs = ShiftJis.CHARSET;
+
+        handler = new TestHandler();
+
+        decoder = cs.newDecoder();
+        sd = new StreamDecoder(decoder, 4, 4);
+        sd.setDecodeHandler(handler);
+        is = byteStream(0x41, 0x82, 0xa0, 0x44, 0x45);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]AあDE[EN]", handler.toString());
+
+        is = byteStream(0x41, 0x82, 0xf2, 0x44, 0x45);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]A[ER]82[ER]f2[CH]DE[EN]", handler.toString());
+
+        // malform error
+        // WARNING: some JDK 1.6 implements make 2byte error 0xff32
+        is = byteStream(0x41, 0xff, 0x32, 0x44, 0x45);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]A[ER]ff[CH]2DE[EN]", handler.toString());
+
+        // malform error
+        is = byteStream(0x41, 0x81, 0xfd, 0x44, 0x45);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]A[ER]81[ER]fd[CH]DE[EN]", handler.toString());
+
+        // malform error
+        is = byteStream(0x41, 0xa0, 0x80, 0x44, 0x45);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]A[ER]a0[ER]80[CH]DE[EN]", handler.toString());
+
+        is = byteStream(0x41, 0x82, 0xa0, 0x82, 0xa2, 0x82, 0xa4);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]Aあいう[EN]", handler.toString());
+
+        // unmap error
+        is = byteStream(0x41, 0x82, 0xa0, 0x82, 0xf2, 0x82, 0xa4);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]Aあ[ER]82[ER]f2[CH]う[EN]", handler.toString());
+
     }
 
     static ByteArrayInputStream byteStream(int... array){
