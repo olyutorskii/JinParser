@@ -275,6 +275,16 @@ public class StreamDecoderTest {
         sd.decode(is);
         assertEquals("[ST][CH]AB\ud83d\udc11G[EN]", handler.toString());
 
+        sd = new StreamDecoder(decoder, 3, 4);
+        sd.setDecodeHandler(handler);
+        is = byteStream(0x41, 0x42, 0xf0, 0x9f, 0x90, 0x91, 0x47);
+        handler.clear();
+        try{
+            sd.decode(is);
+            fail();
+        }catch(DecodeException e){
+        }
+
     }
 
     static ByteArrayInputStream byteStream(int... array){
