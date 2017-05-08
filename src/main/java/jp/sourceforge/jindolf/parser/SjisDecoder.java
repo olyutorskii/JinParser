@@ -68,7 +68,7 @@ public class SjisDecoder extends StreamDecoder{
         currPos = inbuffer.position();
         nextPos = currPos + 1;
         if(nextPos >= inbuffer.limit()){
-            readByteBuffer();
+            fillByteBuffer();
             currPos = inbuffer.position();
             nextPos = currPos + 1;
         }

@@ -41,6 +41,46 @@ public class StreamDecoderTest {
     }
 
     /**
+     * Test of constructor method, of class StreamDecoder.
+     * @throws IOException
+     * @throws DecodeException
+     */
+    @Test
+    public void testConstructor() throws IOException, DecodeException {
+        System.out.println("constructor");
+
+        Charset cs;
+        CharsetDecoder decoder;
+        StreamDecoder sd;
+
+        try{
+            sd = new StreamDecoder(null);
+            fail();
+        }catch(NullPointerException e){
+            // GOOD
+        }
+
+        cs = Charset.forName("US-ASCII");
+        decoder = cs.newDecoder();
+
+        try{
+            sd = new StreamDecoder(decoder, 0, 100);
+            fail();
+        }catch(IllegalArgumentException e){
+            // GOOD
+        }
+
+        try{
+            sd = new StreamDecoder(decoder, 100, 0);
+            fail();
+        }catch(IllegalArgumentException e){
+            // GOOD
+        }
+
+        return;
+    }
+
+    /**
      * Test of decode method, of class StreamDecoder.
      * @throws IOException
      * @throws DecodeException

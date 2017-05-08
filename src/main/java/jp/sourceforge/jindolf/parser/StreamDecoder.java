@@ -42,7 +42,7 @@ public class StreamDecoder{
     /** デフォルト出力バッファサイズ(={@value}chars)。 */
     public static final int CHARBUF_DEFSZ = 4 * 1024;
 
-    private static final int DEF_ERRBUFLEN = 16;
+    private static final int DEF_ERRBUFLEN = 4;
 
 
     private final CharsetDecoder decoder;
@@ -60,7 +60,7 @@ public class StreamDecoder{
     /**
      * コンストラクタ。
      *
-     * @param decoder デコーダ
+     * @param decoder 文字列デコーダ
      */
     public StreamDecoder(CharsetDecoder decoder){
         this(decoder, BYTEBUF_DEFSZ, CHARBUF_DEFSZ);
@@ -99,6 +99,7 @@ public class StreamDecoder{
         return;
     }
 
+
     /**
      * デコーダの初期化下請。
      */
@@ -124,6 +125,21 @@ public class StreamDecoder{
     }
 
     /**
+     * デコードハンドラの設定。
+     *
+     * <p>デコード結果はここで指定したハンドラに通知される。
+     *
+     * <p>nullオブジェクトを指定することも可能だが、
+     * その場合デコード時に例外を起こす。
+     *
+     * @param decodeHandler デコードハンドラ
+     */
+    public void setDecodeHandler(DecodeHandler decodeHandler){
+        this.decodeHandler = decodeHandler;
+        return;
+    }
+
+    /**
      * 入力バッファを返す。
      *
      * @return 入力バッファ
@@ -142,39 +158,20 @@ public class StreamDecoder{
     }
 
     /**
-     * デコードハンドラの設定。
+     * チャネルからの入力を読み進め入力バッファに詰め込む。
      *
-     * <p>デコード結果はここで指定したハンドラに通知される。
+     * <p>前回の読み残しはバッファ前方に詰め直される。
      *
-     * <p>nullオブジェクトを指定しても構わないが、
-     * その場合デコード時に例外を起こす。
-     *
-     * @param decodeHandler デコードハンドラ
+     * @return 入力バイト数。
+     * 入力末端に達したときは負の値。
+     * 既に入力バッファが満杯の場合は0。
+     * @throws java.io.IOException 入出力エラー
      */
-    public void setDecodeHandler(DecodeHandler decodeHandler){
-        this.decodeHandler = decodeHandler;
-        return;
-    }
-
-    /**
-     * デコードエラー格納配列の再アサイン。
-     *
-     * <p>配列の内容は保持される。
-     * 決して縮小することは無い。
-     *
-     * <p>メモ：java.util.Arrays#copyOf()はJRE1.5にない。
-     *
-     * @param size 再アサイン量。バイト長。
-     */
-    protected void reassignErrorData(int size){
-        int oldLength = this.errorData.length;
-        if(oldLength >= size) return;
-        int newSize = size;
-        if(oldLength * 2 > newSize) newSize = oldLength * 2;
-        byte[] newData = new byte[newSize];
-        System.arraycopy(this.errorData, 0, newData, 0, oldLength);
-        this.errorData = newData;
-        return;
+    protected int fillByteBuffer() throws IOException{
+        this.byteBuffer.compact();
+        int length = this.channel.read(this.byteBuffer);
+        this.byteBuffer.flip();
+        return length;
     }
 
     /**
@@ -187,7 +184,7 @@ public class StreamDecoder{
      *
      * @throws DecodeException デコードエラー
      */
-    protected void flushContent() throws DecodeException{
+    protected void notifyText() throws DecodeException{
         if(this.charBuffer.position() <= 0){
             return;
         }
@@ -206,7 +203,7 @@ public class StreamDecoder{
      * @throws DecodeException デコードエラー
      * @throws IOException 入力エラー
      */
-    protected void putDecodeError(CoderResult result)
+    protected void notifyError(CoderResult result)
             throws IOException,
                    DecodeException{
         int length = chopErrorSequence(result);
@@ -215,9 +212,9 @@ public class StreamDecoder{
     }
 
     /**
-     * デコードエラーの原因バイト列を抽出する。
+     * 入力バッファからデコードエラーの原因となったバイト列を読み進める。
      *
-     * <p>{@link #errorData}の先頭にバイト列が格納され、
+     * <p>{@link #errorData}の先頭にバイト列がコピーされ、
      * バイト長が返される。
      *
      * <p>入力バッファはエラーの長さの分だけ読み進められる。
@@ -236,22 +233,33 @@ public class StreamDecoder{
     }
 
     /**
-     * チャンネルからの入力を読み進める。
+     * デコードエラー格納配列の再アサイン。
      *
-     * <p>前回の読み残しはバッファ前方に詰め直される。
+     * <p>旧配列の内容は保持される。
+     * 決して縮小することは無い。
      *
-     * @return 入力バイト数。
-     * @throws java.io.IOException 入出力エラー
+     * @param size 再アサイン量。バイト長。
      */
-    protected int readByteBuffer() throws IOException{
-        this.byteBuffer.compact();
-        int length = this.channel.read(this.byteBuffer);
-        this.byteBuffer.flip();
-        return length;
+    protected void reassignErrorData(int size){
+        int oldLength = this.errorData.length;
+        if(oldLength >= size) return;
+
+        int newSize = size;
+        if(oldLength * 2 > newSize) newSize = oldLength * 2;
+
+        byte[] newData = Arrays.copyOf(this.errorData, newSize);
+        this.errorData = newData;
+
+        return;
     }
 
     /**
-     * バイトストリームのデコードを開始する。
+     * バイト入力ストリームを文字列デコードする。
+     *
+     * <p>デコード作業の状況に応じてハンドラへの各種通知が行われる。
+     *
+     * <p>ストリーム末端に到達するとデコード作業は終わり、
+     * ストリームは閉じられる。
      *
      * @param istream 入力ストリーム
      * @throws IOException 入出力エラー
@@ -260,6 +268,7 @@ public class StreamDecoder{
     public void decode(InputStream istream)
             throws IOException,
                    DecodeException {
+        // このチャネルは必ずブロックモードのはず
         this.channel = Channels.newChannel(istream);
 
         try{
@@ -267,7 +276,6 @@ public class StreamDecoder{
         }finally{
             this.channel.close();
             this.channel = null;
-            istream.close();
         }
 
         return;
@@ -286,7 +294,8 @@ public class StreamDecoder{
 
         this.decodeHandler.startDecoding(this.decoder);
 
-        boolean isEndOfInput = readByteBuffer() < 0;
+        boolean isEndOfInput;
+        isEndOfInput = fillByteBuffer() < 0;
 
         CoderResult decodeResult;
         for(;;){
@@ -299,31 +308,53 @@ public class StreamDecoder{
             }
 
             if(decodeResult.isError()){
-                flushContent();
-                putDecodeError(decodeResult);
-            }else if(decodeResult.isOverflow()){      // 出力バッファが一杯
-                flushContent();
-            }else{                                    // 入力バッファが空
+                // デコードエラー出現
+                notifyText();
+                notifyError(decodeResult);
+            }else if(decodeResult.isOverflow()){
+                // 出力バッファが一杯
+                notifyText();
+            }else{
+                // 入力バッファのデータが不足
                 assert decodeResult.isUnderflow();
-                isEndOfInput = readByteBuffer() < 0;
+                checkInfLoop();
+                isEndOfInput = fillByteBuffer() < 0;
             }
         }
 
-        flushContent();
+        notifyText();
 
         CoderResult flushResult;
         do{
             flushResult = this.decoder.flush(this.charBuffer);
 
-            flushContent();
+            notifyText();
 
             if(flushResult.isError()){
-                putDecodeError(flushResult);
+                notifyError(flushResult);
             }
         }while( ! flushResult.isUnderflow() );
 
         this.decodeHandler.endDecoding();
 
+        return;
+    }
+
+    /**
+     * 不適切なバッファサイズ由来の無限ループを検出し例外を投げる。
+     *
+     * <p>検出しなければ何もしない。
+     *
+     * @throws DecodeException 無限ループが検出された
+     */
+    private void checkInfLoop() throws DecodeException{
+        if(this.byteBuffer.position() == 0){
+            StringBuilder text = new StringBuilder();
+            text.append("too small input buffer (");
+            text.append(this.byteBuffer.capacity()).append("bytes) for ");
+            text.append(this.decoder.charset().name());
+            throw new DecodeException(text.toString());
+        }
         return;
     }
 
