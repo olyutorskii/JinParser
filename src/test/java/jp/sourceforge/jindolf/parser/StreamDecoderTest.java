@@ -187,6 +187,12 @@ public class StreamDecoderTest {
         sd.decode(is);
         assertEquals("[ST][CH]Aあ[ER]82[ER]f2[CH]う[EN]", handler.toString());
 
+        // flush & error
+        is = byteStream(0x41, 0x42, 0x43, 0x44, 0x45, 0x82, 0xf2);
+        handler.clear();
+        sd.decode(is);
+        assertEquals("[ST][CH]ABCDE[ER]82[ER]f2[EN]", handler.toString());
+
     }
 
     /**
