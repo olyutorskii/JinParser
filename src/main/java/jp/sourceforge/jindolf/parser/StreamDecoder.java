@@ -19,13 +19,21 @@ import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 
 /**
- * バイトストリームからの文字デコーダ。
- * 入力バイトストリームをデコードし、デコード結果およびデコードエラーを
+ * バイトストリームからの文字列デコーダ。
+ *
+ * <p>入力バイトストリームから文字列をデコードし、
+ * デコード結果およびデコードエラーを
  * 文字デコードハンドラ{@link DecodeHandler}に通知する。
- * このクラスは、
+ *
+ * <p>このクラスは、
+ * {@link java.nio.charset.CharsetDecoder}呼び出しの煩雑さを
+ * 「制御の反転」を用いて隠蔽するために設計された。
+ *
+ * <p>このクラスは、
  * デコードエラー詳細を察知できない{@link java.io.InputStreamReader}の
  * 代替品として設計された。
- * マルチスレッド対応はしていない。
+ *
+ * <p>マルチスレッド対応はしていない。
  */
 public class StreamDecoder{
 
@@ -34,24 +42,24 @@ public class StreamDecoder{
     /** デフォルト出力バッファサイズ(={@value}chars)。 */
     public static final int CHARBUF_DEFSZ = 4 * 1024;
 
+    private static final int DEF_ERRBUFLEN = 16;
+
 
     private final CharsetDecoder decoder;
 
-    private ReadableByteChannel channel;
     private final ByteBuffer byteBuffer;
     private final CharBuffer charBuffer;
 
-    private boolean isEndOfInput;
-    private boolean isFlushing;
+    private ReadableByteChannel channel;
 
     private DecodeHandler decodeHandler;
 
-    // エンコーディングによっては長さに見直しが必要
-    private byte[] errorData = new byte[4];
+    private byte[] errorData = new byte[DEF_ERRBUFLEN];
 
 
     /**
      * コンストラクタ。
+     *
      * @param decoder デコーダ
      */
     public StreamDecoder(CharsetDecoder decoder){
@@ -61,11 +69,12 @@ public class StreamDecoder{
 
     /**
      * コンストラクタ。
-     * @param decoder デコーダ
-     * @param inbufSz 入力バッファサイズ
-     * @param outbufSz 出力バッファサイズ
+     *
+     * @param decoder 文字列デコーダ
+     * @param inbufSz 入力バッファサイズ(byte単位)
+     * @param outbufSz 出力バッファサイズ(char単位)
      * @throws NullPointerException デコーダにnullを渡した。
-     * @throws IllegalArgumentException バッファサイズが負。
+     * @throws IllegalArgumentException バッファサイズが0以下。
      */
     public StreamDecoder(CharsetDecoder decoder,
                            int inbufSz,
@@ -101,9 +110,6 @@ public class StreamDecoder{
         this.decoder.onUnmappableCharacter(CodingErrorAction.REPORT);
         this.decoder.reset();
 
-        this.isEndOfInput = false;
-        this.isFlushing = false;
-
         Arrays.fill(this.errorData, (byte) 0x00);
 
         return;
@@ -119,6 +125,7 @@ public class StreamDecoder{
 
     /**
      * 入力バッファを返す。
+     *
      * @return 入力バッファ
      */
     protected ByteBuffer getByteBuffer(){
@@ -127,6 +134,7 @@ public class StreamDecoder{
 
     /**
      * 出力バッファを返す。
+     *
      * @return 出力バッファ
      */
     protected CharBuffer getCharBuffer(){
@@ -135,8 +143,12 @@ public class StreamDecoder{
 
     /**
      * デコードハンドラの設定。
-     * nullオブジェクトを指定しても構わないが、
-     * その場合パース時に例外を起こす。
+     *
+     * <p>デコード結果はここで指定したハンドラに通知される。
+     *
+     * <p>nullオブジェクトを指定しても構わないが、
+     * その場合デコード時に例外を起こす。
+     *
      * @param decodeHandler デコードハンドラ
      */
     public void setDecodeHandler(DecodeHandler decodeHandler){
@@ -146,9 +158,12 @@ public class StreamDecoder{
 
     /**
      * デコードエラー格納配列の再アサイン。
-     * 配列の内容は保持される。
+     *
+     * <p>配列の内容は保持される。
      * 決して縮小することは無い。
-     * メモ：java.util.Arrays#copyOf()はJRE1.5にない。
+     *
+     * <p>メモ：java.util.Arrays#copyOf()はJRE1.5にない。
+     *
      * @param size 再アサイン量。バイト長。
      */
     protected void reassignErrorData(int size){
@@ -163,7 +178,13 @@ public class StreamDecoder{
     }
 
     /**
-     * デコードハンドラに文字列を渡す。
+     * 出力バッファの全出力を読み進め、
+     * デコードハンドラに文字列を通知する。
+     *
+     * <p>出力バッファはクリアされる。
+     *
+     * <p>既に出力バッファが空だった場合、何もしない。
+     *
      * @throws DecodeException デコードエラー
      */
     protected void flushContent() throws DecodeException{
@@ -180,6 +201,7 @@ public class StreamDecoder{
 
     /**
      * デコードハンドラにデコードエラーを渡す。
+     *
      * @param result デコード結果
      * @throws DecodeException デコードエラー
      * @throws IOException 入力エラー
@@ -194,8 +216,13 @@ public class StreamDecoder{
 
     /**
      * デコードエラーの原因バイト列を抽出する。
-     * {@link #errorData}の先頭にバイト列が格納され、バイト長が返される。
-     * @param result デコード結果
+     *
+     * <p>{@link #errorData}の先頭にバイト列が格納され、
+     * バイト長が返される。
+     *
+     * <p>入力バッファはエラーの長さの分だけ読み進められる。
+     *
+     * @param result デコードエラー
      * @return 原因バイト列の長さ
      * @throws IOException 入力エラー。
      *     ※このメソッドを継承する場合、必要に応じて先読みをしてもよいし、
@@ -210,25 +237,22 @@ public class StreamDecoder{
 
     /**
      * チャンネルからの入力を読み進める。
-     * 前回の読み残しはバッファ前方に詰め直される。
+     *
+     * <p>前回の読み残しはバッファ前方に詰め直される。
+     *
      * @return 入力バイト数。
      * @throws java.io.IOException 入出力エラー
      */
     protected int readByteBuffer() throws IOException{
         this.byteBuffer.compact();
-
         int length = this.channel.read(this.byteBuffer);
-        if(length <= 0){
-            this.isEndOfInput = true;
-        }
-
         this.byteBuffer.flip();
-
         return length;
     }
 
     /**
      * バイトストリームのデコードを開始する。
+     *
      * @param istream 入力ストリーム
      * @throws IOException 入出力エラー
      * @throws DecodeException デコードエラー
@@ -251,6 +275,7 @@ public class StreamDecoder{
 
     /**
      * 内部チャネルのデコードを開始する。
+     *
      * @throws IOException 入出力エラー
      * @throws DecodeException デコードエラー
      */
@@ -261,38 +286,41 @@ public class StreamDecoder{
 
         this.decodeHandler.startDecoding(this.decoder);
 
+        boolean isEndOfInput = readByteBuffer() < 0;
+
+        CoderResult decodeResult;
         for(;;){
-            CoderResult result;
-            if(this.isFlushing){
-                result = this.decoder.flush(this.charBuffer);
-            }else{
-                result = this.decoder.decode(this.byteBuffer,
-                                             this.charBuffer,
-                                             this.isEndOfInput);
+            decodeResult = this.decoder.decode(this.byteBuffer,
+                                               this.charBuffer,
+                                               isEndOfInput);
+
+            if(isEndOfInput && decodeResult.isUnderflow()){
+                break;
             }
 
-            if(result.isError()){
+            if(decodeResult.isError()){
                 flushContent();
-                putDecodeError(result);
-            }else if(result.isOverflow()){      // 出力バッファが一杯
+                putDecodeError(decodeResult);
+            }else if(decodeResult.isOverflow()){      // 出力バッファが一杯
                 flushContent();
-            }else if(result.isUnderflow()){     // 入力バッファが空
-                if( ! this.isEndOfInput ){
-                    readByteBuffer();
-                    continue;
-                }
-
-                if( ! this.isFlushing ){
-                    this.isFlushing = true;
-                    continue;
-                }
-
-                flushContent();
-                break;
-            }else{
-                assert false;
+            }else{                                    // 入力バッファが空
+                assert decodeResult.isUnderflow();
+                isEndOfInput = readByteBuffer() < 0;
             }
         }
+
+        flushContent();
+
+        CoderResult flushResult;
+        do{
+            flushResult = this.decoder.flush(this.charBuffer);
+
+            flushContent();
+
+            if(flushResult.isError()){
+                putDecodeError(flushResult);
+            }
+        }while( ! flushResult.isUnderflow() );
 
         this.decodeHandler.endDecoding();
 
