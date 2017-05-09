@@ -163,14 +163,20 @@ public class StreamDecoder{
      * <p>前回の読み残しはバッファ前方に詰め直される。
      *
      * @return 入力バイト数。
-     * 入力末端に達したときは負の値。
-     * 既に入力バッファが満杯の場合は0。
+     *     入力末端に達したときは負の値。
+     *     ※入力バッファに空きがありチャネルがブロックモードの場合、
+     *     返り値0はありえない。
      * @throws java.io.IOException 入出力エラー
      */
     protected int fillByteBuffer() throws IOException{
         this.byteBuffer.compact();
+        assert this.byteBuffer.hasRemaining();
+
         int length = this.channel.read(this.byteBuffer);
+        assert length != 0;
+
         this.byteBuffer.flip();
+
         return length;
     }
 
@@ -294,32 +300,41 @@ public class StreamDecoder{
 
         this.decodeHandler.startDecoding(this.decoder);
 
+        int ioLength;
         boolean isEndOfInput;
-        isEndOfInput = fillByteBuffer() < 0;
 
-        CoderResult decodeResult;
+        ioLength = fillByteBuffer();
+        isEndOfInput = ioLength < 0;
+
         for(;;){
-            decodeResult = this.decoder.decode(this.byteBuffer,
-                                               this.charBuffer,
-                                               isEndOfInput);
+            CoderResult decodeResult =
+                    this.decoder.decode(this.byteBuffer,
+                                        this.charBuffer,
+                                        isEndOfInput);
+            // デコードエラー出現
+            if(decodeResult.isError()){
+                notifyText();
+                notifyError(decodeResult);
+                continue;
+            }
 
-            if(isEndOfInput && decodeResult.isUnderflow()){
+            // 出力バッファが一杯
+            if(decodeResult.isOverflow()){
+                notifyText();
+                continue;
+            }
+
+            assert decodeResult.isUnderflow();
+
+            // デコード掃き出し開始
+            if(isEndOfInput){
                 break;
             }
 
-            if(decodeResult.isError()){
-                // デコードエラー出現
-                notifyText();
-                notifyError(decodeResult);
-            }else if(decodeResult.isOverflow()){
-                // 出力バッファが一杯
-                notifyText();
-            }else{
-                // 入力バッファのデータが不足
-                assert decodeResult.isUnderflow();
-                checkInfLoop();
-                isEndOfInput = fillByteBuffer() < 0;
-            }
+            // 入力バッファのデータが不足
+            checkInfLoop();
+            ioLength = fillByteBuffer();
+            isEndOfInput = ioLength < 0;
         }
 
         notifyText();
@@ -327,12 +342,8 @@ public class StreamDecoder{
         CoderResult flushResult;
         do{
             flushResult = this.decoder.flush(this.charBuffer);
-
+            assert ! flushResult.isError();
             notifyText();
-
-            if(flushResult.isError()){
-                notifyError(flushResult);
-            }
         }while( ! flushResult.isUnderflow() );
 
         this.decodeHandler.endDecoding();
@@ -349,10 +360,14 @@ public class StreamDecoder{
      */
     private void checkInfLoop() throws DecodeException{
         if(this.byteBuffer.position() == 0){
+            int bufSz = this.byteBuffer.capacity();
+            String csName = this.decoder.charset().name();
+
             StringBuilder text = new StringBuilder();
             text.append("too small input buffer (");
-            text.append(this.byteBuffer.capacity()).append("bytes) for ");
-            text.append(this.decoder.charset().name());
+            text.append(bufSz).append("bytes) for ");
+            text.append(csName);
+
             throw new DecodeException(text.toString());
         }
         return;
