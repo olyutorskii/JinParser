@@ -58,9 +58,7 @@
     <contributors/>
     <mailingLists/>
 
-    <prerequisites>
-        <maven>3.0.1</maven>
-    </prerequisites>
+    <!--prerequisites/-->
 
     <modules/>
 
