@@ -314,6 +314,7 @@ public class StreamDecoder{
             // デコードエラー出現
             if(decodeResult.isError()){
                 notifyText();
+                decodeResult = modifyErrorLength(decodeResult);
                 notifyError(decodeResult);
                 continue;
             }
@@ -349,6 +350,30 @@ public class StreamDecoder{
         this.decodeHandler.endDecoding();
 
         return;
+    }
+
+    /**
+     * エラーの長さ(バイト列長)を修正する。
+     *
+     * <p>文字コード毎の事情に特化した異常系実装を目的とする。
+     * デフォルト実装では引数をそのまま返す。
+     *
+     * <p>バイト列を先読みすることで、
+     * さらに長いエラー情報を再構成してもよい。
+     *
+     * <p>エラー情報を前方に縮小することで、
+     * エラーとして扱われるはずだったバイト列後部は
+     * 再度デコード処理の対象として扱われる。
+     *
+     * @param result 修正元エラー情報。
+     * @return 修正後エラー情報。引数と同じ場合もありうる。
+     * (修正がない場合など)
+     * @throws IOException バイト列読み込みエラー
+     */
+    protected CoderResult modifyErrorLength(CoderResult result)
+            throws IOException{
+        CoderResult newResult = result;
+        return newResult;
     }
 
     /**
