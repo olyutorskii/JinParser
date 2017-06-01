@@ -26,13 +26,6 @@ import java.nio.charset.CoderResult;
  */
 public class SjisDecoder extends StreamDecoder{
 
-    /** 入力バッファに必要な最小サイズ(={@value})。 */
-    public static final int MIN_INBUFSZ = ShiftJis.MAX_BYTES_PER_CHAR * 2 + 1;
-
-    static{
-        assert MIN_INBUFSZ <= BYTEBUF_DEFSZ;
-    }
-
     /**
      * コンストラクタ。
      */
@@ -51,9 +44,6 @@ public class SjisDecoder extends StreamDecoder{
     public SjisDecoder(int inbufSz, int outbufSz)
             throws IllegalArgumentException{
         super(ShiftJis.CHARSET.newDecoder(), inbufSz, outbufSz);
-        if(inbufSz < MIN_INBUFSZ){
-            throw new IllegalArgumentException();
-        }
         return;
     }
 

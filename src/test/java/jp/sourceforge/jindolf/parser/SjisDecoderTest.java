@@ -114,6 +114,38 @@ public class SjisDecoderTest {
         sjd.decode(is);
         assertEquals("[ST][CH]ABC[EN]", handler.toString());
 
+        sjd = new SjisDecoder(10, 2);
+        sjd.setDecodeHandler(handler);
+        is = byteIs("414243");
+        handler.clear();
+        sjd.decode(is);
+        assertEquals("[ST][CH]AB[CH]C[EN]", handler.toString());
+
+        sjd = new SjisDecoder(2, 10);
+        sjd.setDecodeHandler(handler);
+        is = byteIs("82a0:82a1");
+        handler.clear();
+        sjd.decode(is);
+        assertEquals("[ST][CH]あぃ[EN]", handler.toString());
+
+        sjd = new SjisDecoder(2, 10);
+        sjd.setDecodeHandler(handler);
+        is = byteIs("41:82a0:82a1");
+        handler.clear();
+        sjd.decode(is);
+        assertEquals("[ST][CH]Aあぃ[EN]", handler.toString());
+
+        sjd = new SjisDecoder(1, 10);
+        sjd.setDecodeHandler(handler);
+        is = byteIs("82a0:82a1");
+        handler.clear();
+        try{
+            sjd.decode(is);
+            fail();
+        }catch(DecodeException e){
+            // GOOD
+        }
+
         return;
     }
 
