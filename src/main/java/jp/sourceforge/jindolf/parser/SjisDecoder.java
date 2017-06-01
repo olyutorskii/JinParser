@@ -47,6 +47,7 @@ public class SjisDecoder extends StreamDecoder{
         return;
     }
 
+
     /**
      * 1バイトのエラーをUnmap系2バイトエラーに統合できないか試す。
      *
@@ -57,7 +58,7 @@ public class SjisDecoder extends StreamDecoder{
      *
      * @param result デコード異常系
      * @return 修正されたデコード異常系。修正がなければ引数と同じものを返す。
-     * @throws IOException 入力エラー
+     * @throws IOException 追加入力エラー
      */
     private CoderResult modify1ByteError(CoderResult result)
             throws IOException {
@@ -110,10 +111,10 @@ public class SjisDecoder extends StreamDecoder{
         byte next = inbuffer.get(nextPos);
 
         CoderResult newResult;
-        if( ! ShiftJis.isShiftJIS(curr, next) ){
-            newResult = CoderResult.malformedForLength(1);
-        }else{
+        if( ShiftJis.isShiftJIS(curr, next) ){
             newResult = result;
+        }else{
+            newResult = CoderResult.malformedForLength(1);
         }
 
         return newResult;
