@@ -19,21 +19,24 @@ import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 
 /**
- * バイトストリームからの文字列デコーダ。
+ * バイトストリームを入力とする文字列デコーダ。
  *
- * <p>入力バイトストリームから文字列をデコードし、
- * デコード結果およびデコードエラーを
- * 文字デコードハンドラ{@link DecodeHandler}に通知する。
+ * <p>入力バイトストリームから文字列(charシーケンス)をデコードし、
+ * デコード結果およびデコード異常系を
+ * 文字デコードハンドラ<code>{@link DecodeHandler}</code>に通知する。
+ *
+ * <p>このクラスは、「制御の反転」(Inversion of Control)を用いて
+ * <code>{@link java.nio.charset.CharsetDecoder}</code>呼び出しの
+ * 煩雑さを隠蔽するために設計された。
  *
  * <p>このクラスは、
- * {@link java.nio.charset.CharsetDecoder}呼び出しの煩雑さを
- * 「制御の反転」を用いて隠蔽するために設計された。
- *
- * <p>このクラスは、
- * デコードエラー詳細を察知できない{@link java.io.InputStreamReader}の
+ * デコード異常系詳細を察知できない
+ * <code>{@link java.io.InputStreamReader}</code>の
  * 代替品として設計された。
  *
- * <p>マルチスレッド対応はしていない。
+ * <p>マルチスレッドからの同一インスタンスへの操作は非対応。
+ *
+ * @see java.nio.charset.CharsetDecoder
  */
 public class StreamDecoder{
 
@@ -60,9 +63,13 @@ public class StreamDecoder{
     /**
      * コンストラクタ。
      *
-     * @param decoder 文字列デコーダ
+     * バッファサイズは入出力ともデフォルト値が用いられる。
+     *
+     * @param decoder 文字列デコーダ。
+     * 異常系に関するアクション応答設定は変更される。
+     * @throws NullPointerException デコーダにnullを渡した。
      */
-    public StreamDecoder(CharsetDecoder decoder){
+    public StreamDecoder(CharsetDecoder decoder) throws NullPointerException{
         this(decoder, BYTEBUF_DEFSZ, CHARBUF_DEFSZ);
         return;
     }
@@ -70,7 +77,8 @@ public class StreamDecoder{
     /**
      * コンストラクタ。
      *
-     * @param decoder 文字列デコーダ
+     * @param decoder 文字列デコーダ。
+     * 異常系に関するアクション応答設定は変更される。
      * @param inbufSz 入力バッファサイズ(byte単位)
      * @param outbufSz 出力バッファサイズ(char単位)
      * @throws NullPointerException デコーダにnullを渡した。
@@ -160,13 +168,15 @@ public class StreamDecoder{
     /**
      * チャネルからの入力を読み進め入力バッファに詰め込む。
      *
-     * <p>前回の読み残しはバッファ前方に詰め直される。
+     * <p>前回デコード処理の読み残しはバッファ前方に詰め直される。
+     *
+     * <p>入力バッファに空きがない状態で呼んではいけない。
      *
      * @return 入力バイト数。
      *     入力末端に達したときは負の値。
      *     ※入力バッファに空きがありチャネルがブロックモードの場合、
      *     返り値0はありえない。
-     * @throws java.io.IOException 入出力エラー
+     * @throws java.io.IOException 入力エラー
      */
     protected int fillByteBuffer() throws IOException{
         this.byteBuffer.compact();
@@ -188,7 +198,7 @@ public class StreamDecoder{
      *
      * <p>既に出力バッファが空だった場合、何もしない。
      *
-     * @throws DecodeException デコードエラー
+     * @throws DecodeException ハンドラによるデコードエラー
      */
     protected void notifyText() throws DecodeException{
         if(this.charBuffer.position() <= 0){
@@ -203,10 +213,10 @@ public class StreamDecoder{
     }
 
     /**
-     * デコードハンドラにデコードエラーを渡す。
+     * デコードハンドラにデコードエラーを通知する。
      *
      * @param result デコード結果
-     * @throws DecodeException デコードエラー
+     * @throws DecodeException ハンドラによるデコードエラー
      * @throws IOException 入力エラー
      */
     protected void notifyError(CoderResult result)
@@ -264,12 +274,12 @@ public class StreamDecoder{
      *
      * <p>デコード作業の状況に応じてハンドラへの各種通知が行われる。
      *
-     * <p>ストリーム末端に到達するとデコード作業は終わり、
-     * ストリームは閉じられる。
+     * <p>入力ストリーム末端に到達するとデコード作業は終わり、
+     * 入力ストリームは閉じられる。
      *
      * @param istream 入力ストリーム
-     * @throws IOException 入出力エラー
-     * @throws DecodeException デコードエラー
+     * @throws IOException 入力エラー
+     * @throws DecodeException ハンドラによるデコードエラー
      */
     public void decode(InputStream istream)
             throws IOException,
@@ -290,8 +300,8 @@ public class StreamDecoder{
     /**
      * 内部チャネルのデコードを開始する。
      *
-     * @throws IOException 入出力エラー
-     * @throws DecodeException デコードエラー
+     * @throws IOException 入力エラー
+     * @throws DecodeException ハンドラによるデコードエラー
      */
     protected void decodeChannel()
             throws IOException,
@@ -377,7 +387,7 @@ public class StreamDecoder{
     }
 
     /**
-     * 不適切なバッファサイズ由来の無限ループを検出し例外を投げる。
+     * 不適切な入力バッファサイズ由来の無限ループを検出し例外を投げる。
      *
      * <p>検出しなければ何もしない。
      *
