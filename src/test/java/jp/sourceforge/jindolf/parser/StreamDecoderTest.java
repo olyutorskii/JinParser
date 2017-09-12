@@ -283,6 +283,7 @@ public class StreamDecoderTest {
             sd.decode(is);
             fail();
         }catch(DecodeException e){
+            assertEquals("too small input buffer (3bytes) for UTF-8 bytePos=-1 charPos=-1", e.getMessage());
         }
 
     }
