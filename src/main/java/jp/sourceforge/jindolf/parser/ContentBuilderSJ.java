@@ -96,21 +96,34 @@ public class ContentBuilderSJ extends ContentBuilder{
     @Override
     public void decodingError(byte[] errorArray, int offset, int length)
             throws DecodeException{
+        DecodedContent text = getContent();
+
+        switch(length){
+        case 1:
+            text.addDecodeError(errorArray[0]);
+            return;
+        case 2:
+            text.addDecodeError(errorArray[0], errorArray[1]);
+            return;
+        default:
+            break;
+        }
+
         int limit = offset + length;
         for(int bpos = offset; bpos < limit; bpos++){
             byte bval = errorArray[bpos];
 
             if(this.hasByte1st){
                 if(ShiftJis.isShiftJIS2ndByte(bval)){   // 文字集合エラー
-                    getContent().addDecodeError(this.byte1st, bval);
+                    text.addDecodeError(this.byte1st, bval);
                     this.hasByte1st = false;
                 }else if(ShiftJis.isShiftJIS1stByte(bval)){
-                    getContent().addDecodeError(this.byte1st);
+                    text.addDecodeError(this.byte1st);
                     this.byte1st = bval;
                     this.hasByte1st = true;
                 }else{
-                    getContent().addDecodeError(this.byte1st);
-                    getContent().addDecodeError(bval);
+                    text.addDecodeError(this.byte1st);
+                    text.addDecodeError(bval);
                     this.hasByte1st = false;
                 }
             }else{
@@ -118,10 +131,9 @@ public class ContentBuilderSJ extends ContentBuilder{
                     this.byte1st = bval;
                     this.hasByte1st = true;
                 }else{
-                    getContent().addDecodeError(bval);
+                    text.addDecodeError(bval);
                 }
             }
-
         }
 
         return;
