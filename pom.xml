@@ -128,6 +128,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.bitbucket.olyutorskii</groupId>
+            <artifactId>jiocema</artifactId>
+            <version>1.101.2</version>
+        </dependency>
+
     </dependencies>
 
     <repositories/>
