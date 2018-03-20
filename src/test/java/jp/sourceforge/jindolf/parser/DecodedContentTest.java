@@ -62,7 +62,7 @@ public class DecodedContentTest {
         assertEquals("abc", content.toString());
 
         try{
-            new DecodedContent(-1);
+            Object o = new DecodedContent(-1);
             fail();
         }catch(NegativeArraySizeException e){
         }catch(Throwable e){
@@ -442,6 +442,26 @@ public class DecodedContentTest {
         info = list.get(2);
         assertEquals(5, info.getCharPosition());
         assertEquals((byte)0x04, info.getRawByte1st());
+
+        return;
+    }
+
+    /**
+     * Test of append method, of class DecodedContent.
+     */
+    @Test
+    public void testAppend_3args_3(){
+        System.out.println("append");
+
+        DecodedContent content;
+
+        content = new DecodedContent();
+        content.append("abc");
+        assertEquals("abc", content.toString());
+
+        char[] seq = {'1','2','3','4','5',};
+        content.append(seq, 1, 3);
+        assertEquals("abc234", content.toString());
 
         return;
     }
