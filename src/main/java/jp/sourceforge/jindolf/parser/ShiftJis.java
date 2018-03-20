@@ -11,7 +11,9 @@ import java.nio.charset.Charset;
 
 /**
  * シフトJIS符号化ユーティリティ。
- * JIS X0208:1997 準拠。（Windows-31Jではない！）
+ *
+ * <p>JIS X0208:1997 準拠。（Windows-31Jではない！）
+ *
  * @see <a href="http://www.iana.org/assignments/character-sets">
  * CHARACTER SETS</a>
  * @see <a href="http://ja.wikipedia.org/wiki/Shift_JIS">
@@ -39,44 +41,46 @@ public final class ShiftJis{
     /**
      * 任意のバイト値がシフトJISの1バイト目でありうるか否か判定する。
      * 文字集合の判定は行わない。
+     *
      * @param bval バイト値
      * @return シフトJISの1バイト目でありうるならtrue
      */
     public static boolean isShiftJIS1stByte(byte bval){
-        if(    (byte) 0x81 <= bval && bval <= (byte) 0x9f
-            || (byte) 0xe0 <= bval && bval <= (byte) 0xfc){
-            return true;
-        }
-        return false;
+        int iVal = (int) bval & 0xff;
+        boolean result =
+               0x81 <= iVal && iVal <= 0x9f
+            || 0xe0 <= iVal && iVal <= 0xfc;
+        return result;
     }
 
     /**
      * 任意のバイト値がシフトJISの2バイト目でありうるか否か判定する。
      * 文字集合の判定は行わない。
+     *
      * @param bval バイト値
      * @return シフトJISの2バイト目でありうるならtrue
      */
     public static boolean isShiftJIS2ndByte(byte bval){
-        if(    (byte) 0x40 <= bval && bval <= (byte) 0x7e
-            || (byte) 0x80 <= bval && bval <= (byte) 0xfc){
-            return true;
-        }
-        return false;
+        int iVal = (int) bval & 0xff;
+        boolean result =
+               0x40 <= iVal && iVal <= 0x7e
+            || 0x80 <= iVal && iVal <= 0xfc;
+        return result;
     }
 
     /**
      * 任意のバイト値ペアがシフトJISでありうるか否か判定する。
      * 文字集合の判定は行わない。
+     *
      * @param b1st 第一バイト値
      * @param b2nd 第二バイト値
      * @return シフトJISならtrue
      */
     public static boolean isShiftJIS(byte b1st, byte b2nd){
-        if(    ShiftJis.isShiftJIS1stByte(b1st)
-            && ShiftJis.isShiftJIS2ndByte(b2nd)){
-            return true;
-        }
-        return false;
+        boolean result =
+               ShiftJis.isShiftJIS1stByte(b1st)
+            && ShiftJis.isShiftJIS2ndByte(b2nd);
+        return result;
     }
 
 }

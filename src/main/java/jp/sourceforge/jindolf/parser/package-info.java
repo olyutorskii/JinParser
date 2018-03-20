@@ -19,7 +19,6 @@
  * 作られたJavaライブラリです。
  * JinParserライブラリは、人狼BBSの専用クライアント開発プロジェクト
  * 「Jindolf」から派生しました。
- * </p>
  *
  * <hr>
  *
@@ -43,7 +42,6 @@
  * DecodedContent content = builder.getContent();
  * }
  * </pre>
- * </p>
  *
  * <p>
  * このようにして得られた文字列をパースして、
@@ -63,21 +61,17 @@
  * }
  * }
  * </pre>
- * </p>
  *
  * <p>
  * ハンドラ内部で、パース元となった文字列の一部を切り出したい場合は、
  * {@code EntityConverter}を使うのが便利です。
- * </p>
  *
  * <hr>
  *
  * <p>
  * The MIT License
- * </p>
  * <p>
  * Copyright(c) 2009 olyutorskii
- * </p>
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -85,11 +79,9 @@
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
- * </p>
  * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * </p>
  * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

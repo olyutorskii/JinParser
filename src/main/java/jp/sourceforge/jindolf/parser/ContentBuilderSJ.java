@@ -96,28 +96,42 @@ public class ContentBuilderSJ extends ContentBuilder{
     @Override
     public void decodingError(byte[] errorArray, int offset, int length)
             throws DecodeException{
+        DecodedContent text = getContent();
+
+        switch(length){
+        case 1:
+            text.addDecodeError(errorArray[0]);
+            return;
+        case 2:
+            text.addDecodeError(errorArray[0], errorArray[1]);
+            return;
+        default:
+            break;
+        }
+
         int limit = offset + length;
         for(int bpos = offset; bpos < limit; bpos++){
             byte bval = errorArray[bpos];
-            if( ! this.hasByte1st){
+
+            if(this.hasByte1st){
+                if(ShiftJis.isShiftJIS2ndByte(bval)){   // 文字集合エラー
+                    text.addDecodeError(this.byte1st, bval);
+                    this.hasByte1st = false;
+                }else if(ShiftJis.isShiftJIS1stByte(bval)){
+                    text.addDecodeError(this.byte1st);
+                    this.byte1st = bval;
+                    this.hasByte1st = true;
+                }else{
+                    text.addDecodeError(this.byte1st);
+                    text.addDecodeError(bval);
+                    this.hasByte1st = false;
+                }
+            }else{
                 if(ShiftJis.isShiftJIS1stByte(bval)){
                     this.byte1st = bval;
                     this.hasByte1st = true;
                 }else{
-                    getContent().addDecodeError(bval);
-                }
-            }else{
-                if(ShiftJis.isShiftJIS2ndByte(bval)){   // 文字集合エラー
-                    getContent().addDecodeError(this.byte1st, bval);
-                    this.hasByte1st = false;
-                }else if(ShiftJis.isShiftJIS1stByte(bval)){
-                    getContent().addDecodeError(this.byte1st);
-                    this.byte1st = bval;
-                    this.hasByte1st = true;
-                }else{
-                    getContent().addDecodeError(this.byte1st);
-                    getContent().addDecodeError(bval);
-                    this.hasByte1st = false;
+                    text.addDecodeError(bval);
                 }
             }
         }

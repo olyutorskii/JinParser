@@ -92,6 +92,8 @@ public class ContentBuilderSJTest {
 
     /**
      * Test of SjisDecoder & ContentBuilder.
+     * @throws java.io.IOException
+     * @throws jp.sourceforge.jindolf.parser.DecodeException
      */
     @Test
     public void testDecoding() throws IOException, DecodeException{
@@ -172,6 +174,8 @@ public class ContentBuilderSJTest {
 
     /**
      * Test of unmappable character.
+     * @throws java.io.IOException
+     * @throws jp.sourceforge.jindolf.parser.DecodeException
      */
     @Test
     public void testUnmap() throws IOException, DecodeException{
@@ -272,6 +276,8 @@ public class ContentBuilderSJTest {
 
     /**
      * Test of malformed character.
+     * @throws java.io.IOException
+     * @throws jp.sourceforge.jindolf.parser.DecodeException
      */
     @Test
     public void testMalform() throws IOException, DecodeException{
@@ -327,6 +333,8 @@ public class ContentBuilderSJTest {
 
     /**
      * Test of Bounds buffering.
+     * @throws java.io.IOException
+     * @throws jp.sourceforge.jindolf.parser.DecodeException
      */
     @Test
     public void testBounds() throws IOException, DecodeException{
