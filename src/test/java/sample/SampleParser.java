@@ -20,7 +20,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import jp.sourceforge.jindolf.parser.*;
+import jp.osdn.jindolf.parser.HtmlHandler;
+import jp.osdn.jindolf.parser.HtmlParseException;
+import jp.osdn.jindolf.parser.HtmlParser;
+import jp.osdn.jindolf.parser.content.ContentBuilder;
+import jp.osdn.jindolf.parser.content.DecodedContent;
 
 /**
  * サンプルのパーサ
