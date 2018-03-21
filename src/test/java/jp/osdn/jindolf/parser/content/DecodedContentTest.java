@@ -5,7 +5,6 @@
 
 package jp.osdn.jindolf.parser.content;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -372,6 +371,8 @@ public class DecodedContentTest {
         CharSequence seq = "abc";
         content.append(seq);
         assertEquals("abc", content.toString());
+        content.append(null);
+        assertEquals("abcnull", content.toString());
 
         return;
     }
@@ -392,6 +393,8 @@ public class DecodedContentTest {
         CharSequence seq = "12345";
         content.append(seq, 1, 4);
         assertEquals("abc234", content.toString());
+        content.append((CharSequence)null, 1, 2);
+        assertEquals("abc234null", content.toString());
 
         return;
     }
@@ -462,6 +465,8 @@ public class DecodedContentTest {
         char[] seq = {'1','2','3','4','5',};
         content.append(seq, 1, 3);
         assertEquals("abc234", content.toString());
+        content.append((char[])null, 1, 2);
+        assertEquals("abc234null", content.toString());
 
         return;
     }
@@ -553,137 +558,6 @@ public class DecodedContentTest {
 
         assertEquals("abc?def?", content.toString());
         assertEquals(content.getRawContent().toString(), content.toString());
-
-        return;
-    }
-
-    /**
-     * Test of lsearchErrorIndex method, of class DecodedContent.
-     */
-    @Test
-    public void testLsearchErrorIndex(){
-        System.out.println("lsearchErrorIndex");
-
-        List<DecodeErrorInfo> errList;
-        int result;
-
-        errList = new ArrayList<>();
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(1, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-
-        return;
-     }
-
-    /**
-     * Test of bsearchErrorIndex method, of class DecodedContent.
-     */
-    @Test
-    public void testBsearchErrorIndex(){
-        System.out.println("bsearchErrorIndex");
-
-        List<DecodeErrorInfo> errList;
-        int result;
-
-        errList = new ArrayList<>();
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(1, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-        result = DecodedContent.bsearchErrorIndex(errList, 9);
-        assertEquals(2, result);
-        result = DecodedContent.bsearchErrorIndex(errList, 11);
-        assertEquals(3, result);
-
-        return;
-    }
-
-    /**
-     * Test of searchErrorIndex method, of class DecodedContent.
-     */
-    @Test
-    public void testSearchErrorIndex(){
-        System.out.println("searchErrorIndex");
-
-        List<DecodeErrorInfo> errList;
-        int result;
-
-        errList = new ArrayList<>();
-
-        errList.clear();
-        for(int pos = 0; pos <= 1000; pos += 10){
-            errList.add(new DecodeErrorInfo(pos, (byte)0x00));
-        }
-        result = DecodedContent.searchErrorIndex(errList, 503);
-        assertEquals(51, result);
-
-        errList.clear();
-        for(int pos = 0; pos <= 50; pos += 10){
-            errList.add(new DecodeErrorInfo(pos, (byte)0x00));
-        }
-        result = DecodedContent.searchErrorIndex(errList, 23);
-        assertEquals(3, result);
 
         return;
     }

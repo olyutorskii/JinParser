@@ -5,6 +5,8 @@
 
 package jp.osdn.jindolf.parser.content;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,26 +45,34 @@ public class DecodeErrorInfoTest {
     public void testConstructor(){
         System.out.println("Constructor");
 
-        new DecodeErrorInfo(99, (byte)0xfe);
-        new DecodeErrorInfo(999, (byte)0x87, (byte)0x40);
+        DecodeErrorInfo info;
 
-        new DecodeErrorInfo(0, (byte)0xfe);
-        new DecodeErrorInfo(0, (byte)0x87, (byte)0x40);
+        info = new DecodeErrorInfo(99, (byte)0xfe);
+        assertNotNull(info);
+
+        info = new DecodeErrorInfo(999, (byte)0x87, (byte)0x40);
+        assertNotNull(info);
+
+        info = new DecodeErrorInfo(0, (byte)0xfe);
+        assertNotNull(info);
+
+        info = new DecodeErrorInfo(0, (byte)0x87, (byte)0x40);
+        assertNotNull(info);
 
         try{
-            new DecodeErrorInfo(-1, (byte)0xfe);
+            info = new DecodeErrorInfo(-1, (byte)0xfe);
             fail();
+            info.hashCode();
         }catch(IndexOutOfBoundsException e){
-        }catch(Throwable e){
-            fail();
+            // GOOD
         }
 
         try{
-            new DecodeErrorInfo(-1, (byte)0x87, (byte)0x40);
+            info = new DecodeErrorInfo(-1, (byte)0x87, (byte)0x40);
             fail();
+            info.hashCode();
         }catch(IndexOutOfBoundsException e){
-        }catch(Throwable e){
-            fail();
+            // GOOD
         }
 
         return;
@@ -76,6 +86,9 @@ public class DecodeErrorInfoTest {
         System.out.println("getCharPosition");
 
         DecodeErrorInfo info;
+
+        info = new DecodeErrorInfo(0, (byte)0xfe);
+        assertEquals(0, info.getCharPosition());
 
         info = new DecodeErrorInfo(99, (byte)0xfe);
         assertEquals(99, info.getCharPosition());
@@ -136,8 +149,7 @@ public class DecodeErrorInfoTest {
             info.getRawByte2nd();
             fail();
         }catch(IllegalStateException e){
-        }catch(Throwable e){
-            fail();
+            // GOOD
         }
 
         info = new DecodeErrorInfo(999, (byte)0x87, (byte)0x40);
@@ -183,18 +195,18 @@ public class DecodeErrorInfoTest {
         try{
             info = info.createGappedClone(100);
             fail();
+            info.hashCode();
         }catch(IndexOutOfBoundsException e){
-        }catch(Throwable e){
-            fail();
+            // GOOD
         }
 
         info = new DecodeErrorInfo(999, (byte)0x87, (byte)0x40);
         try{
             info = info.createGappedClone(1000);
             fail();
+            info.hashCode();
         }catch(IndexOutOfBoundsException e){
-        }catch(Throwable e){
-            fail();
+            // GOOD
         }
 
         return;
@@ -225,6 +237,137 @@ public class DecodeErrorInfoTest {
     }
 
     /**
+     * Test of lsearchErrorIndex method, of class DecodedContent.
+     */
+    @Test
+    public void testLsearchErrorIndex(){
+        System.out.println("lsearchErrorIndex");
+
+        List<DecodeErrorInfo> errList;
+        int result;
+
+        errList = new ArrayList<>();
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(5, (byte)0x00));
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        assertEquals(1, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(10, (byte)0x00));
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(15, (byte)0x00));
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(4, (byte)0x00));
+        errList.add(new DecodeErrorInfo(5, (byte)0x00));
+        errList.add(new DecodeErrorInfo(14, (byte)0x00));
+        errList.add(new DecodeErrorInfo(15, (byte)0x00));
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        assertEquals(2, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(4, (byte)0x00));
+        errList.add(new DecodeErrorInfo(5, (byte)0x00));
+        errList.add(new DecodeErrorInfo(10, (byte)0x00));
+        errList.add(new DecodeErrorInfo(14, (byte)0x00));
+        errList.add(new DecodeErrorInfo(15, (byte)0x00));
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        assertEquals(2, result);
+
+        return;
+     }
+
+    /**
+     * Test of bsearchErrorIndex method, of class DecodedContent.
+     */
+    @Test
+    public void testBsearchErrorIndex(){
+        System.out.println("bsearchErrorIndex");
+
+        List<DecodeErrorInfo> errList;
+        int result;
+
+        errList = new ArrayList<>();
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(5, (byte)0x00));
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
+        assertEquals(1, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(10, (byte)0x00));
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(15, (byte)0x00));
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(4, (byte)0x00));
+        errList.add(new DecodeErrorInfo(5, (byte)0x00));
+        errList.add(new DecodeErrorInfo(14, (byte)0x00));
+        errList.add(new DecodeErrorInfo(15, (byte)0x00));
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
+        assertEquals(2, result);
+
+        errList.clear();
+        errList.add(new DecodeErrorInfo(4, (byte)0x00));
+        errList.add(new DecodeErrorInfo(5, (byte)0x00));
+        errList.add(new DecodeErrorInfo(10, (byte)0x00));
+        errList.add(new DecodeErrorInfo(14, (byte)0x00));
+        errList.add(new DecodeErrorInfo(15, (byte)0x00));
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
+        assertEquals(2, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 9);
+        assertEquals(2, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 11);
+        assertEquals(3, result);
+
+        return;
+    }
+
+    /**
+     * Test of searchErrorIndex method, of class DecodedContent.
+     */
+    @Test
+    public void testSearchErrorIndex(){
+        System.out.println("searchErrorIndex");
+
+        List<DecodeErrorInfo> errList;
+        int result;
+
+        errList = new ArrayList<>();
+
+        errList.clear();
+        for(int pos = 0; pos <= 1000; pos += 10){
+            errList.add(new DecodeErrorInfo(pos, (byte)0x00));
+        }
+        result = DecodeErrorInfo.searchErrorIndex(errList, 503);
+        assertEquals(51, result);
+
+        errList.clear();
+        for(int pos = 0; pos <= 50; pos += 10){
+            errList.add(new DecodeErrorInfo(pos, (byte)0x00));
+        }
+        result = DecodeErrorInfo.searchErrorIndex(errList, 23);
+        assertEquals(3, result);
+
+        return;
+    }
+
+    /**
      * Test of POS_COMPARATOR.
      */
     @Test
@@ -234,16 +377,16 @@ public class DecodeErrorInfoTest {
         DecodeErrorInfo info;
         DecodeErrorInfo other;
 
-        info  = new DecodeErrorInfo(99, (byte)0xfe);
-        other = new DecodeErrorInfo(98, (byte)0xfe);
+        info  = new DecodeErrorInfo(99, (byte)0xf1);
+        other = new DecodeErrorInfo(98, (byte)0xf2);
         assertTrue(DecodeErrorInfo.POS_COMPARATOR.compare(info, other) > 0);
 
-        info  = new DecodeErrorInfo(99, (byte)0xfe);
-        other = new DecodeErrorInfo(100, (byte)0xfe);
+        info  = new DecodeErrorInfo(99, (byte)0xf3);
+        other = new DecodeErrorInfo(100, (byte)0xf4);
         assertTrue(DecodeErrorInfo.POS_COMPARATOR.compare(info, other) < 0);
 
-        info  = new DecodeErrorInfo(99, (byte)0xfe);
-        other = new DecodeErrorInfo(99, (byte)0xfe);
+        info  = new DecodeErrorInfo(99, (byte)0xf5);
+        other = new DecodeErrorInfo(99, (byte)0xf6);
         assertTrue(DecodeErrorInfo.POS_COMPARATOR.compare(info, other) == 0);
 
         assertTrue(DecodeErrorInfo.POS_COMPARATOR.compare(null, other) < 0);
