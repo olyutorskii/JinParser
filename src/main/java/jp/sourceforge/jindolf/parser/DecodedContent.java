@@ -125,14 +125,14 @@ public class DecodedContent
         int roof  = errList.size() - 1;
 
         while(floor <= roof){
-            int midpoint = (floor + roof) / 2;  // 切り捨て
+            int gapHalf = (roof - floor) / 2;  // 切り捨て
+            int midpoint = floor + gapHalf;
             DecodeErrorInfo einfo = errList.get(midpoint);
             int cmp = einfo.getCharPosition() - startPos;
 
-            if(cmp == 0) return midpoint;
-
             if     (cmp < 0) floor = midpoint + 1;
             else if(cmp > 0) roof  = midpoint - 1;
+            else return midpoint;
         }
 
         return floor;

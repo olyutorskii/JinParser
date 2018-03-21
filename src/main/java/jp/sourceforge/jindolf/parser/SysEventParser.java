@@ -17,6 +17,10 @@ import jp.sourceforge.jindolf.corelib.Team;
  * 人狼BBSシステムが出力する各種イベント表記のパースを行うパーサ。
  * パース進行に従い{@link SysEventHandler}の各種メソッドが呼び出される。
  */
+@SuppressWarnings({
+    "PMD.FieldDeclarationsShouldBeAtStartOfClass",
+    "PMD.PrematureDeclaration"
+})
 public class SysEventParser extends AbstractParser{
 
     private static final String AVATAR_REGEX =

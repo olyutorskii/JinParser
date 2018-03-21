@@ -14,6 +14,7 @@ import jp.sourceforge.jindolf.corelib.TalkType;
  * 人狼BBSシステムが出力する各発言箇所のパーサ。
  * パース進行に従い{@link TalkHandler}の各種メソッドが呼び出される。
  */
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public class TalkParser extends AbstractParser{
 
     private TalkHandler talkHandler;

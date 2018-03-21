@@ -14,6 +14,10 @@ import jp.sourceforge.jindolf.corelib.VillageState;
 /**
  * 人狼BBS各種XHTML文字列のパースを行いハンドラに通知する。
  */
+@SuppressWarnings({
+    "PMD.FieldDeclarationsShouldBeAtStartOfClass",
+    "PMD.PrematureDeclaration"
+})
 public class HtmlParser extends AbstractParser{
 
     private static final String SP = "\u0020";

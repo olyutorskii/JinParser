@@ -651,6 +651,10 @@ public class DecodedContentTest {
         errList.add(new DecodeErrorInfo(15, (byte)0x00));
         result = DecodedContent.bsearchErrorIndex(errList, 10);
         assertEquals(2, result);
+        result = DecodedContent.bsearchErrorIndex(errList, 9);
+        assertEquals(2, result);
+        result = DecodedContent.bsearchErrorIndex(errList, 11);
+        assertEquals(3, result);
 
         return;
     }
