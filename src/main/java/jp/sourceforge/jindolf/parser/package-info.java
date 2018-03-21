@@ -29,14 +29,14 @@
  * <pre>
  * {@code
  * InputStream is = .....
- * StreamDecoder decoder = new SjisDecoder();
+ * DecodeNotifier decoder = new DecodeNotifier(...);
  * ContentBuilder builder = new ContentBuilder();
- * decoder.setDecodeHandler(builder);
+ * decoder.setCharDecodeListener(builder);
  * try{
  *     decoder.decode(is);
  * }catch(IOException e){
  *     // ERROR!
- * }catch(DecodeException e){
+ * }catch(DecodeBreakException e){
  *     // ERROR!
  * }
  * DecodedContent content = builder.getContent();

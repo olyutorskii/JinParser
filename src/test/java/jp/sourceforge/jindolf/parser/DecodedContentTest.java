@@ -62,7 +62,7 @@ public class DecodedContentTest {
         assertEquals("abc", content.toString());
 
         try{
-            new DecodedContent(-1);
+            Object o = new DecodedContent(-1);
             fail();
         }catch(NegativeArraySizeException e){
         }catch(Throwable e){
@@ -447,6 +447,26 @@ public class DecodedContentTest {
     }
 
     /**
+     * Test of append method, of class DecodedContent.
+     */
+    @Test
+    public void testAppend_3args_3(){
+        System.out.println("append");
+
+        DecodedContent content;
+
+        content = new DecodedContent();
+        content.append("abc");
+        assertEquals("abc", content.toString());
+
+        char[] seq = {'1','2','3','4','5',};
+        content.append(seq, 1, 3);
+        assertEquals("abc234", content.toString());
+
+        return;
+    }
+
+    /**
      * Test of addDecodeError method, of class DecodedContent.
      */
     @Test
@@ -631,6 +651,10 @@ public class DecodedContentTest {
         errList.add(new DecodeErrorInfo(15, (byte)0x00));
         result = DecodedContent.bsearchErrorIndex(errList, 10);
         assertEquals(2, result);
+        result = DecodedContent.bsearchErrorIndex(errList, 9);
+        assertEquals(2, result);
+        result = DecodedContent.bsearchErrorIndex(errList, 11);
+        assertEquals(3, result);
 
         return;
     }

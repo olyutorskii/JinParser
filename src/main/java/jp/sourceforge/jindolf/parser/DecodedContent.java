@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.RandomAccess;
 
 /**
- * ShiftJISデコードエラー情報を含む再利用可能な文字列。
- * デコードエラーを起こした箇所は代替文字{@link #ALTCHAR}で置き換えられる。
+ * デコードエラー情報を含む再利用可能な文字列。
+ *
+ * <p>デコードエラーを起こした箇所は代替文字{@link #ALTCHAR}で置き換えられる。
  * マルチスレッドには非対応。
- * UCS-4コードポイントには未対応。
  */
 public class DecodedContent
         implements CharSequence,
@@ -125,14 +125,14 @@ public class DecodedContent
         int roof  = errList.size() - 1;
 
         while(floor <= roof){
-            int midpoint = (floor + roof) / 2;  // 切り捨て
+            int gapHalf = (roof - floor) / 2;  // 切り捨て
+            int midpoint = floor + gapHalf;
             DecodeErrorInfo einfo = errList.get(midpoint);
             int cmp = einfo.getCharPosition() - startPos;
 
-            if(cmp == 0) return midpoint;
-
             if     (cmp < 0) floor = midpoint + 1;
             else if(cmp > 0) roof  = midpoint - 1;
+            else return midpoint;
         }
 
         return floor;
@@ -381,11 +381,31 @@ public class DecodedContent
                                   int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(seq == null){
-            this.rawContent.append(NULLTEXT, startPos, endPos);
+            this.rawContent.append(NULLTEXT);
         }else if(seq instanceof DecodedContent){
             append((DecodedContent) seq, startPos, endPos);
         }else{
             this.rawContent.append(seq, startPos, endPos);
+        }
+
+        return this;
+    }
+
+    /**
+     * 文字列を追加する。
+     *
+     * @param str  追加される文字
+     * @param offset 追加される最初の char のインデックス
+     * @param len 追加される char の数
+     * @return thisオブジェクト
+     * @throws IndexOutOfBoundsException 範囲指定が不正。
+     */
+    public DecodedContent append(char[] str, int offset, int len)
+            throws IndexOutOfBoundsException{
+        if(str == null){
+            this.rawContent.append(NULLTEXT);
+        }else{
+            this.rawContent.append(str, offset, len);
         }
 
         return this;
@@ -403,7 +423,7 @@ public class DecodedContent
                                   int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(source == null){
-            return append(NULLTEXT, startPos, endPos);
+            return append(NULLTEXT);
         }
 
         int gap = startPos - this.rawContent.length();
@@ -460,7 +480,10 @@ public class DecodedContent
     }
 
     /**
-     * 代替文字とともにデコードエラーを追加する。
+     * 代替文字とともに2バイトからなるデコードエラーを追加する。
+     *
+     * <p>主にシフトJISのUnmapエラーを想定。
+     *
      * @param b1st 1バイト目の値
      * @param b2nd 2バイト目の値
      */

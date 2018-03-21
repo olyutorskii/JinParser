@@ -5,11 +5,13 @@
 
 package jp.sourceforge.jindolf.parser;
 
+import io.bitbucket.olyutorskii.jiocema.DecodeBreakException;
+import io.bitbucket.olyutorskii.jiocema.DecodeNotifier;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -22,9 +24,9 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class ContentBuilderUCS2Test {
+public class ContentBuilderTest {
 
-    public ContentBuilderUCS2Test() {
+    public ContentBuilderTest() {
     }
 
     @BeforeClass
@@ -43,65 +45,18 @@ public class ContentBuilderUCS2Test {
     public void tearDown() {
     }
 
-    public static byte[] byteArray(CharSequence seq){
-        byte[] result;
-
-        List<Byte> byteList = new ArrayList<>();
-
-        int length = seq.length();
-        for(int pos = 0; pos < length; pos++){
-            int val = 0;
-
-            char ch = seq.charAt(pos);
-
-            if('0' <= ch && ch <= '9'){
-                val += ch - '0';
-            }else if('a' <= ch && ch <= 'f'){
-                val += ch - 'a' + 10;
-            }else if('A' <= ch && ch <= 'F'){
-                val += ch - 'A' + 10;
-            }else{
-                continue;
-            }
-
-            pos++;
-            if(pos >= length) break;
-
-            val *= 16;
-            ch = seq.charAt(pos);
-
-            if('0' <= ch && ch <= '9'){
-                val += ch - '0';
-            }else if('a' <= ch && ch <= 'f'){
-                val += ch - 'a' + 10;
-            }else if('A' <= ch && ch <= 'F'){
-                val += ch - 'A' + 10;
-            }else{
-                continue;
-            }
-
-            byteList.add((byte)val);
-        }
-
-        result = new byte[byteList.size()];
-
-        for(int pos = 0; pos < result.length; pos++){
-            result[pos] = byteList.get(pos);
-        }
-
-        return result;
-    }
 
     /**
      * Test of UTF8
+     * @throws Exception
      */
     @Test
     public void testUTF8() throws Exception {
         Charset cs = Charset.forName("UTF-8");
 
         CharsetDecoder cd;
-        ContentBuilderUCS2 cb;
-        StreamDecoder decoder;
+        ContentBuilder cb;
+        DecodeNotifier decoder;
         byte[] bdata;
         InputStream is;
         DecodedContent content;
@@ -110,10 +65,10 @@ public class ContentBuilderUCS2Test {
 
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("41:42:43");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("41:42:43");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
@@ -124,10 +79,10 @@ public class ContentBuilderUCS2Test {
 
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("41:EFBCA2:43");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("41:EFBCA2:43");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
@@ -138,10 +93,10 @@ public class ContentBuilderUCS2Test {
 
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("41:FF:43");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("41:FF:43");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
@@ -161,24 +116,25 @@ public class ContentBuilderUCS2Test {
 
     /**
      * Test of UTF16
+     * @throws Exception
      */
     @Test
     public void testUTF16() throws Exception {
         Charset cs = Charset.forName("UTF-16");
 
         CharsetDecoder cd;
-        ContentBuilderUCS2 cb;
-        StreamDecoder decoder;
+        ContentBuilder cb;
+        DecodeNotifier decoder;
         byte[] bdata;
         InputStream is;
         DecodedContent content;
 
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("0041:0042:0043");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("0041:0042:0043");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
@@ -189,10 +145,10 @@ public class ContentBuilderUCS2Test {
 
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("0041:FF22:0043");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("0041:FF22:0043");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
@@ -207,14 +163,15 @@ public class ContentBuilderUCS2Test {
 
     /**
      * Test of UTF16 sequence error
+     * @throws Exception
      */
     @Test
     public void testUTF16_seq() throws Exception {
         Charset cs = Charset.forName("UTF-16");
 
         CharsetDecoder cd;
-        ContentBuilderUCS2 cb;
-        StreamDecoder decoder;
+        ContentBuilder cb;
+        DecodeNotifier decoder;
         byte[] bdata;
         InputStream is;
         DecodedContent content;
@@ -222,10 +179,10 @@ public class ContentBuilderUCS2Test {
         DecodeErrorInfo einfo;
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("0041:d800:0043:0044");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("0041:d800:0043:0044");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
@@ -254,10 +211,10 @@ public class ContentBuilderUCS2Test {
 
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("0041:0042:dc00:0044");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("0041:0042:dc00:0044");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
@@ -277,10 +234,10 @@ public class ContentBuilderUCS2Test {
 
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("0041:d800");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("0041:d800");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
@@ -304,29 +261,58 @@ public class ContentBuilderUCS2Test {
 
     /**
      * Test of UTF16 mapping error
+     * @throws Exception
      */
     @Test
     public void testUTF16_nomap() throws Exception {
         Charset cs = Charset.forName("UTF-16");
 
         CharsetDecoder cd;
-        ContentBuilderUCS2 cb;
-        StreamDecoder decoder;
+        ContentBuilder cb;
+        DecodeNotifier decoder;
         byte[] bdata;
         InputStream is;
         DecodedContent content;
 
         cd = cs.newDecoder();
-        decoder = new StreamDecoder(cd);
-        cb = new ContentBuilderUCS2();
-        decoder.setDecodeHandler(cb);
-        bdata = byteArray("0041:d83d:dc11:0042");
+        decoder = new DecodeNotifier(cd);
+        cb = new ContentBuilder();
+        decoder.setCharDecodeListener(cb);
+        bdata = Bseq.byteArray("0041:d83d:dc11:0042");
         is = new ByteArrayInputStream(bdata);
         decoder.decode(is);
         content = cb.getContent();
 
         assertEquals(4, content.length());
         assertEquals("A\ud83d\udc11B", content.toString());
+
+        return;
+    }
+
+    @Test
+    public void testSheep() throws IOException, DecodeBreakException {
+        System.out.println("sheep");
+
+        Charset cs;
+        CharsetDecoder decoder;
+        ContentBuilder listener;
+
+        DecodeNotifier sd;
+        InputStream is;
+
+        cs = Charset.forName("UTF-8");
+        decoder = cs.newDecoder();
+
+        sd = new DecodeNotifier(decoder);
+
+        listener = new ContentBuilder();
+        sd.setCharDecodeListener(listener);
+
+        // SMP character U+1F411 [SHEEP]
+        // see https://ja.osdn.net/projects/jindolf/ticket/36356
+        is = Bseq.byteStream(0xf0, 0x9f, 0x90, 0x91);
+        sd.decode(is);
+        assertEquals("\ud83d\udc11", listener.getContent().toString());
 
         return;
     }
