@@ -18,6 +18,8 @@ import jp.sourceforge.jindolf.corelib.Team;
  * パース進行に従い{@link SysEventHandler}の各種メソッドが呼び出される。
  */
 @SuppressWarnings({
+    "checkstyle:declarationdistance",
+    "checkstyle:declarationorder",
     "PMD.FieldDeclarationsShouldBeAtStartOfClass",
     "PMD.PrematureDeclaration"
 })

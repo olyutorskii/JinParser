@@ -36,7 +36,7 @@ import java.nio.charset.CoderResult;
  * <p>TODO: 1.7系ランタイムによっては
  * [0x81, 0x7f]が「÷」にデコードされる場合がある問題が未解決。
  *
- * @see https://en.wikipedia.org/wiki/Shift_JIS
+ * @see <a href="https://en.wikipedia.org/wiki/Shift_JIS">Shift_JIS</a>
  * @see sun.nio.cs.ext.SJIS
  */
 public class SjisNotifier extends DecodeNotifier{

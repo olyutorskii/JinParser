@@ -83,6 +83,8 @@
         <property name="tabWidth" value="8"/>
         <property name="fileExtensions" value="java"/>
 
+        <module name="SuppressWarningsHolder" />
+
 
     <!-- Annotations -->
 
@@ -125,7 +127,9 @@
         <module name="ArrayTrailingComma" />
         <module name="AvoidInlineConditionals" />
         <module name="CovariantEquals" />
-        <module name="DeclarationOrder" />
+        <module name="DeclarationOrder">
+            <property name="id" value="declarationorder" />
+        </module>
         <module name="DefaultComesLast" />
         <module name="EmptyStatement" />
         <module name="EqualsAvoidNull" />
@@ -173,7 +177,9 @@
         <module name="SuperClone" />
         <module name="SuperFinalize" />
         <module name="UnnecessaryParentheses" />
-        <module name="VariableDeclarationUsageDistance" />
+        <module name="VariableDeclarationUsageDistance">
+            <property name="id" value="declarationdistance" />
+        </module>
 
 
     <!-- Imports -->
