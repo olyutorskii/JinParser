@@ -7,8 +7,9 @@
 
 package sample;
 
+import io.bitbucket.olyutorskii.jiocema.DecodeBreakException;
+import io.bitbucket.olyutorskii.jiocema.DecodeNotifier;
 import java.io.FileInputStream;
-import jp.sourceforge.jindolf.parser.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -19,16 +20,17 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import jp.sourceforge.jindolf.parser.*;
 
 /**
  * サンプルのパーサ
  */
 public class SampleParser{
 
-    private static final CharsetDecoder ud;
+    private static final CharsetDecoder CHD_UTF8;
 
     static{
-        ud = Charset.forName("UTF-8").newDecoder();
+        CHD_UTF8 = Charset.forName("UTF-8").newDecoder();
     }
 
     private SampleParser(){
@@ -37,7 +39,7 @@ public class SampleParser{
     }
 
     public static SortedMap<String, ZipEntry> createEntryMap(ZipFile file){
-        TreeMap<String, ZipEntry> result = new TreeMap<String, ZipEntry>();
+        TreeMap<String, ZipEntry> result = new TreeMap<>();
 
         Enumeration<? extends ZipEntry> list = file.entries();
         while(list.hasMoreElements()){
@@ -50,11 +52,11 @@ public class SampleParser{
     }
 
     public static DecodedContent contentFromStream(InputStream istream)
-            throws IOException, DecodeException{
-        StreamDecoder decoder = new StreamDecoder(ud);
-        ContentBuilderUCS2 builder = new ContentBuilderUCS2();
+            throws IOException, DecodeBreakException{
+        DecodeNotifier decoder = new DecodeNotifier(CHD_UTF8);
+        ContentBuilder builder = new ContentBuilder();
 
-        decoder.setDecodeHandler(builder);
+        decoder.setCharDecodeListener(builder);
 
         decoder.decode(istream);
 
@@ -79,7 +81,7 @@ public class SampleParser{
 
     public static void parseStream(InputStream istream)
             throws IOException,
-                   DecodeException,
+                   DecodeBreakException,
                    HtmlParseException{
         DecodedContent content = contentFromStream(istream);
 
@@ -90,7 +92,7 @@ public class SampleParser{
 
     public static void main(String[] args)
             throws IOException,
-                   DecodeException,
+                   DecodeBreakException,
                    HtmlParseException {
         if(args.length == 0){
             System.out.println(

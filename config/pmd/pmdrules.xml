@@ -29,14 +29,28 @@
         <exclude name="LocalVariableCouldBeFinal" />
         <exclude name="MethodArgumentCouldBeFinal" />
         <exclude name="OnlyOneReturn" />
-        <exclude name="ShortVariable" />
         <exclude name="UnnecessaryLocalBeforeReturn" />
         <exclude name="UnnecessaryReturn" />
+    </rule>
+    <rule ref="category/java/codestyle.xml/LongVariable" >
+        <properties>
+            <property name="minimum" value="25"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/codestyle.xml/ShortVariable" >
+        <properties>
+            <property name="minimum" value="2"/>
+        </properties>
     </rule>
 
     <rule ref="category/java/design.xml" >
         <exclude name="LawOfDemeter" />
         <exclude name="LoosePackageCoupling" />
+    </rule>
+    <rule ref="category/java/design.xml/NcssCount" >
+        <properties>
+            <property name="methodReportLevel" value="50"/>
+        </properties>
     </rule>
 
     <rule ref="category/java/documentation.xml" />
