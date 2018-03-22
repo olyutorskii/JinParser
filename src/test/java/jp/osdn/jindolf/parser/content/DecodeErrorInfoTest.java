@@ -19,6 +19,9 @@ import static org.junit.Assert.*;
  */
 public class DecodeErrorInfoTest {
 
+    private static final byte B0 = (byte)0x00;
+
+
     public DecodeErrorInfoTest() {
     }
 
@@ -247,40 +250,50 @@ public class DecodeErrorInfoTest {
         int result;
 
         errList = new ArrayList<>();
+
+        errList.clear();
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, -1);
+        assertEquals(0, result);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 0);
+        assertEquals(0, result);
         result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
         assertEquals(0, result);
 
         errList.clear();
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
+        errList.add(new DecodeErrorInfo(10, B0));
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 9);
+        assertEquals(0, result);
         result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 11);
         assertEquals(1, result);
 
         errList.clear();
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
+        errList.add(new DecodeErrorInfo(10, B0));
+        errList.add(new DecodeErrorInfo(20, B0));
+        errList.add(new DecodeErrorInfo(30, B0));
+        errList.add(new DecodeErrorInfo(40, B0));
+        errList.add(new DecodeErrorInfo(50, B0));
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 9);
+        assertEquals(0, result);
         result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
         assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 11);
+        assertEquals(1, result);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 29);
         assertEquals(2, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodeErrorInfo.lsearchErrorIndex(errList, 10);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 30);
         assertEquals(2, result);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 31);
+        assertEquals(3, result);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 49);
+        assertEquals(4, result);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 50);
+        assertEquals(4, result);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 51);
+        assertEquals(5, result);
+        result = DecodeErrorInfo.lsearchErrorIndex(errList, 1000);
+        assertEquals(5, result);
 
         return;
      }
@@ -296,44 +309,50 @@ public class DecodeErrorInfoTest {
         int result;
 
         errList = new ArrayList<>();
+
+        errList.clear();
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, -1);
+        assertEquals(0, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 0);
+        assertEquals(0, result);
         result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
         assertEquals(0, result);
 
         errList.clear();
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
+        errList.add(new DecodeErrorInfo(10, B0));
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 9);
+        assertEquals(0, result);
         result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 11);
         assertEquals(1, result);
 
         errList.clear();
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
+        errList.add(new DecodeErrorInfo(10, B0));
+        errList.add(new DecodeErrorInfo(20, B0));
+        errList.add(new DecodeErrorInfo(30, B0));
+        errList.add(new DecodeErrorInfo(40, B0));
+        errList.add(new DecodeErrorInfo(50, B0));
         result = DecodeErrorInfo.bsearchErrorIndex(errList, 9);
-        assertEquals(2, result);
+        assertEquals(0, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 10);
+        assertEquals(0, result);
         result = DecodeErrorInfo.bsearchErrorIndex(errList, 11);
+        assertEquals(1, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 29);
+        assertEquals(2, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 30);
+        assertEquals(2, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 31);
         assertEquals(3, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 49);
+        assertEquals(4, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 50);
+        assertEquals(4, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 51);
+        assertEquals(5, result);
+        result = DecodeErrorInfo.bsearchErrorIndex(errList, 1000);
+        assertEquals(5, result);
 
         return;
     }
@@ -351,18 +370,28 @@ public class DecodeErrorInfoTest {
         errList = new ArrayList<>();
 
         errList.clear();
-        for(int pos = 0; pos <= 1000; pos += 10){
-            errList.add(new DecodeErrorInfo(pos, (byte)0x00));
+        for(int pos = 0; pos < 150; pos += 10){
+            errList.add(new DecodeErrorInfo(pos, B0));
         }
-        result = DecodeErrorInfo.searchErrorIndex(errList, 503);
-        assertEquals(51, result);
+        assertTrue(errList.size() < DecodeErrorInfo.BSEARCH_THRESHOLD);
+        result = DecodeErrorInfo.searchErrorIndex(errList, 89);
+        assertEquals(9, result);
+        result = DecodeErrorInfo.searchErrorIndex(errList, 90);
+        assertEquals(9, result);
+        result = DecodeErrorInfo.searchErrorIndex(errList, 91);
+        assertEquals(10, result);
 
         errList.clear();
-        for(int pos = 0; pos <= 50; pos += 10){
-            errList.add(new DecodeErrorInfo(pos, (byte)0x00));
+        for(int pos = 0; pos < 1500; pos += 10){
+            errList.add(new DecodeErrorInfo(pos, B0));
         }
-        result = DecodeErrorInfo.searchErrorIndex(errList, 23);
-        assertEquals(3, result);
+        assertTrue(errList.size() >= DecodeErrorInfo.BSEARCH_THRESHOLD);
+        result = DecodeErrorInfo.searchErrorIndex(errList, 899);
+        assertEquals(90, result);
+        result = DecodeErrorInfo.searchErrorIndex(errList, 900);
+        assertEquals(90, result);
+        result = DecodeErrorInfo.searchErrorIndex(errList, 901);
+        assertEquals(91, result);
 
         return;
     }

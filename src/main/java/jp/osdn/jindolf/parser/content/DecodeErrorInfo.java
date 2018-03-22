@@ -9,6 +9,7 @@ package jp.osdn.jindolf.parser.content;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * 文字デコード異常系の発生により
@@ -27,7 +28,7 @@ public class DecodeErrorInfo{
     public static final Comparator<DecodeErrorInfo> POS_COMPARATOR =
             new PosComparator();
 
-    private static final int BSEARCH_THRESHOLD = 16;
+    static final int BSEARCH_THRESHOLD = 16;
 
 
     private final int charPos;
@@ -96,22 +97,18 @@ public class DecodeErrorInfo{
      * デコードエラーのインデックス位置を返す。※リニアサーチ版。
      *
      * @param errList デコードエラーのリスト
-     * @param startPos 文字位置
+     * @param charPos 代替文字位置
      * @return 0から始まるリスト内の位置。
      *     文字位置の一致するデコードエラーがなければ
      *     リストへの挿入ポイントが返る。
      */
     public static int lsearchErrorIndex(List<DecodeErrorInfo> errList,
-                                        int startPos){
-        // assert errList instanceof RandomAccess;
-
-        int listSize = errList.size();
-
-        int idx;
-        for(idx = 0; idx < listSize; idx++){
-            DecodeErrorInfo einfo = errList.get(idx);
-            int errPos = einfo.getCharPosition();
-            if(startPos <= errPos) break;
+                                        int charPos){
+        int idx = 0;
+        for(DecodeErrorInfo einfo : errList){
+            int errCharPos = einfo.getCharPosition();
+            if(charPos <= errCharPos) break;
+            idx++;
         }
 
         return idx;
@@ -122,55 +119,64 @@ public class DecodeErrorInfo{
      * デコードエラーのインデックス位置を返す。※バイナリサーチ版。
      *
      * @param errList デコードエラーのリスト
-     * @param startPos 文字位置
+     * @param charPos 代替文字位置
      * @return 0から始まるリスト内の位置。
      *     文字位置の一致するデコードエラーがなければ
      *     リストへの挿入ポイントが返る。
      */
     public static int bsearchErrorIndex(List<DecodeErrorInfo> errList,
-                                        int startPos){
-        // assert errList instanceof RandomAccess;
+                                        int charPos){
+        int floorIdx = 0;
+        int roofIdx  = errList.size() - 1;
 
-        int floor = 0;
-        int roof  = errList.size() - 1;
+        while(floorIdx <= roofIdx){
+            int gapHalf = (roofIdx - floorIdx) / 2;  // 切り捨て
+            int midIdx = floorIdx + gapHalf;
+            DecodeErrorInfo einfo = errList.get(midIdx);
+            int errCharPos = einfo.getCharPosition();
 
-        while(floor <= roof){
-            int gapHalf = (roof - floor) / 2;  // 切り捨て
-            int midpoint = floor + gapHalf;
-            DecodeErrorInfo einfo = errList.get(midpoint);
-            int errPos = einfo.getCharPosition();
-
-            if     (errPos < startPos) floor = midpoint + 1;
-            else if(errPos > startPos) roof  = midpoint - 1;
-            else return midpoint;
+            if     (errCharPos < charPos) floorIdx = midIdx + 1;
+            else if(errCharPos > charPos) roofIdx  = midIdx - 1;
+            else return midIdx;
         }
 
-        return floor;
+        return floorIdx;
     }
 
     /**
      * 与えられた文字位置を含むか、またはそれ以降で最も小さな位置情報を持つ
      * デコードエラーのインデックス位置を返す。
      *
-     * <p>要素数の増減に応じてリニアサーチとバイナリサーチを使い分ける。
+     * <p>ランダムアクセスの可否、および要素数の増減に応じて
+     * リニアサーチとバイナリサーチを使い分ける。
      *
      * @param errList デコードエラーのリスト
-     * @param startPos 文字位置
+     * @param charPos 代替文字位置
      * @return 0から始まるリスト内の位置。
      *     文字位置の一致するデコードエラーがなければ
      *     リストへの挿入ポイントが返る。
      */
     public static int searchErrorIndex(List<DecodeErrorInfo> errList,
-                                       int startPos){
+                                       int charPos){
         int result;
 
-        int listSize = errList.size();
-        if(listSize < BSEARCH_THRESHOLD){
+        boolean useLinear;
+        if(errList instanceof RandomAccess){
+            if(errList.size() < BSEARCH_THRESHOLD){
+                useLinear = true;
+            }else{
+                useLinear = false;
+            }
+        }else{
+            useLinear = true;
+        }
+
+        if(useLinear){
             // linear-search
-            result = lsearchErrorIndex(errList, startPos);
+            result = lsearchErrorIndex(errList, charPos);
         }else{
             // binary-search
-            result = bsearchErrorIndex(errList, startPos);
+            result = bsearchErrorIndex(errList, charPos);
         }
 
         return result;
