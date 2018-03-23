@@ -429,10 +429,9 @@ public class DecodedContent
             return append(NULLTEXT, startPos, endPos);
         }
 
-        int srcLength = source.length();
         if(   startPos < 0
            || startPos > endPos
-           || endPos > srcLength){
+           || endPos > source.length()){
             throw new IndexOutOfBoundsException();
         }else if(startPos == endPos){
             return this;
