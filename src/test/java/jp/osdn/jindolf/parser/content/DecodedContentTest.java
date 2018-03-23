@@ -390,11 +390,21 @@ public class DecodedContentTest {
         content.append("abc");
         assertEquals("abc", content.toString());
 
+        StringBuilder sb = new StringBuilder("A");
+        sb.append((CharSequence)null, 1,2);
+        assertEquals("Au", sb.toString());
+        try{
+            sb.append((char[])null, 1,2);
+            fail();
+        }catch(NullPointerException e){
+            // GOOD
+        }
+
         CharSequence seq = "12345";
         content.append(seq, 1, 4);
         assertEquals("abc234", content.toString());
         content.append((CharSequence)null, 1, 2);
-        assertEquals("abc234null", content.toString());
+        assertEquals("abc234u", content.toString());
 
         return;
     }
@@ -465,8 +475,13 @@ public class DecodedContentTest {
         char[] seq = {'1','2','3','4','5',};
         content.append(seq, 1, 3);
         assertEquals("abc234", content.toString());
-        content.append((char[])null, 1, 2);
-        assertEquals("abc234null", content.toString());
+
+        try{
+            content.append((char[])null, 1, 2);
+            fail();
+        }catch(NullPointerException e){
+            // GOOD
+        }
 
         return;
     }

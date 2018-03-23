@@ -110,6 +110,8 @@ public class DecodedContent
                                   int startPos, int endPos,
                                   List<DecodeErrorInfo> targetError,
                                   int gap){
+        if(startPos >= endPos) return targetError;
+
         List<DecodeErrorInfo> errList = sourceContent.decodeError;
         int errSize = errList.size();
         assert errSize > 0;
@@ -347,14 +349,20 @@ public class DecodedContent
      */
     @Override
     public DecodedContent append(CharSequence seq){
+        DecodedContent result;
+
         if(seq == null){
-            this.rawContent.append(NULLTEXT);
+            result = append(NULLTEXT);
         }else if(seq instanceof DecodedContent){
-            append((DecodedContent) seq, 0, seq.length());
+            DecodedContent content = (DecodedContent) seq;
+            int seqLen = seq.length();
+            result = append(content, 0, seqLen);
         }else{
             this.rawContent.append(seq);
+            result = this;
         }
-        return this;
+
+        return result;
     }
 
     /**
@@ -368,23 +376,32 @@ public class DecodedContent
      */
     @Override
     public DecodedContent append(CharSequence seq,
-                                  int startPos, int endPos)
+                                 int startPos, int endPos)
             throws IndexOutOfBoundsException{
+        DecodedContent result;
+
         if(seq == null){
-            this.rawContent.append(NULLTEXT);
+            result = append(NULLTEXT, startPos, endPos);
         }else if(seq instanceof DecodedContent){
-            append((DecodedContent) seq, startPos, endPos);
+            result = append((DecodedContent) seq, startPos, endPos);
+        }else if(   startPos < 0
+                 || startPos > endPos
+                 || endPos > seq.length()){
+            throw new IndexOutOfBoundsException();
+        }else if(startPos == endPos){
+            result = this;
         }else{
             this.rawContent.append(seq, startPos, endPos);
+            result = this;
         }
 
-        return this;
+        return result;
     }
 
     /**
      * 文字列を追加する。
      *
-     * @param str  追加される文字
+     * @param str  追加される文字配列
      * @param offset 追加される最初の char のインデックス
      * @param len 追加される char の数
      * @return thisオブジェクト
@@ -392,12 +409,7 @@ public class DecodedContent
      */
     public DecodedContent append(char[] str, int offset, int len)
             throws IndexOutOfBoundsException{
-        if(str == null){
-            this.rawContent.append(NULLTEXT);
-        }else{
-            this.rawContent.append(str, offset, len);
-        }
-
+        this.rawContent.append(str, offset, len);
         return this;
     }
 
@@ -414,10 +426,19 @@ public class DecodedContent
                                  int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(source == null){
-            return append(NULLTEXT);
+            return append(NULLTEXT, startPos, endPos);
         }
 
-        int gap = startPos - this.rawContent.length();
+        int srcLength = source.length();
+        if(   startPos < 0
+           || startPos > endPos
+           || endPos > srcLength){
+            throw new IndexOutOfBoundsException();
+        }else if(startPos == endPos){
+            return this;
+        }
+
+        int oldLength = this.rawContent.length();
 
         this.rawContent.append(source.rawContent, startPos, endPos);
         if( ! source.hasDecodeError() ) return this;
@@ -425,6 +446,8 @@ public class DecodedContent
         List<DecodeErrorInfo> targetErrorList;
         if(source != this) targetErrorList = this.decodeError;
         else               targetErrorList = null;
+
+        int gap = startPos - oldLength;
 
         targetErrorList = appendGappedErrorInfo(source,
                                                 startPos, endPos,
