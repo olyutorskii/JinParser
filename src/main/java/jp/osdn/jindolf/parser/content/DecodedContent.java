@@ -412,6 +412,7 @@ public class DecodedContent
      * @param len 追加される char の数
      * @return thisオブジェクト
      * @throws IndexOutOfBoundsException 範囲指定が不正。
+     * @see StringBuffer#append(char[], int, int)
      */
     public DecodedContent append(char[] str, int offset, int len)
             throws IndexOutOfBoundsException{
@@ -427,6 +428,7 @@ public class DecodedContent
      * @param endPos 終了位置
      * @return thisオブジェクト
      * @throws IndexOutOfBoundsException 範囲指定が変。
+     * @see Appendable#append(CharSequence, int, int)
      */
     public DecodedContent append(DecodedContent source,
                                  int startPos, int endPos)
@@ -446,31 +448,32 @@ public class DecodedContent
         int oldLength = this.rawContent.length();
 
         this.rawContent.append(source.rawContent, startPos, endPos);
-        List<DecodeErrorInfo> sourceErrorList;
+
+        List<DecodeErrorInfo> srcErrList;
         if(source.hasDecodeError()){
-            sourceErrorList = source.decodeError;
+            srcErrList = source.decodeError;
         }else{
             return this;
         }
 
-        List<DecodeErrorInfo> targetErrorList;
-        if(source != this) targetErrorList = this.decodeError;
-        else               targetErrorList = null;
+        List<DecodeErrorInfo> dstErrList;
+        if(source == this) dstErrList = null;
+        else               dstErrList = this.decodeError;
 
         int gap = startPos - oldLength;
 
-        targetErrorList = appendGappedErrorInfo(sourceErrorList,
-                                                startPos, endPos,
-                                                targetErrorList,
-                                                gap);
+        dstErrList = appendGappedErrorInfo(srcErrList,
+                                           startPos, endPos,
+                                           dstErrList,
+                                           gap);
 
-        if(targetErrorList == null)             return this;
-        if(targetErrorList == this.decodeError) return this;
+        if(dstErrList == null)             return this;
+        if(dstErrList == this.decodeError) return this;
 
         if(this.decodeError == null){
-            this.decodeError = targetErrorList;
+            this.decodeError = dstErrList;
         }else{
-            this.decodeError.addAll(targetErrorList);
+            this.decodeError.addAll(dstErrList);
         }
 
         return this;

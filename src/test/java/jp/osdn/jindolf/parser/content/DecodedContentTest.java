@@ -385,6 +385,8 @@ public class DecodedContentTest {
         seq = null;
         content.append(seq);
         assertEquals("abcdefnull", content.toString());
+        content.append(new DecodedContent("dec"));
+        assertEquals("abcdefnulldec", content.toString());
 
         return;
     }
@@ -419,6 +421,10 @@ public class DecodedContentTest {
         content.init();
         content.append(seq, 1, 3);
         assertEquals("23", content.toString());
+
+        content.init();
+        content.append((CharSequence)new DecodedContent("PQR"), 1, 3);
+        assertEquals("QR", content.toString());
 
         content.init();
         try{
