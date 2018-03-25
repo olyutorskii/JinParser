@@ -98,38 +98,44 @@ public class DecodedContent
      * 必要に応じてエラーリストが生成され
      * 戻り値となる場合がありうる。
      *
-     * @param sourceContent 元の文字列
-     * @param startPos 範囲開始位置
-     * @param endPos 範囲終了位置
-     * @param targetError 追加先エラーリスト。nullでもよい。
+     * @param srcErrList 追加元エラーリスト
+     * @param startCharPos 範囲開始位置
+     * @param endCharPos 範囲終了位置
+     * @param dstErrList 追加先エラーリスト。nullでもよい。
+     *     追加元と異なるリストでなければならない。
      * @param gap ギャップ量
      * @return 引数targetErrorもしくは新規生成されたリストを返す。
+     *     なにもコピーされなければnullを返す。
+     * @throws IllegalArgumentException 追加元リストと追加先リストが
+     *     同一インスタンス
      */
     protected static List<DecodeErrorInfo>
-            appendGappedErrorInfo(DecodedContent sourceContent,
-                                  int startPos, int endPos,
-                                  List<DecodeErrorInfo> targetError,
+            appendGappedErrorInfo(List<DecodeErrorInfo> srcErrList,
+                                  int startCharPos, int endCharPos,
+                                  List<DecodeErrorInfo> dstErrList,
                                   int gap){
-        if(startPos >= endPos) return targetError;
+        if(srcErrList == dstErrList) throw new IllegalArgumentException();
 
-        List<DecodeErrorInfo> errList = sourceContent.decodeError;
-        int errSize = errList.size();
-        assert errSize > 0;
+        if(startCharPos >= endCharPos) return dstErrList;
+
+        int errSize = srcErrList.size();
 
         int startErrorIdx;
         int endErrorIdx;
 
-        startErrorIdx = DecodeErrorInfo.searchErrorIndex(errList, startPos);
+        startErrorIdx =
+                DecodeErrorInfo.searchErrorIndex(srcErrList, startCharPos);
         if(startErrorIdx >= errSize){
             return null;
         }
 
-        int lastCharPos = endPos - 1;
-        endErrorIdx = DecodeErrorInfo.searchErrorIndex(errList, lastCharPos);
+        int lastCharPos = endCharPos - 1;
+        endErrorIdx =
+                DecodeErrorInfo.searchErrorIndex(srcErrList, lastCharPos);
         if(endErrorIdx >= errSize){
             endErrorIdx = errSize - 1;
         }else{
-            DecodeErrorInfo lastErrorInfo = errList.get(endErrorIdx);
+            DecodeErrorInfo lastErrorInfo = srcErrList.get(endErrorIdx);
             boolean isLastErrorInfoOnLastPos =
                     lastErrorInfo.getCharPosition() == lastCharPos;
             if( ! isLastErrorInfoOnLastPos){
@@ -144,10 +150,10 @@ public class DecodedContent
         }
 
         List<DecodeErrorInfo> result;
-        if(targetError == null) result = createErrorList();
-        else                    result = targetError;
+        if(dstErrList == null) result = createErrorList();
+        else                   result = dstErrList;
 
-        copyGappedErrorInfo(errList,
+        copyGappedErrorInfo(srcErrList,
                             startErrorIdx, endErrorIdx,
                             result, gap);
         return result;
@@ -440,7 +446,12 @@ public class DecodedContent
         int oldLength = this.rawContent.length();
 
         this.rawContent.append(source.rawContent, startPos, endPos);
-        if( ! source.hasDecodeError() ) return this;
+        List<DecodeErrorInfo> sourceErrorList;
+        if(source.hasDecodeError()){
+            sourceErrorList = source.decodeError;
+        }else{
+            return this;
+        }
 
         List<DecodeErrorInfo> targetErrorList;
         if(source != this) targetErrorList = this.decodeError;
@@ -448,7 +459,7 @@ public class DecodedContent
 
         int gap = startPos - oldLength;
 
-        targetErrorList = appendGappedErrorInfo(source,
+        targetErrorList = appendGappedErrorInfo(sourceErrorList,
                                                 startPos, endPos,
                                                 targetErrorList,
                                                 gap);

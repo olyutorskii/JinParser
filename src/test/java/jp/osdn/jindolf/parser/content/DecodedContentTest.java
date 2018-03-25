@@ -5,6 +5,7 @@
 
 package jp.osdn.jindolf.parser.content;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -789,19 +790,100 @@ public class DecodedContentTest {
     public void testAppendGappedErrorInfo(){
         System.out.println("appendGappedErrorInfo");
 
-        DecodedContent sourceContent;
-        sourceContent = new DecodedContent();
+        List<DecodeErrorInfo> srcErrList = new ArrayList<>();
         for(int pos = 0; pos <= 50; pos += 10){
-            sourceContent.append("123456789");
-            sourceContent.addDecodeError((byte)0x00);
+            DecodeErrorInfo info = new DecodeErrorInfo(pos, (byte)0x00);
+            srcErrList.add(info);
         }
 
         List<DecodeErrorInfo> result;
-        result = DecodedContent.appendGappedErrorInfo(sourceContent, 15, 35, null, -100);
+        List<DecodeErrorInfo> target;
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 15, 35, null, -100);
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(119, result.get(0).getCharPosition());
-        assertEquals(129, result.get(1).getCharPosition());
+        assertEquals(120, result.get(0).getCharPosition());
+        assertEquals(130, result.get(1).getCharPosition());
+
+        target = new ArrayList<>();
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 15, 35, target, -100);
+        assertSame(target, result);
+        assertEquals(2, result.size());
+        assertEquals(120, result.get(0).getCharPosition());
+        assertEquals(130, result.get(1).getCharPosition());
+
+        try{
+            DecodedContent.appendGappedErrorInfo(srcErrList, 15, 35, srcErrList, -100);
+            fail();
+        }catch(IllegalArgumentException e){
+            // GOOD
+        }
+
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 40, null, -100);
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 41, null, -100);
+        assertNotNull(result);
+        assertEquals(4, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+        assertEquals(140, result.get(3).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 11, 40, null, -100);
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(120, result.get(0).getCharPosition());
+        assertEquals(130, result.get(1).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 9, 40, null, -100);
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 50, null, -100);
+        assertNotNull(result);
+        assertEquals(4, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+        assertEquals(140, result.get(3).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 51, null, -100);
+        assertNotNull(result);
+        assertEquals(5, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+        assertEquals(140, result.get(3).getCharPosition());
+        assertEquals(150, result.get(4).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 0, 0, null, -100);
+        assertNull(result);
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 0, 1, null, -100);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(100, result.get(0).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 10, null, -100);
+        assertNull(result);
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 15, 15, null, -100);
+        assertNull(result);
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 15, 16, null, -100);
+        assertNull(result);
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 60, 70, null, -100);
+        assertNull(result);
 
         return;
     }
