@@ -102,7 +102,16 @@ public class ContentBuilder implements CharDecodeListener{
     @Override
     public void charContent(char[] charArray, int offset, int length)
             throws DecodeBreakException{
+        if(length > 0){
+            char ch1st  = charArray[0];
+            assert ! Character.isLowSurrogate(ch1st);
+
+            char chLast = charArray[length - 1];
+            assert ! Character.isHighSurrogate(chLast);
+        }
+
         getContent().append(charArray, offset, length);
+
         return;
     }
 
