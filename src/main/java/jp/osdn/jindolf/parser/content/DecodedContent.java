@@ -16,7 +16,8 @@ import java.util.RandomAccess;
  * デコードエラー情報を含む再利用可能な文字列。
  *
  * <p>デコードエラーを起こした箇所は代替文字{@link #ALTCHAR}で置き換えられる。
- * マルチスレッドには非対応。
+ *
+ * <p>マルチスレッドには非対応。
  */
 public class DecodedContent
         implements CharSequence,
@@ -25,7 +26,7 @@ public class DecodedContent
     /**
      * 代替文字。
      *
-     * <p>{@literal HTMLで使うなら < や > や & や " や ' はやめて！}
+     * <p>{@literal HTMLで使うなら < や > や & や " や ' は避けた方が無難}
      */
     public static final char ALTCHAR = '?';
 
@@ -34,13 +35,6 @@ public class DecodedContent
     private static final List<DecodeErrorInfo> EMPTY_LIST;
 
     static{
-        assert ALTCHAR != '<';
-        assert ALTCHAR != '>';
-        assert ALTCHAR != '&';
-        assert ALTCHAR != '"';
-        assert ALTCHAR != '\'';
-        assert ALTCHAR != '\\';
-
         List<DecodeErrorInfo> emptyList;
         emptyList = Collections.emptyList();
         emptyList = Collections.unmodifiableList(emptyList);
@@ -55,21 +49,26 @@ public class DecodedContent
 
     /**
      * コンストラクタ。
+     *
+     * <p>長さ0の文字列が反映され、デコードエラー総数は0件となる。
      */
     public DecodedContent(){
-        this("");
+        super();
+        initImpl();
         return;
     }
 
     /**
      * コンストラクタ。
      *
+     * <p>引数の文字列が反映され、デコードエラー総数は0件となる。
+     *
+     * <p>nullが渡されると文字列"null"として解釈される。
+     *
      * @param seq 初期化文字列
-     * @throws NullPointerException 引数がnull
      */
-    public DecodedContent(CharSequence seq) throws NullPointerException{
+    public DecodedContent(CharSequence seq){
         super();
-        if(seq == null) throw new NullPointerException();
         initImpl();
         this.rawContent.append(seq);
         return;
@@ -77,6 +76,12 @@ public class DecodedContent
 
     /**
      * コンストラクタ。
+     *
+     * <p>長さ0の文字列が反映され、デコードエラー総数は0件となる。
+     *
+     * <p>文字数の初期容量を引数で指定する。
+     * 文字列長が初期容量を超えるまでの間、
+     * 文字列格納の再割り当てが起こらないことが期待される。
      *
      * @param capacity 文字数の初期容量
      * @throws NegativeArraySizeException 容量が負の値
@@ -197,6 +202,17 @@ public class DecodedContent
 
 
     /**
+     * 初期化。
+     *
+     * <p>長さ0の文字列＆デコードエラー無しの状態になる。
+     * コンストラクタで新インスタンスを作るより低コスト。
+     */
+    public void init(){
+        initImpl();
+        return;
+    }
+
+    /**
      * 初期化下請け。
      *
      * <p>長さ0の文字列＆デコードエラー無しの状態になる。
@@ -224,18 +240,7 @@ public class DecodedContent
     }
 
     /**
-     * 初期化。
-     *
-     * <p>長さ0の文字列＆デコードエラー無しの状態になる。
-     * コンストラクタで新インスタンスを作るより低コスト。
-     */
-    public void init(){
-        initImpl();
-        return;
-    }
-
-    /**
-     * デコードエラーを含むか判定する。
+     * デコードエラーを含むか否か判定する。
      *
      * @return デコードエラーを含むならtrue
      */
@@ -270,6 +275,8 @@ public class DecodedContent
 
     /**
      * 指定された位置の文字を変更する。
+     *
+     * <p>デコードエラーにより追加された代替文字の変更も可能。
      *
      * @param index 文字位置
      * @param ch 文字
@@ -336,7 +343,7 @@ public class DecodedContent
     }
 
     /**
-     * 文字を追加する。
+     * 文字を末尾へ追加する。
      *
      * @param letter 追加する文字
      * @return thisオブジェクト
@@ -348,7 +355,9 @@ public class DecodedContent
     }
 
     /**
-     * 文字列を追加する。
+     * 文字列を末尾へ追加する。
+     *
+     * <p>nullが渡されると文字列"null"として解釈される。
      *
      * @param seq 追加する文字列
      * @return thisオブジェクト
@@ -372,7 +381,9 @@ public class DecodedContent
     }
 
     /**
-     * 文字列を追加する。
+     * 文字列を末尾へ追加する。
+     *
+     * <p>nullが渡されると文字列"null"として解釈される。
      *
      * @param seq 追加する文字列
      * @param startPos 開始位置
@@ -405,9 +416,9 @@ public class DecodedContent
     }
 
     /**
-     * 文字列を追加する。
+     * 文字列を末尾へ追加する。
      *
-     * @param str  追加される文字配列
+     * @param str  追加する文字配列
      * @param offset 追加される最初の char のインデックス
      * @param len 追加される char の数
      * @return thisオブジェクト
@@ -421,7 +432,11 @@ public class DecodedContent
     }
 
     /**
-     * 文字列を追加する。
+     * 文字列を末尾へ追加する。
+     *
+     * <p>追加元のエラー情報は追加先へ引き継がれる。
+     *
+     * <p>nullが渡されると文字列"null"として解釈される。
      *
      * @param source 追加する文字列
      * @param startPos 開始位置
@@ -480,7 +495,7 @@ public class DecodedContent
     }
 
     /**
-     * 代替文字とともにデコードエラーを追加する。
+     * 代替文字とともにデコードエラーを末尾へ追加する。
      *
      * <p>※呼び出し側は、追加されるデコードエラーの位置情報が
      * 既存のデコードエラーよりも大きいことを保証しなければならない。
@@ -497,9 +512,9 @@ public class DecodedContent
     }
 
     /**
-     * 代替文字とともにデコードエラーを追加する。
+     * 代替文字とともにデコードエラーを末尾へ追加する。
      *
-     * @param b1st 1バイト目の値
+     * @param b1st エラー1バイト目の値
      */
     public void addDecodeError(byte b1st){
         DecodeErrorInfo errInfo =
@@ -509,12 +524,12 @@ public class DecodedContent
     }
 
     /**
-     * 代替文字とともに2バイトからなるデコードエラーを追加する。
+     * 代替文字とともに2バイトからなるデコードエラーを末尾へ追加する。
      *
      * <p>主にシフトJISのUnmapエラーを想定。
      *
-     * @param b1st 1バイト目の値
-     * @param b2nd 2バイト目の値
+     * @param b1st エラー1バイト目の値
+     * @param b2nd エラー2バイト目の値
      */
     public void addDecodeError(byte b1st, byte b2nd){
         DecodeErrorInfo errInfo =

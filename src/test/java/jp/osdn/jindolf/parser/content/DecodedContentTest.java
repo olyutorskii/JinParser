@@ -69,6 +69,9 @@ public class DecodedContentTest {
             fail();
         }
 
+        content = new DecodedContent(null);
+        assertEquals("null", content.toString());
+
         return;
     }
 

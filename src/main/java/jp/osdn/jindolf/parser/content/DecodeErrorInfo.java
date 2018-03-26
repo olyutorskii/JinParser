@@ -294,8 +294,8 @@ public class DecodeErrorInfo{
             else if(info1 == null)  return -1;
             else if(info2 == null)  return 1;
 
-            int pos1 = info1.charPos;
-            int pos2 = info2.charPos;
+            int pos1 = info1.getCharPosition();
+            int pos2 = info2.getCharPosition();
 
             int result;
             if     (pos1 < pos2) result = -1;
