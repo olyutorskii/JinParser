@@ -7,6 +7,8 @@
 
 package jp.osdn.jindolf.parser;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jp.osdn.jindolf.parser.content.DecodedContent;
@@ -41,16 +43,40 @@ public class EntityConverter{
 
     private static final String UCS4_PATTERN = "[\\x{10000}-\\x{10ffff}]";
 
-    private static final RegexRep[] VALUES_CACHE = RegexRep.values();
+    private static final RegexCnv GT   = new RegexCnv("&gt;",       ">");
+    private static final RegexCnv LT   = new RegexCnv("&lt;",       "<");
+    private static final RegexCnv AMP  = new RegexCnv("&amp;",      "&");
+    private static final RegexCnv QUAT = new RegexCnv("&quot;",     DQ_STR);
+    private static final RegexCnv BS   = new RegexCnv(BS_PATTERN,   YEN_STR);
+    private static final RegexCnv UCS4 = new RegexCnv(UCS4_PATTERN, "?");
+
+    private static final List<RegexCnv> REGS =
+            Arrays.asList(GT, LT, AMP, QUAT, BS, UCS4);
+
+    private static final Pattern ORPAT;
+
+    static{
+        int groupNo = 1;
+        StringBuilder orRegex = new StringBuilder();
+        for(RegexCnv cnv : REGS){
+            if(groupNo > 1) orRegex.append('|');
+            orRegex.append('(');
+            orRegex.append(cnv.getRegex());
+            orRegex.append(')');
+            cnv.setGroupNo(groupNo++);
+        }
+        ORPAT = Pattern.compile(orRegex.toString());
+    }
 
 
-    private final Matcher matcher = RegexRep.buildMatcher();
+    private final Matcher matcher;
     private final boolean replaceSmp;
 
 
     /**
      * コンストラクタ。
-     * SMP面文字の代替処理は行われない。
+     *
+     * <p>SMP面文字の代替処理は行われない。
      */
     public EntityConverter(){
         this(false);
@@ -59,114 +85,133 @@ public class EntityConverter{
 
     /**
      * コンストラクタ。
+     *
      * @param replaceSmp SMP面文字を代替処理するならtrue
      */
     public EntityConverter(boolean replaceSmp){
         super();
+        this.matcher = buildMatcher();
         this.replaceSmp = replaceSmp;
         return;
     }
 
 
     /**
+     * マッチャを生成する。
+     *
+     * @return マッチャ
+     */
+    private static Matcher buildMatcher(){
+        Matcher result = ORPAT.matcher("");
+        return result;
+    }
+
+
+    /**
      * 実体参照の変換を行う。
-     * @param content 変換元文書
+     *
+     * @param srcContent 変換元文書
      * @return 切り出された変換済み文書
      */
-    public DecodedContent convert(DecodedContent content){
+    public DecodedContent convert(DecodedContent srcContent){
         int startPos = 0;
-        int endPos   = content.length();
-        return append(null, content, startPos, endPos);
+        int endPos   = srcContent.length();
+        return append(null, srcContent, startPos, endPos);
     }
 
     /**
      * 実体参照の変換を行う。
-     * @param content 変換元文書
+     *
+     * @param srcContent 変換元文書
      * @param range 範囲指定
      * @return 切り出された変換済み文書
      * @throws IndexOutOfBoundsException 位置指定に不正があった
      */
-    public DecodedContent convert(DecodedContent content, SeqRange range)
+    public DecodedContent convert(DecodedContent srcContent, SeqRange range)
             throws IndexOutOfBoundsException{
         int startPos = range.getStartPos();
         int endPos   = range.getEndPos();
-        return append(null, content, startPos, endPos);
+        return append(null, srcContent, startPos, endPos);
     }
 
     /**
      * 実体参照の変換を行う。
-     * @param content 変換元文書
+     *
+     * @param srcContent 変換元文書
      * @param startPos 開始位置
      * @param endPos 終了位置
      * @return 切り出された変換済み文書
      * @throws IndexOutOfBoundsException 位置指定に不正があった
      */
-    public DecodedContent convert(DecodedContent content,
-                                   int startPos, int endPos)
-            throws IndexOutOfBoundsException{
-        return append(null, content, startPos, endPos);
-    }
-
-    /**
-     * 実体参照の変換を行い既存のDecodedContentに追加を行う。
-     * @param target 追加先文書。nullなら新たな文書が用意される。
-     * @param content 変換元文書
-     * @return targetもしくは新規に用意された文書
-     * @throws IndexOutOfBoundsException 位置指定に不正があった
-     */
-    public DecodedContent  append(DecodedContent target,
-                                   DecodedContent content)
-            throws IndexOutOfBoundsException{
-        int startPos = 0;
-        int endPos   = content.length();
-        return append(target, content, startPos, endPos);
-    }
-
-    /**
-     * 実体参照の変換を行い既存のDecodedContentに追加を行う。
-     * @param target 追加先文書。nullなら新たな文書が用意される。
-     * @param content 変換元文書
-     * @param range 範囲指定
-     * @return targetもしくは新規に用意された文書
-     * @throws IndexOutOfBoundsException 位置指定に不正があった
-     */
-    public DecodedContent  append(DecodedContent target,
-                                   DecodedContent content,
-                                   SeqRange range )
-            throws IndexOutOfBoundsException{
-        int startPos = range.getStartPos();
-        int endPos   = range.getEndPos();
-        return append(target, content, startPos, endPos);
-    }
-
-    /**
-     * 実体参照の変換を行い既存のDecodedContentに追加を行う。
-     * @param target 追加先文書。nullなら新たな文書が用意される。
-     * @param content 変換元文書
-     * @param startPos 開始位置
-     * @param endPos 終了位置
-     * @return targetもしくは新規に用意された文書
-     * @throws IndexOutOfBoundsException 位置指定に不正があった
-     */
-    public DecodedContent append(DecodedContent target,
-                                  DecodedContent content,
+    public DecodedContent convert(DecodedContent srcContent,
                                   int startPos, int endPos)
+            throws IndexOutOfBoundsException{
+        return append(null, srcContent, startPos, endPos);
+    }
+
+    /**
+     * 実体参照の変換を行い既存のDecodedContentに追加を行う。
+     *
+     * @param dstContent 追加先文書。nullなら新たな文書が用意される。
+     * @param srcContent 変換元文書
+     * @return targetもしくは新規に用意された文書
+     * @throws IndexOutOfBoundsException 位置指定に不正があった
+     */
+    public DecodedContent append(DecodedContent dstContent,
+                                 DecodedContent srcContent)
+            throws IndexOutOfBoundsException{
+        int startPos = 0;
+        int endPos   = srcContent.length();
+        return append(dstContent, srcContent, startPos, endPos);
+    }
+
+    /**
+     * 実体参照の変換を行い既存のDecodedContentに追加を行う。
+     *
+     * @param dstContent 追加先文書。nullなら新たな文書が用意される。
+     * @param srcContent 変換元文書
+     * @param range 範囲指定
+     * @return targetもしくは新規に用意された文書
+     * @throws IndexOutOfBoundsException 位置指定に不正があった
+     */
+    public DecodedContent append(DecodedContent dstContent,
+                                 DecodedContent srcContent,
+                                 SeqRange range )
+            throws IndexOutOfBoundsException{
+        int startPos = range.getStartPos();
+        int endPos   = range.getEndPos();
+        return append(dstContent, srcContent, startPos, endPos);
+    }
+
+    /**
+     * 実体参照の変換を行い既存のDecodedContentに追加を行う。
+     *
+     * @param dstContent 追加先文書。nullなら新たな文書が用意される。
+     * @param srcContent 変換元文書
+     * @param startPos 開始位置
+     * @param endPos 終了位置
+     * @return targetもしくは新規に用意された文書
+     * @throws IndexOutOfBoundsException 位置指定に不正があった
+     */
+    public DecodedContent append(DecodedContent dstContent,
+                                 DecodedContent srcContent,
+                                 int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(    startPos > endPos
             || startPos < 0
-            || content.length() < endPos){
+            || srcContent.length() < endPos){
             throw new IndexOutOfBoundsException();
         }
 
         DecodedContent result;
-        if(target == null){
+        if(dstContent == null){
             int length = endPos - startPos;
             result = new DecodedContent(length);
         }else{
-            result = target;
+            result = dstContent;
         }
 
-        this.matcher.reset(content.getRawContent());
+        this.matcher.reset(srcContent.getRawContent());
         this.matcher.region(startPos, endPos);
 
         int copiedPos = startPos;
@@ -174,14 +219,14 @@ public class EntityConverter{
             int group = -1;
             int matchStart = -1;
             String altTxt = "";
-            for(RegexRep rr : VALUES_CACHE){
-                group = rr.getGroupNo();
+            for(RegexCnv rc : REGS){
+                group = rc.getGroupNo();
                 matchStart = this.matcher.start(group);
                 if(matchStart >= 0){
-                    if(rr == RegexRep.UCS4 &&  ! this.replaceSmp){
+                    if(rc == UCS4 &&  ! this.replaceSmp){
                         altTxt = this.matcher.group(group);
                     }else{
-                        altTxt = rr.getAltTxt();
+                        altTxt = rc.getAltTxt();
                     }
                     break;
                 }
@@ -189,12 +234,12 @@ public class EntityConverter{
             assert group >= 1;
             int matchEnd = this.matcher.end(group);
 
-            result.append(content, copiedPos, matchStart);
+            result.append(srcContent, copiedPos, matchStart);
             result.append(altTxt);
 
             copiedPos = matchEnd;
         }
-        result.append(content, copiedPos, endPos);
+        result.append(srcContent, copiedPos, endPos);
 
         this.matcher.reset("");
 
@@ -205,27 +250,20 @@ public class EntityConverter{
     /**
      * 文字列置換リスト。
      */
-    private static enum RegexRep{
-
-        GT   ("&gt;",       ">"),
-        LT   ("&lt;",       "<"),
-        AMP  ("&amp;",      "&"),
-        QUAT ("&quot;",     DQ_STR),
-        BS   (BS_PATTERN,   YEN_STR),
-        UCS4 (UCS4_PATTERN, "?"),
-        ;
-
+    private static class RegexCnv{
 
         private final String regex;
         private final String altTxt;
+        private int groupNo;
 
 
         /**
          * コンストラクタ。
+         *
          * @param regex 置換元パターン正規表現
          * @param altTxt 置換文字列。
          */
-        RegexRep(String regex, String altTxt){
+        RegexCnv(String regex, String altTxt){
             this.regex = regex;
             this.altTxt = altTxt;
             return;
@@ -233,49 +271,35 @@ public class EntityConverter{
 
 
         /**
-         * 全正規表現をOR連結したパターンを生成する。
-         * @return パターン
+         * 正規表現文字列を返す。
+         *
+         * @return 正規表現文字列
          */
-        private static Pattern buildPattern(){
-            StringBuilder orRegex = new StringBuilder();
-
-            for(RegexRep rr : values()){
-                if(orRegex.length() > 0) orRegex.append('|');
-                orRegex.append('(');
-                orRegex.append(rr.regex);
-                orRegex.append(')');
-            }
-
-            Pattern result = Pattern.compile(orRegex.toString());
-            return result;
+        String getRegex(){
+            return this.regex;
         }
-
-        /**
-         * マッチャを生成する。
-         * @return マッチャ
-         */
-        private static Matcher buildMatcher(){
-            Pattern pattern = buildPattern();
-            Matcher result = pattern.matcher("");
-            return result;
-        }
-
 
         /**
          * 置換文字列を返す。
+         *
          * @return 置換文字列
          */
-        private String getAltTxt(){
+        String getAltTxt(){
             return this.altTxt;
         }
 
         /**
          * パターン内において占めるグループ番号を返す。
+         *
          * @return グループ番号
          */
-        private int getGroupNo(){
-            int group = ordinal() + 1;
-            return group;
+        int getGroupNo(){
+            return this.groupNo;
+        }
+
+        void setGroupNo(int groupNo){
+            this.groupNo = groupNo;
+            return;
         }
 
     }
