@@ -259,36 +259,6 @@ public class ContentBuilderTest {
         return;
     }
 
-    /**
-     * Test of UTF16 mapping error
-     * @throws Exception
-     */
-    @Test
-    public void testUTF16_nomap() throws Exception {
-        Charset cs = Charset.forName("UTF-16");
-
-        CharsetDecoder cd;
-        ContentBuilder cb;
-        DecodeNotifier decoder;
-        byte[] bdata;
-        InputStream is;
-        DecodedContent content;
-
-        cd = cs.newDecoder();
-        decoder = new DecodeNotifier(cd);
-        cb = new ContentBuilder();
-        decoder.setCharDecodeListener(cb);
-        bdata = Bseq.byteArray("0041:d83d:dc11:0042");
-        is = new ByteArrayInputStream(bdata);
-        decoder.decode(is);
-        content = cb.getContent();
-
-        assertEquals(4, content.length());
-        assertEquals("A\ud83d\udc11B", content.toString());
-
-        return;
-    }
-
     @Test
     public void testSheep() throws IOException, DecodeBreakException {
         System.out.println("sheep");

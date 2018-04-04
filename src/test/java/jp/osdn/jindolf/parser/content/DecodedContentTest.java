@@ -69,6 +69,9 @@ public class DecodedContentTest {
             fail();
         }
 
+        content = new DecodedContent(null);
+        assertEquals("null", content.toString());
+
         return;
     }
 
@@ -345,6 +348,7 @@ public class DecodedContentTest {
 
     /**
      * Test of append method, of class DecodedContent.
+     * @see DecodedContent#append(char)
      */
     @Test
     public void testAppend_char(){
@@ -353,57 +357,135 @@ public class DecodedContentTest {
         DecodedContent content;
 
         content = new DecodedContent();
+        assertEquals("", content.toString());
         content.append('a');
         assertEquals("a", content.toString());
+        content.append('b');
+        assertEquals("ab", content.toString());
 
         return;
     }
 
     /**
      * Test of append method, of class DecodedContent.
+     * @see DecodedContent#append(CharSequence)
      */
     @Test
     public void testAppend_CharSequence(){
         System.out.println("append");
 
         DecodedContent content;
+        CharSequence seq;
 
         content = new DecodedContent();
-        CharSequence seq = "abc";
+        assertEquals("", content.toString());
+        seq = "abc";
         content.append(seq);
         assertEquals("abc", content.toString());
+        seq = "def";
+        content.append(seq);
+        assertEquals("abcdef", content.toString());
+        seq = null;
+        content.append(seq);
+        assertEquals("abcdefnull", content.toString());
+        content.append(new DecodedContent("dec"));
+        assertEquals("abcdefnulldec", content.toString());
 
         return;
     }
 
     /**
      * Test of append method, of class DecodedContent.
+     * @see DecodedContent#append(CharSequence txt, int start, int end)
      */
     @Test
-    public void testAppend_3args_1(){
+    public void testAppend_3args_CharSeqintint(){
         System.out.println("append");
 
         DecodedContent content;
+        CharSequence seq;
 
         content = new DecodedContent();
-        content.append("abc");
-        assertEquals("abc", content.toString());
 
-        CharSequence seq = "12345";
-        content.append(seq, 1, 4);
-        assertEquals("abc234", content.toString());
+        seq = "12345";
+
+        content.init();
+        try{
+            content.append(seq, -1, 3);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
+        content.append(seq, 0, 3);
+        assertEquals("123", content.toString());
+
+        content.init();
+        content.append(seq, 1, 3);
+        assertEquals("23", content.toString());
+
+        content.init();
+        content.append((CharSequence)new DecodedContent("PQR"), 1, 3);
+        assertEquals("QR", content.toString());
+
+        content.init();
+        try{
+            content.append(seq, 3, 1);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
+        content.append(seq, 3, 3);
+        assertEquals("", content.toString());
+
+        content.init();
+        content.append(seq, 3, 5);
+        assertEquals("45", content.toString());
+
+        content.init();
+        try{
+            content.append(seq, 3, 6);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
+        try{
+            content.append(seq, 10, 10);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        // test runtime
+        StringBuilder sb = new StringBuilder("");
+        seq = null;
+        sb.append(seq, 1, 2);
+        assertEquals("u", sb.toString());
+
+        content.init();
+        seq = null;
+        content.append(seq, 1, 2);
+        assertEquals("u", content.toString());
 
         return;
     }
 
     /**
      * Test of append method, of class DecodedContent.
+     * @see DecodedContent#append(DecodedContent txt, int start, int end)
      */
     @Test
-    public void testAppend_3args_2(){
+    public void testAppend_3args_Decodeintint(){
         System.out.println("append");
 
         DecodedContent content;
+        List<DecodeErrorInfo> errList;
+        DecodeErrorInfo info;
 
         content = new DecodedContent();
         content.append("abc");
@@ -415,53 +497,206 @@ public class DecodedContentTest {
         content.append(other, 1, 4);
         assertEquals("abc234", content.toString());
 
-        content = new DecodedContent();
+        content.init();
+        try{
+            content.append(other, -1, 3);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
+        content.append(other, 0, 3);
+        assertEquals("123", content.toString());
+
+        content.init();
+        content.append(other, 1, 3);
+        assertEquals("23", content.toString());
+
+        content.init();
+        try{
+            content.append(other, 3, 1);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
+        content.append(other, 3, 3);
+        assertEquals("", content.toString());
+
+        content.init();
+        content.append(other, 3, 5);
+        assertEquals("45", content.toString());
+
+        content.init();
+        try{
+            content.append(other, 3, 6);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
+        try{
+            content.append(other, 10, 10);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
         content.append("abc");
 
         other = new DecodedContent();
+        other.append('A');
         other.addDecodeError((byte)0x01);
+        other.append('B');
         other.addDecodeError((byte)0x02);
-        other.addDecodeError((byte)0x03);
-        other.addDecodeError((byte)0x04);
-        other.addDecodeError((byte)0x05);
+        other.append('C');
+        assertEquals("A?B?C", other.toString());
 
         content.append(other, 1, 4);
-        assertEquals("abc???", content.toString());
+        assertEquals("abc?B?", content.toString());
 
-        List<DecodeErrorInfo> list = content.getDecodeErrorList();
-        assertEquals(3, list.size());
+        errList = content.getDecodeErrorList();
+        assertEquals(2, errList.size());
 
-        DecodeErrorInfo info;
+        info = errList.get(0);
+        assertEquals(3, info.getCharPosition());
+        assertEquals((byte)0x01, info.getRawByte1st());
+        info = errList.get(1);
+        assertEquals(5, info.getCharPosition());
+        assertEquals((byte)0x02, info.getRawByte1st());
 
-        info = list.get(0);
+        content.init();
+        content.append(other, 0, 5);
+        assertEquals("A?B?C", content.toString());
+
+        errList = content.getDecodeErrorList();
+        assertEquals(2, errList.size());
+
+        info = errList.get(0);
+        assertEquals(1, info.getCharPosition());
+        assertEquals((byte)0x01, info.getRawByte1st());
+        info = errList.get(1);
         assertEquals(3, info.getCharPosition());
         assertEquals((byte)0x02, info.getRawByte1st());
-        info = list.get(1);
-        assertEquals(4, info.getCharPosition());
-        assertEquals((byte)0x03, info.getRawByte1st());
-        info = list.get(2);
+
+        content.init();
+        content.append("ABCDE");
+        content.append(content, 1, 3);
+        assertEquals("ABCDEBC", content.toString());
+
+        content.init();
+        content.append('A');
+        content.addDecodeError((byte)0x00);
+        content.append('B');
+        content.addDecodeError((byte)0x01);
+        content.append('C');
+        content.append(content, 1, 3);
+        assertEquals("A?B?C?B", content.toString());
+        errList = content.getDecodeErrorList();
+        assertEquals(3, errList.size());
+        info = errList.get(0);
+        assertEquals(1, info.getCharPosition());
+        assertEquals((byte)0x00, info.getRawByte1st());
+        info = errList.get(1);
+        assertEquals(3, info.getCharPosition());
+        assertEquals((byte)0x01, info.getRawByte1st());
+        info = errList.get(2);
         assertEquals(5, info.getCharPosition());
-        assertEquals((byte)0x04, info.getRawByte1st());
+        assertEquals((byte)0x00, info.getRawByte1st());
+
+        CharSequence seq;
+        // test runtime
+        StringBuilder sb = new StringBuilder("");
+        seq = null;
+        sb.append(seq, 1, 2);
+        assertEquals("u", sb.toString());
+
+        content.init();
+        other = null;
+        content.append(other, 1, 2);
+        assertEquals("u", content.toString());
 
         return;
     }
 
     /**
      * Test of append method, of class DecodedContent.
+     * @see DecodedContent#append(char[], int, int)
      */
     @Test
-    public void testAppend_3args_3(){
+    public void testAppend_3args_charintint(){
         System.out.println("append");
 
         DecodedContent content;
 
-        content = new DecodedContent();
-        content.append("abc");
-        assertEquals("abc", content.toString());
-
         char[] seq = {'1','2','3','4','5',};
+
+        content = new DecodedContent();
+
+
+        content.init();
+        try{
+            content.append(seq, -1, 3);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
+        content.append(seq, 0, 3);
+        assertEquals("123", content.toString());
+
+        content.init();
         content.append(seq, 1, 3);
-        assertEquals("abc234", content.toString());
+        assertEquals("234", content.toString());
+
+
+        try{
+            content.append(seq, 3, -1);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        content.init();
+        content.append(seq, 3, 0);
+        assertEquals("", content.toString());
+
+        content.init();
+        content.append(seq, 3, 1);
+        assertEquals("4", content.toString());
+
+        content.init();
+        content.append(seq, 3, 2);
+        assertEquals("45", content.toString());
+
+        content.init();
+        try{
+            content.append(seq, 3, 3);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // GOOD
+        }
+
+        // test runtime
+        StringBuilder sb = new StringBuilder("A");
+        try{
+            sb.append((char[])null, 1, 2);
+            fail();
+        }catch(NullPointerException e){
+            // GOOD
+        }
+
+        try{
+            content.append((char[])null, 1, 2);
+            fail();
+        }catch(NullPointerException e){
+            // GOOD
+        }
 
         return;
     }
@@ -558,156 +793,106 @@ public class DecodedContentTest {
     }
 
     /**
-     * Test of lsearchErrorIndex method, of class DecodedContent.
-     */
-    @Test
-    public void testLsearchErrorIndex(){
-        System.out.println("lsearchErrorIndex");
-
-        List<DecodeErrorInfo> errList;
-        int result;
-
-        errList = new ArrayList<>();
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(1, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.lsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-
-        return;
-     }
-
-    /**
-     * Test of bsearchErrorIndex method, of class DecodedContent.
-     */
-    @Test
-    public void testBsearchErrorIndex(){
-        System.out.println("bsearchErrorIndex");
-
-        List<DecodeErrorInfo> errList;
-        int result;
-
-        errList = new ArrayList<>();
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(1, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(0, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-
-        errList.clear();
-        errList.add(new DecodeErrorInfo(4, (byte)0x00));
-        errList.add(new DecodeErrorInfo(5, (byte)0x00));
-        errList.add(new DecodeErrorInfo(10, (byte)0x00));
-        errList.add(new DecodeErrorInfo(14, (byte)0x00));
-        errList.add(new DecodeErrorInfo(15, (byte)0x00));
-        result = DecodedContent.bsearchErrorIndex(errList, 10);
-        assertEquals(2, result);
-        result = DecodedContent.bsearchErrorIndex(errList, 9);
-        assertEquals(2, result);
-        result = DecodedContent.bsearchErrorIndex(errList, 11);
-        assertEquals(3, result);
-
-        return;
-    }
-
-    /**
-     * Test of searchErrorIndex method, of class DecodedContent.
-     */
-    @Test
-    public void testSearchErrorIndex(){
-        System.out.println("searchErrorIndex");
-
-        List<DecodeErrorInfo> errList;
-        int result;
-
-        errList = new ArrayList<>();
-
-        errList.clear();
-        for(int pos = 0; pos <= 1000; pos += 10){
-            errList.add(new DecodeErrorInfo(pos, (byte)0x00));
-        }
-        result = DecodedContent.searchErrorIndex(errList, 503);
-        assertEquals(51, result);
-
-        errList.clear();
-        for(int pos = 0; pos <= 50; pos += 10){
-            errList.add(new DecodeErrorInfo(pos, (byte)0x00));
-        }
-        result = DecodedContent.searchErrorIndex(errList, 23);
-        assertEquals(3, result);
-
-        return;
-    }
-
-    /**
      * Test of appendGappedErrorInfo method, of class DecodedContent.
      */
     @Test
     public void testAppendGappedErrorInfo(){
         System.out.println("appendGappedErrorInfo");
 
-        DecodedContent sourceContent;
-        sourceContent = new DecodedContent();
+        List<DecodeErrorInfo> srcErrList = new ArrayList<>();
         for(int pos = 0; pos <= 50; pos += 10){
-            sourceContent.append("123456789");
-            sourceContent.addDecodeError((byte)0x00);
+            DecodeErrorInfo info = new DecodeErrorInfo(pos, (byte)0x00);
+            srcErrList.add(info);
         }
 
         List<DecodeErrorInfo> result;
-        result = DecodedContent.appendGappedErrorInfo(sourceContent, 15, 35, null, -100);
+        List<DecodeErrorInfo> target;
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 15, 35, null, -100);
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(119, result.get(0).getCharPosition());
-        assertEquals(129, result.get(1).getCharPosition());
+        assertEquals(120, result.get(0).getCharPosition());
+        assertEquals(130, result.get(1).getCharPosition());
+
+        target = new ArrayList<>();
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 15, 35, target, -100);
+        assertSame(target, result);
+        assertEquals(2, result.size());
+        assertEquals(120, result.get(0).getCharPosition());
+        assertEquals(130, result.get(1).getCharPosition());
+
+        try{
+            DecodedContent.appendGappedErrorInfo(srcErrList, 15, 35, srcErrList, -100);
+            fail();
+        }catch(IllegalArgumentException e){
+            // GOOD
+        }
+
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 40, null, -100);
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 41, null, -100);
+        assertNotNull(result);
+        assertEquals(4, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+        assertEquals(140, result.get(3).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 11, 40, null, -100);
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(120, result.get(0).getCharPosition());
+        assertEquals(130, result.get(1).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 9, 40, null, -100);
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 50, null, -100);
+        assertNotNull(result);
+        assertEquals(4, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+        assertEquals(140, result.get(3).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 51, null, -100);
+        assertNotNull(result);
+        assertEquals(5, result.size());
+        assertEquals(110, result.get(0).getCharPosition());
+        assertEquals(120, result.get(1).getCharPosition());
+        assertEquals(130, result.get(2).getCharPosition());
+        assertEquals(140, result.get(3).getCharPosition());
+        assertEquals(150, result.get(4).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 0, 0, null, -100);
+        assertNull(result);
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 0, 1, null, -100);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(100, result.get(0).getCharPosition());
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 10, 10, null, -100);
+        assertNull(result);
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 15, 15, null, -100);
+        assertNull(result);
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 15, 16, null, -100);
+        assertNull(result);
+
+        result = DecodedContent.appendGappedErrorInfo(srcErrList, 60, 70, null, -100);
+        assertNull(result);
 
         return;
     }

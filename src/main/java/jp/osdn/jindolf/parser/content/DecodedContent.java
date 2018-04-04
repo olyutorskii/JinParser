@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.RandomAccess;
 
 /**
- * デコードエラー情報を含む再利用可能な文字列。
+ * デコードエラー情報と共に追記可能な可変文字列。
  *
  * <p>デコードエラーを起こした箇所は代替文字{@link #ALTCHAR}で置き換えられる。
- * マルチスレッドには非対応。
+ *
+ * <p>マルチスレッドには非対応。
  */
 public class DecodedContent
         implements CharSequence,
@@ -24,48 +25,50 @@ public class DecodedContent
 
     /**
      * 代替文字。
-     * {@literal HTMLで使うなら < や > や & や " や ' はやめて！}
+     *
+     * <p>{@literal HTMLで使うなら < や > や & や " や ' は避けた方が無難}
      */
     public static final char ALTCHAR = '?';
 
+    private static final List<DecodeErrorInfo> EMPTY_LIST;
     private static final String NULLTEXT = "null";
 
-    private static final List<DecodeErrorInfo> EMPTY_LIST =
-            Collections.emptyList();
-
-    private static final int BSEARCH_THRESHOLD = 16;
-
     static{
-        assert ALTCHAR != '<';
-        assert ALTCHAR != '>';
-        assert ALTCHAR != '&';
-        assert ALTCHAR != '"';
-        assert ALTCHAR != '\'';
-        assert ALTCHAR != '\\';
+        List<DecodeErrorInfo> emptyList;
+        emptyList = Collections.emptyList();
+        emptyList = Collections.unmodifiableList(emptyList);
+        EMPTY_LIST = emptyList;
+
+        assert createErrorList() instanceof RandomAccess;
     }
 
 
     private final StringBuilder rawContent = new StringBuilder();
-
-    private List<DecodeErrorInfo> decodeError;
+    private List<DecodeErrorInfo> errList;
 
 
     /**
      * コンストラクタ。
+     *
+     * <p>長さ0の文字列が反映され、デコードエラー総数は0件となる。
      */
     public DecodedContent(){
-        this("");
+        super();
+        initImpl();
         return;
     }
 
     /**
      * コンストラクタ。
+     *
+     * <p>引数の文字列が反映され、デコードエラー総数は0件となる。
+     *
+     * <p>nullが渡されると文字列"null"として解釈される。
+     *
      * @param seq 初期化文字列
-     * @throws NullPointerException 引数がnull
      */
-    public DecodedContent(CharSequence seq) throws NullPointerException{
+    public DecodedContent(CharSequence seq){
         super();
-        if(seq == null) throw new NullPointerException();
         initImpl();
         this.rawContent.append(seq);
         return;
@@ -73,6 +76,13 @@ public class DecodedContent
 
     /**
      * コンストラクタ。
+     *
+     * <p>長さ0の文字列が反映され、デコードエラー総数は0件となる。
+     *
+     * <p>文字数の初期容量を引数で指定する。
+     * 文字列長が初期容量を超えるまでの間、
+     * 文字列格納の再割り当てが起こらないことが期待される。
+     *
      * @param capacity 文字数の初期容量
      * @throws NegativeArraySizeException 容量が負の値
      */
@@ -86,124 +96,114 @@ public class DecodedContent
 
 
     /**
-     * 与えられた文字位置を含むか、またはそれ以降で最も小さな位置情報を持つ
-     * デコードエラーのインデックス位置を返す。※リニアサーチ版。
-     * @param errList デコードエラーのリスト
-     * @param startPos 文字位置
-     * @return 0から始まるリスト内の位置。
-     *     一致する文字位置がなければ挿入ポイント。
-     */
-    protected static int lsearchErrorIndex(List<DecodeErrorInfo> errList,
-                                             int startPos){
-        // assert errList instanceof RandomAccess;
-
-        int errSize = errList.size();
-
-        int idx;
-        for(idx = 0; idx < errSize; idx++){
-            DecodeErrorInfo einfo = errList.get(idx);
-            int errPos = einfo.getCharPosition();
-            if(startPos <= errPos) break;
-        }
-
-        return idx;
-    }
-
-    /**
-     * 与えられた文字位置を含むか、またはそれ以降で最も小さな位置情報を持つ
-     * デコードエラーのインデックス位置を返す。※バイナリサーチ版。
-     * @param errList デコードエラーのリスト
-     * @param startPos 文字位置
-     * @return 0から始まるリスト内の位置。
-     *     一致する文字位置がなければ挿入ポイント。
-     */
-    protected static int bsearchErrorIndex(List<DecodeErrorInfo> errList,
-                                             int startPos){
-        // assert errList instanceof RandomAccess;
-
-        int floor = 0;
-        int roof  = errList.size() - 1;
-
-        while(floor <= roof){
-            int gapHalf = (roof - floor) / 2;  // 切り捨て
-            int midpoint = floor + gapHalf;
-            DecodeErrorInfo einfo = errList.get(midpoint);
-            int cmp = einfo.getCharPosition() - startPos;
-
-            if     (cmp < 0) floor = midpoint + 1;
-            else if(cmp > 0) roof  = midpoint - 1;
-            else return midpoint;
-        }
-
-        return floor;
-    }
-
-    /**
-     * 与えられた文字位置を含むか、またはそれ以降で最も小さな位置情報を持つ
-     * デコードエラーのインデックス位置を返す。
-     * 要素数の増減に応じてリニアサーチとバイナリサーチを使い分ける。
-     * @param errList デコードエラーのリスト
-     * @param startPos 文字位置
-     * @return 0から始まるリスト内の位置。
-     *     一致する文字位置がなければ挿入ポイント。
-     */
-    protected static int searchErrorIndex(List<DecodeErrorInfo> errList,
-                                            int startPos){
-        int result;
-
-        int errSize = errList.size();
-        if(errSize < BSEARCH_THRESHOLD){
-            // linear-search
-            result = lsearchErrorIndex(errList, startPos);
-        }else{
-            // binary-search
-            result = bsearchErrorIndex(errList, startPos);
-        }
-
-        return result;
-    }
-
-    /**
      * ギャップ情報が加味されたデコードエラー情報を、
-     * 範囲指定込みで指定エラーリストに追加転記する。
-     * 追加先エラーリストがnullだった場合、必要に応じてエラーリストが生成され
+     * 範囲指定込みで指定エラーリストに追加コピーする。
+     *
+     * <p>追加先エラーリストがnullだった場合、
+     * 必要に応じてエラーリストが生成され
      * 戻り値となる場合がありうる。
-     * @param sourceContent 元の文字列
-     * @param startPos 範囲開始位置
-     * @param endPos 範囲終了位置
-     * @param targetError 追加先エラーリスト。nullでもよい。
+     *
+     * @param srcErrList 追加元エラーリスト
+     * @param startCharPt 範囲開始位置
+     * @param endCharPt 範囲終了位置
+     * @param dstErrList 追加先エラーリスト。nullでもよい。
+     *     追加元と異なるリストでなければならない。
      * @param gap ギャップ量
      * @return 引数targetErrorもしくは新規生成されたリストを返す。
+     *     なにもコピーされなければnullを返す。
+     * @throws IllegalArgumentException 追加元リストと追加先リストが
+     *     同一インスタンス
      */
-    protected static List<DecodeErrorInfo>
-            appendGappedErrorInfo(DecodedContent sourceContent,
-                                     int startPos, int endPos,
-                                     List<DecodeErrorInfo> targetError,
-                                     int gap){
-        List<DecodeErrorInfo> sourceError = sourceContent.decodeError;
-        List<DecodeErrorInfo> result = targetError;
+    static List<DecodeErrorInfo> appendGappedErrorInfo(
+        List<DecodeErrorInfo> srcErrList,
+        int startCharPt, int endCharPt,
+        List<DecodeErrorInfo> dstErrList,
+        int gap
+    ){
+        if(srcErrList == dstErrList) throw new IllegalArgumentException();
+        if(startCharPt >= endCharPt) return dstErrList;
 
-        int startErrorIdx = searchErrorIndex(sourceError, startPos);
-        int endErrorIdx = sourceError.size() - 1;
-        assert endErrorIdx >= 0;
-
-        for(int index = startErrorIdx; index <= endErrorIdx; index++){
-            DecodeErrorInfo einfo = sourceError.get(index);
-            int pos = einfo.getCharPosition();
-            if(pos < startPos) continue;
-            if(pos >= endPos) break;
-            DecodeErrorInfo newInfo = einfo.createGappedClone(gap);
-            if(result == null){
-                result = createErrorList();
-            }
-            result.add(newInfo);
+        int startErrorIdx =
+                DecodeErrorInfo.searchErrorIndex(srcErrList, startCharPt);
+        int errSize = srcErrList.size();
+        if(startErrorIdx >= errSize){
+            return null;
         }
 
+        int endErrorIdx = calcEndIdx(srcErrList, endCharPt);
+
+        boolean hasLoop =
+                (0 <= startErrorIdx) && (startErrorIdx <= endErrorIdx);
+        if( ! hasLoop){
+            return null;
+        }
+
+        List<DecodeErrorInfo> result;
+        if(dstErrList == null) result = createErrorList();
+        else                   result = dstErrList;
+
+        copyGappedErrorInfo(srcErrList,
+                            startErrorIdx, endErrorIdx,
+                            result, gap);
         return result;
+    }
+
+    /**
+     * 文字列終了点からエラーリスト範囲の最終インデックスを求める。
+     *
+     * @param srcErrList エラーリスト
+     * @param endCharPt 文字列終了点
+     * @return リスト範囲の最終インデックス
+     */
+    private static int calcEndIdx(List<DecodeErrorInfo> srcErrList,
+                                  int endCharPt){
+        int lastCharPos = endCharPt - 1;
+
+        int endErrorIdx =
+                DecodeErrorInfo.searchErrorIndex(srcErrList, lastCharPos);
+
+        int errSize = srcErrList.size();
+        if(endErrorIdx >= errSize){
+            endErrorIdx = errSize - 1;
+        }else{
+            DecodeErrorInfo lastErrorInfo = srcErrList.get(endErrorIdx);
+
+            boolean isLastErrorInfoOnLastPos =
+                    lastErrorInfo.getCharPosition() == lastCharPos;
+            if( ! isLastErrorInfoOnLastPos){
+                endErrorIdx--;
+            }
+        }
+
+        return endErrorIdx;
+    }
+
+    /**
+     * エラーリストの一部の範囲を、gapを加味して別リストに追加コピーする。
+     *
+     * @param srcErrList コピー元リスト
+     * @param startErrorIdx コピー元の範囲開始インデックス
+     * @param endErrorIdx コピー元の範囲終了インデックス
+     * @param dstErrList コピー先リスト
+     * @param gap 代替文字出現位置ギャップ量
+     */
+    private static void copyGappedErrorInfo(
+        List<DecodeErrorInfo> srcErrList,
+        int startErrorIdx, int endErrorIdx,
+        List<DecodeErrorInfo> dstErrList,
+        int gap
+    ){
+        for(int index = startErrorIdx; index <= endErrorIdx; index++){
+            DecodeErrorInfo srcErrInfo = srcErrList.get(index);
+            DecodeErrorInfo gappedInfo = srcErrInfo.createGappedClone(gap);
+            dstErrList.add(gappedInfo);
+        }
+        return;
     }
 
     /**
      * エラー格納用リストを生成する。
+     *
      * @return リスト
      */
     private static List<DecodeErrorInfo> createErrorList(){
@@ -211,37 +211,11 @@ public class DecodedContent
         return result;
     }
 
-    static{
-        assert createErrorList() instanceof RandomAccess;
-    }
-
-    /**
-     * 初期化下請け。
-     * 長さ0の文字列＆デコードエラー無しの状態になる。
-     */
-    private void initImpl(){
-        this.rawContent.setLength(0);
-
-        if(this.decodeError != null){
-            this.decodeError.clear();
-        }
-
-        return;
-    }
-
-    /**
-     * 事前にキャパシティを確保する。
-     * 指定されたキャパシティの範囲内で再割り当てが起きないことを保証する。
-     * @param minimumCapacity キャラクタ単位のキャパシティ長。
-     */
-    public void ensureCapacity(int minimumCapacity){
-        this.rawContent.ensureCapacity(minimumCapacity);
-        return;
-    }
 
     /**
      * 初期化。
-     * 長さ0の文字列＆デコードエラー無しの状態になる。
+     *
+     * <p>長さ0の文字列＆デコードエラー無しの状態になる。
      * コンストラクタで新インスタンスを作るより低コスト。
      */
     public void init(){
@@ -250,29 +224,62 @@ public class DecodedContent
     }
 
     /**
-     * デコードエラーを含むか判定する。
+     * 初期化下請け。
+     *
+     * <p>長さ0の文字列＆デコードエラー無しの状態になる。
+     */
+    private void initImpl(){
+        this.rawContent.setLength(0);
+
+        if(this.errList != null){
+            this.errList.clear();
+        }
+
+        return;
+    }
+
+    /**
+     * 事前にキャパシティを確保する。
+     *
+     * <p>指定されたキャパシティの範囲内で再割り当てが起きないことを保証する。
+     *
+     * @param minimumCapacity キャラクタ単位のキャパシティ長。
+     */
+    public void ensureCapacity(int minimumCapacity){
+        this.rawContent.ensureCapacity(minimumCapacity);
+        return;
+    }
+
+    /**
+     * デコードエラーを含むか否か判定する。
+     *
      * @return デコードエラーを含むならtrue
      */
     public boolean hasDecodeError(){
-        if(this.decodeError == null) return false;
-        if(this.decodeError.isEmpty()) return false;
+        if(this.errList == null)   return false;
+        if(this.errList.isEmpty()) return false;
         return true;
     }
 
     /**
      * デコードエラーの一覧を取得する。
+     *
      * @return デコードエラーの一覧
      */
     public List<DecodeErrorInfo> getDecodeErrorList(){
         if( ! hasDecodeError() ){
             return EMPTY_LIST;
         }
-        return Collections.unmodifiableList(this.decodeError);
+        return Collections.unmodifiableList(this.errList);
     }
 
     /**
      * 生の文字列を得る。
-     * 高速なCharSequenceアクセス用途。
+     *
+     * <p>戻り値からエラー情報は消される。
+     *
+     * <p>高速なCharSequenceアクセス用途。
+     *
      * @return 生の文字列。
      */
     public CharSequence getRawContent(){
@@ -281,6 +288,9 @@ public class DecodedContent
 
     /**
      * 指定された位置の文字を変更する。
+     *
+     * <p>デコードエラーにより追加された代替文字の変更も可能。
+     *
      * @param index 文字位置
      * @param ch 文字
      * @throws IndexOutOfBoundsException 不正な位置指定
@@ -293,6 +303,7 @@ public class DecodedContent
 
     /**
      * {@inheritDoc}
+     *
      * @param index {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -303,6 +314,7 @@ public class DecodedContent
 
     /**
      * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
@@ -312,36 +324,40 @@ public class DecodedContent
 
     /**
      * {@inheritDoc}
-     * @param start {@inheritDoc}
-     * @param end {@inheritDoc}
+     *
+     * @param startCharPt {@inheritDoc}
+     * @param endCharPt {@inheritDoc}
      * @return {@inheritDoc}
      */
     @Override
-    public CharSequence subSequence(int start, int end){
-        return this.rawContent.subSequence(start, end);
+    public CharSequence subSequence(int startCharPt, int endCharPt){
+        return this.rawContent.subSequence(startCharPt, endCharPt);
     }
 
     /**
      * 範囲指定されたサブコンテントを切り出す。
-     * サブコンテントにはデコードエラー情報が引き継がれる。
-     * @param start 開始位置
-     * @param end 終了位置
+     *
+     * <p>サブコンテントにはデコードエラー情報が引き継がれる。
+     *
+     * @param startCharPt 開始位置
+     * @param endCharPt 終了位置
      * @return サブコンテント
      * @throws IndexOutOfBoundsException start または end が負の値の場合、
      *     end が length() より大きい場合、
      *     あるいは start が end より大きい場合
      */
-    public DecodedContent subContent(int start, int end)
+    public DecodedContent subContent(int startCharPt, int endCharPt)
             throws IndexOutOfBoundsException{
-        int length = end - start;
+        int length = endCharPt - startCharPt;
         if(length < 0) throw new IndexOutOfBoundsException();
         DecodedContent result = new DecodedContent(length);
-        result.append(this, start, end);
+        result.append(this, startCharPt, endCharPt);
         return result;
     }
 
     /**
-     * 文字を追加する。
+     * 文字を末尾へ追加する。
+     *
      * @param letter 追加する文字
      * @return thisオブジェクト
      */
@@ -352,125 +368,166 @@ public class DecodedContent
     }
 
     /**
-     * 文字列を追加する。
+     * 文字列を末尾へ追加する。
+     *
+     * <p>nullが渡されると文字列"null"として解釈される。
+     *
      * @param seq 追加する文字列
      * @return thisオブジェクト
      */
     @Override
     public DecodedContent append(CharSequence seq){
+        DecodedContent result;
+
         if(seq == null){
-            this.rawContent.append(NULLTEXT);
+            result = append(NULLTEXT);
         }else if(seq instanceof DecodedContent){
-            append((DecodedContent) seq, 0, seq.length());
+            DecodedContent content = (DecodedContent) seq;
+            int seqLen = seq.length();
+            result = append(content, 0, seqLen);
         }else{
             this.rawContent.append(seq);
+            result = this;
         }
-        return this;
+
+        return result;
     }
 
     /**
-     * 文字列を追加する。
+     * 文字列を末尾へ追加する。
+     *
+     * <p>nullが渡されると文字列"null"として解釈される。
+     *
      * @param seq 追加する文字列
-     * @param startPos 開始位置
-     * @param endPos 終了位置
+     * @param startCharPt 開始位置
+     * @param endCharPt 終了位置
      * @return thisオブジェクト
      * @throws IndexOutOfBoundsException 範囲指定が変。
      */
     @Override
     public DecodedContent append(CharSequence seq,
-                                  int startPos, int endPos)
+                                 int startCharPt, int endCharPt)
             throws IndexOutOfBoundsException{
+        DecodedContent result;
+
         if(seq == null){
-            this.rawContent.append(NULLTEXT);
+            result = append(NULLTEXT, startCharPt, endCharPt);
         }else if(seq instanceof DecodedContent){
-            append((DecodedContent) seq, startPos, endPos);
+            result = append((DecodedContent) seq, startCharPt, endCharPt);
+        }else if(   startCharPt < 0
+                 || startCharPt > endCharPt
+                 || endCharPt > seq.length()){
+            throw new IndexOutOfBoundsException();
+        }else if(startCharPt == endCharPt){
+            result = this;
         }else{
-            this.rawContent.append(seq, startPos, endPos);
+            this.rawContent.append(seq, startCharPt, endCharPt);
+            result = this;
         }
 
-        return this;
+        return result;
     }
 
     /**
-     * 文字列を追加する。
+     * 文字列を末尾へ追加する。
      *
-     * @param str  追加される文字
+     * @param str  追加する文字配列
      * @param offset 追加される最初の char のインデックス
      * @param len 追加される char の数
      * @return thisオブジェクト
      * @throws IndexOutOfBoundsException 範囲指定が不正。
+     * @see StringBuffer#append(char[], int, int)
      */
     public DecodedContent append(char[] str, int offset, int len)
             throws IndexOutOfBoundsException{
-        if(str == null){
-            this.rawContent.append(NULLTEXT);
-        }else{
-            this.rawContent.append(str, offset, len);
-        }
-
+        this.rawContent.append(str, offset, len);
         return this;
     }
 
     /**
-     * 文字列を追加する。
+     * 文字列を末尾へ追加する。
+     *
+     * <p>追加元のエラー情報は追加先へ引き継がれる。
+     *
+     * <p>nullが渡されると文字列"null"として解釈される。
+     *
      * @param source 追加する文字列
-     * @param startPos 開始位置
-     * @param endPos 終了位置
+     * @param startCharPt 開始位置
+     * @param endCharPt 終了位置
      * @return thisオブジェクト
      * @throws IndexOutOfBoundsException 範囲指定が変。
+     * @see Appendable#append(CharSequence, int, int)
      */
     public DecodedContent append(DecodedContent source,
-                                  int startPos, int endPos)
+                                 int startCharPt, int endCharPt)
             throws IndexOutOfBoundsException{
         if(source == null){
-            return append(NULLTEXT);
+            return append(NULLTEXT, startCharPt, endCharPt);
         }
 
-        int gap = startPos - this.rawContent.length();
+        if(   startCharPt < 0
+           || startCharPt > endCharPt
+           || endCharPt > source.length()){
+            throw new IndexOutOfBoundsException();
+        }else if(startCharPt == endCharPt){
+            return this;
+        }
 
-        this.rawContent.append(source.rawContent, startPos, endPos);
+        int oldLength = this.rawContent.length();
 
-        if( ! source.hasDecodeError() ) return this;
+        this.rawContent.append(source.rawContent, startCharPt, endCharPt);
 
-        List<DecodeErrorInfo> targetErrorList;
-        if(source != this) targetErrorList = this.decodeError;
-        else               targetErrorList = null;
-
-        targetErrorList = appendGappedErrorInfo(source,
-                                                startPos, endPos,
-                                                targetErrorList,
-                                                gap);
-
-        if(targetErrorList == null)             return this;
-        if(targetErrorList == this.decodeError) return this;
-
-        if(this.decodeError == null){
-            this.decodeError = targetErrorList;
+        List<DecodeErrorInfo> srcErrList;
+        if(source.hasDecodeError()){
+            srcErrList = source.errList;
         }else{
-            this.decodeError.addAll(targetErrorList);
+            return this;
+        }
+
+        List<DecodeErrorInfo> dstErrList;
+        if(source == this) dstErrList = null;
+        else               dstErrList = this.errList;
+
+        int gap = startCharPt - oldLength;
+
+        dstErrList = appendGappedErrorInfo(srcErrList,
+                                           startCharPt, endCharPt,
+                                           dstErrList,
+                                           gap);
+
+        if(dstErrList == null)         return this;
+        if(dstErrList == this.errList) return this;
+
+        if(this.errList == null){
+            this.errList = dstErrList;
+        }else{
+            this.errList.addAll(dstErrList);
         }
 
         return this;
     }
 
     /**
-     * 代替文字とともにデコードエラーを追加する。
-     * ※呼び出し側は、追加されるデコードエラーの位置情報が
+     * 代替文字とともにデコードエラーを末尾へ追加する。
+     *
+     * <p>※呼び出し側は、追加されるデコードエラーの位置情報が
      * 既存のデコードエラーよりも大きいことを保証しなければならない。
+     *
      * @param errorInfo デコードエラー
      */
-    private void addDecodeError(DecodeErrorInfo errorInfo){
-        if(this.decodeError == null){
-            this.decodeError = createErrorList();
+    void addDecodeError(DecodeErrorInfo errorInfo){
+        if(this.errList == null){
+            this.errList = createErrorList();
         }
-        this.decodeError.add(errorInfo);
+        this.errList.add(errorInfo);
         this.rawContent.append(ALTCHAR);
         return;
     }
 
     /**
-     * 代替文字とともにデコードエラーを追加する。
-     * @param b1st 1バイト目の値
+     * 代替文字とともにデコードエラーを末尾へ追加する。
+     *
+     * @param b1st エラー1バイト目の値
      */
     public void addDecodeError(byte b1st){
         DecodeErrorInfo errInfo =
@@ -480,12 +537,12 @@ public class DecodedContent
     }
 
     /**
-     * 代替文字とともに2バイトからなるデコードエラーを追加する。
+     * 代替文字とともに2バイトからなるデコードエラーを末尾へ追加する。
      *
      * <p>主にシフトJISのUnmapエラーを想定。
      *
-     * @param b1st 1バイト目の値
-     * @param b2nd 2バイト目の値
+     * @param b1st エラー1バイト目の値
+     * @param b2nd エラー2バイト目の値
      */
     public void addDecodeError(byte b1st, byte b2nd){
         DecodeErrorInfo errInfo =
@@ -496,6 +553,7 @@ public class DecodedContent
 
     /**
      * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override

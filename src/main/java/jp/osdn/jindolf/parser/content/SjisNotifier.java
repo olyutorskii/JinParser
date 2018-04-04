@@ -86,6 +86,7 @@ public class SjisNotifier extends DecodeNotifier{
     /**
      * Javaランタイムの差異によるシフトJISデコードエラーの揺らぎを正規化する。
      *
+     * <p>
      * <ul>
      *
      * <li>2バイト長のUnmapエラーがシフトJISの形式を満たさない場合、
