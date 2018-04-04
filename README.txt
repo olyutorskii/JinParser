@@ -37,8 +37,8 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 
 === 依存ライブラリ ===
 
- - JinParserはビルドに際してJinCoreライブラリを必要とします。
-   開発時はMaven等を用いてJinCoreライブラリを用意してください。
+ - JinParserはビルドに際してJinCore、JioCema両ライブラリを必要とします。
+   開発時はMaven等を用いてこれらのライブラリを用意してください。
 
 
 === 開発プロジェクト運営元 ===
@@ -65,10 +65,10 @@ JindolfのXHTML文書パース機能を提供することを目的に発足し�
 ./pom.xml
     Maven3用プロジェクト構成定義ファイル。
 
-./checkstyle.xml
+./config/checkstyle/checkstyle.xml
     Checkstyle用configファイル。
 
-./pmdrules.xml
+./config/pmd/pmdrules.xml
     PMD用ルール定義ファイル。
 
 ./src/assembly/src.xml
