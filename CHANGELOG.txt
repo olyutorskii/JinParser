@@ -4,6 +4,10 @@
 JinParser 変更履歴
 
 
+2.101.106 (2019-05-06)
+    ・必須環境をJavaSE8に引き上げ。
+    ・Mercurial(2.101.5-SNAPSHOT)からGit(2.101.105-SNAPSHOT)へSCMを移行。
+
 2.101.4 (2018-04-04)
     ・assemblyファイルにconfig/ディレクトリが指定されない不備を修正。
 
