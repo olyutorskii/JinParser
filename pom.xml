@@ -118,7 +118,7 @@
         <dependency>
             <groupId>jp.sourceforge.jindolf</groupId>
             <artifactId>jincore</artifactId>
-            <version>1.206.112</version>
+            <version>1.207.2</version>
             <scope>compile</scope>
         </dependency>
 
