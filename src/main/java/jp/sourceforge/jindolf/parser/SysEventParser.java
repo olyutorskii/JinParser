@@ -1,8 +1,8 @@
 /*
  * System event parser
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: SysEventParser.java 1027 2010-05-13 09:47:30Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -78,6 +78,7 @@ public class SysEventParser extends AbstractParser{
                 || probePlayerList()
                 || probeExecution()
                 || probeVanish()
+                || probeCheckout()
                 ;
         if( ! result ){
             throw buildParseException();
@@ -139,9 +140,13 @@ public class SysEventParser extends AbstractParser{
               "全ては終わったかのように見えた。<br />"
              +"だが、奴が生き残っていた……。");
     private static final Pattern PANIC_PATTERN =
-            compile("……。");
+             compile("……。");
+    private static final Pattern SHORTMEMBER_PATTERN =
+             compile(
+             "まだ村人達は揃っていないようだ。"
+            +"(?:<br />)?");
 
-    private static Object[][] simpleRegexToType = {
+    private static final Object[][] SIMPLE_REGEX_TO_TYPE = {
         { STARTENTRY_PATTERN,   SysEventType.STARTENTRY   },
         { STARTMIRROR_PATTERN,  SysEventType.STARTMIRROR  },
         { STARTASSAULT_PATTERN, SysEventType.STARTASSAULT },
@@ -150,6 +155,7 @@ public class SysEventParser extends AbstractParser{
         { WINWOLF_PATTERN,      SysEventType.WINWOLF      },
         { WINHAMSTER_PATTERN,   SysEventType.WINHAMSTER   },
         { PANIC_PATTERN,        SysEventType.PANIC        },
+        { SHORTMEMBER_PATTERN,  SysEventType.SHORTMEMBER  },
     };
 
     /**
@@ -164,12 +170,12 @@ public class SysEventParser extends AbstractParser{
 
         SysEventType matchedType = null;
 
-        for(Object[] pair : simpleRegexToType){
-            Pattern pattern = (Pattern)( pair[0] );
+        for(Object[] pair : SIMPLE_REGEX_TO_TYPE){
+            Pattern pattern = (Pattern) pair[0];
 
             if(lookingAtProbe(pattern)){
                 shrinkRegion();
-                matchedType = (SysEventType)( pair[1] );
+                matchedType = (SysEventType) pair[1];
                 break;
             }
         }
@@ -789,6 +795,55 @@ public class SysEventParser extends AbstractParser{
         return true;
     }
 
+    private static final Pattern CHECKOUT_PATTERN =
+            compile(
+                 "(?:<br />)*"
+                +"(" + AVATAR_REGEX + ")"
+                +"\u0020は、宿を去った。"
+                +"(?:<br />)*"
+            );
+
+    /**
+     * CHECKOUTメッセージのパースを試みる。
+     * @return マッチしたらtrue
+     * @throws HtmlParseException パースエラー
+     */
+    private boolean probeCheckout() throws HtmlParseException{
+        SeqRange avatarRange  = this.rangepool_1;
+
+        pushRegion();
+
+        sweepSpace();
+
+        boolean hasCheckout = false;
+
+        for(;;){
+            if( ! lookingAtProbe(CHECKOUT_PATTERN)){
+                break;
+            }
+
+            if( ! hasCheckout ){
+                hasCheckout = true;
+                this.sysEventHandler.sysEventType(SysEventType.CHECKOUT);
+            }
+            avatarRange.setLastMatchedGroupRange(getMatcher(), 1);
+
+            shrinkRegion();
+
+            this.sysEventHandler
+                .sysEventCheckout(getContent(), avatarRange);
+        }
+
+        if( ! hasCheckout ){
+            popRegion();
+            return false;
+        }
+
+        sweepSpace();
+
+        return true;
+    }
+
     /**
      * Orderメッセージをパースする。
      * @throws HtmlParseException パースエラー
@@ -1260,8 +1315,8 @@ public class SysEventParser extends AbstractParser{
             throw new IllegalStateException();
         }
 
-        if(   this.pushedRegionStart != regionStart()
-           || this.pushedRegionEnd   != regionEnd()  ){
+        if(    this.pushedRegionStart != regionStart()
+            || this.pushedRegionEnd   != regionEnd()  ){
             getMatcher().region(this.pushedRegionStart, this.pushedRegionEnd);
         }
 

@@ -1,6 +1,6 @@
 /*
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: EntityConverterTest.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -11,6 +11,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -109,6 +110,44 @@ public class EntityConverterTest {
         SeqRange range = new SeqRange(1,4);
         result = converter.convert(from, range);
         assertEquals("bcd", result.toString());
+
+        from = new DecodedContent();
+        from.append("abcde");
+        try{
+            converter.convert(from, 4, 1);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // OK
+        }
+
+        from = new DecodedContent();
+        from.append("abcde");
+        try{
+            converter.convert(from, -1, 4);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // OK
+        }
+
+        from = new DecodedContent();
+        from.append("abcde");
+        try{
+            converter.convert(from, 1, 6);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+            // OK
+        }
+
+        from = new DecodedContent();
+        from.append("a\ud83d\udc11b"); // 🐑
+        result = converter.convert(from);
+        assertEquals("a\ud83d\udc11b", result.toString());
+
+        from = new DecodedContent();
+        from.append("a\ud83d\udc11b"); // 🐑
+        EntityConverter repConverter = new EntityConverter(true);
+        result = repConverter.convert(from);
+        assertEquals("a?b", result.toString());
 
         return;
     }

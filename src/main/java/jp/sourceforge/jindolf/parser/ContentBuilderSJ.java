@@ -1,8 +1,8 @@
 /*
  * content builder for Shift_JIS
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: ContentBuilderSJ.java 991 2010-03-14 10:22:35Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -14,15 +14,19 @@ package jp.sourceforge.jindolf.parser;
  */
 public class ContentBuilderSJ extends ContentBuilder{
 
+    private static final int DEF_BUF_SZ = 128;
+
+
     private boolean hasByte1st;
     private byte byte1st;
+
 
     /**
      * コンストラクタ。
      * 長さ0で空の{@link DecodedContent}がセットされる。
      */
     public ContentBuilderSJ(){
-        this(128);
+        this(DEF_BUF_SZ);
         return;
     }
 
@@ -42,7 +46,7 @@ public class ContentBuilderSJ extends ContentBuilder{
      * デコード処理の初期化下請。
      */
     private void initImpl(){
-        this.content.init();
+        getContent().init();
         this.hasByte1st = false;
         this.byte1st = 0x00;
         return;
@@ -63,7 +67,7 @@ public class ContentBuilderSJ extends ContentBuilder{
     @Override
     protected void flushError(){
         if(this.hasByte1st){
-            this.content.addDecodeError(this.byte1st);
+            getContent().addDecodeError(this.byte1st);
             this.hasByte1st = false;
         }
         return;
@@ -74,10 +78,11 @@ public class ContentBuilderSJ extends ContentBuilder{
      * @param seq {@inheritDoc}
      * @throws DecodeException {@inheritDoc}
      */
+    @Override
     public void charContent(CharSequence seq)
             throws DecodeException{
         flushError();
-        this.content.append(seq);
+        getContent().append(seq);
         return;
     }
 
@@ -88,6 +93,7 @@ public class ContentBuilderSJ extends ContentBuilder{
      * @param length {@inheritDoc}
      * @throws DecodeException {@inheritDoc}
      */
+    @Override
     public void decodingError(byte[] errorArray, int offset, int length)
             throws DecodeException{
         int limit = offset + length;
@@ -98,19 +104,19 @@ public class ContentBuilderSJ extends ContentBuilder{
                     this.byte1st = bval;
                     this.hasByte1st = true;
                 }else{
-                    this.content.addDecodeError(bval);
+                    getContent().addDecodeError(bval);
                 }
             }else{
                 if(ShiftJis.isShiftJIS2ndByte(bval)){   // 文字集合エラー
-                    this.content.addDecodeError(this.byte1st, bval);
+                    getContent().addDecodeError(this.byte1st, bval);
                     this.hasByte1st = false;
                 }else if(ShiftJis.isShiftJIS1stByte(bval)){
-                    this.content.addDecodeError(this.byte1st);
+                    getContent().addDecodeError(this.byte1st);
                     this.byte1st = bval;
                     this.hasByte1st = true;
                 }else{
-                    this.content.addDecodeError(this.byte1st);
-                    this.content.addDecodeError(bval);
+                    getContent().addDecodeError(this.byte1st);
+                    getContent().addDecodeError(bval);
                     this.hasByte1st = false;
                 }
             }

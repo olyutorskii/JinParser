@@ -1,8 +1,8 @@
 /*
  * abstract XHTML parser
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: AbstractParser.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -29,23 +29,13 @@ public abstract class AbstractParser implements ChainedParser{
 
     private static final Pattern DUMMY_PATTERN = compile("\u0000");
 
-    /**
-     * 正規表現のコンパイルを行う。
-     * デフォルトで{@link java.util.regex.Pattern#DOTALL}が
-     * オプション指定される。
-     * @param regex 正規表現文字列
-     * @return マッチエンジン
-     */
-    protected static Pattern compile(CharSequence regex){
-        Pattern result = Pattern.compile(regex.toString(), Pattern.DOTALL);
-        return result;
-    }
 
     private final ChainedParser parent;
 
     private DecodedContent content;
     private Matcher matcher;
     private String contextErrorMessage;
+
 
     /**
      * コンストラクタ。
@@ -64,6 +54,19 @@ public abstract class AbstractParser implements ChainedParser{
         this.parent = parent;
         resetImpl();
         return;
+    }
+
+
+    /**
+     * 正規表現のコンパイルを行う。
+     * デフォルトで{@link java.util.regex.Pattern#DOTALL}が
+     * オプション指定される。
+     * @param regex 正規表現文字列
+     * @return マッチエンジン
+     */
+    protected static Pattern compile(CharSequence regex){
+        Pattern result = Pattern.compile(regex.toString(), Pattern.DOTALL);
+        return result;
     }
 
     /**
@@ -89,10 +92,6 @@ public abstract class AbstractParser implements ChainedParser{
     }
 
     /**
-     * {@inheritDoc}
-     * @param content {@inheritDoc}
-     */
-    /**
      * パース対象文字列をセットする。
      * パースが終わるまでこの文字列の内容を変更してはならない。
      * @param content パース対象文字列
@@ -114,6 +113,7 @@ public abstract class AbstractParser implements ChainedParser{
      * {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public DecodedContent getContent(){
         if(this.parent != null){
             return this.parent.getContent();
@@ -126,6 +126,7 @@ public abstract class AbstractParser implements ChainedParser{
      * {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public Matcher getMatcher(){
         if(this.parent != null){
             return this.parent.getMatcher();
@@ -221,8 +222,7 @@ public abstract class AbstractParser implements ChainedParser{
      * 残りの検索対象領域からパターンがマッチする部分を探す。
      * 見つからなければ例外をスローする。
      * @param pattern 正規表現パターン
-     * @throws HtmlParseException
-     * マッチしなかった
+     * @throws HtmlParseException マッチしなかった
      */
     protected void findAffirm(Pattern pattern)
             throws HtmlParseException{
@@ -236,8 +236,7 @@ public abstract class AbstractParser implements ChainedParser{
      * 残りの検索対象領域先頭からパターンがマッチする部分を探す。
      * 見つからなければ例外をスローする。
      * @param pattern 正規表現パターン
-     * @throws HtmlParseException
-     * マッチしなかった
+     * @throws HtmlParseException マッチしなかった
      */
     protected void lookingAtAffirm(Pattern pattern)
             throws HtmlParseException{
@@ -251,8 +250,7 @@ public abstract class AbstractParser implements ChainedParser{
      * 残りの検索対象領域全体がパターンにマッチするか調べる。
      * マッチしなければ例外をスローする。
      * @param pattern 正規表現パターン
-     * @throws HtmlParseException
-     * マッチしなかった
+     * @throws HtmlParseException マッチしなかった
      */
     protected void matchesAffirm(Pattern pattern)
             throws HtmlParseException{
@@ -303,20 +301,20 @@ public abstract class AbstractParser implements ChainedParser{
     }
 
     /**
+     * 最後にマッチした全領域の開始位置を得る。
+     * @return 開始位置
+     */
+    protected int matchStart(){
+        return getMatcher().start();
+    }
+
+    /**
      * 最後にマッチした前方参照グループの終了位置を得る。
      * @param group 前方参照識別番号
      * @return 終了位置
      */
     protected int matchEnd(int group){
         return getMatcher().end(group);
-    }
-
-    /**
-     * 最後にマッチした全領域の開始位置を得る。
-     * @return 開始位置
-     */
-    protected int matchStart(){
-        return getMatcher().start();
     }
 
     /**

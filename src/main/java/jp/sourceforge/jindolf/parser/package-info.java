@@ -6,21 +6,24 @@
  * このファイルはソースコードを含まず、
  * パッケージコメントとパッケージ宣言のみが含まれます。
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: package-info.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 /**
  * これは Jindolf プロジェクトにおける、
  * XHTML文書のパース部分を構成するパッケージです。
  *
+ * <p>
  * JinParserライブラリは、CGIゲーム「人狼BBS」のクライアント制作者向けに
  * 作られたJavaライブラリです。
  * JinParserライブラリは、人狼BBSの専用クライアント開発プロジェクト
  * 「Jindolf」から派生しました。
+ * </p>
  *
  * <hr>
  *
+ * <p>
  * 任意のバイトストリームから、
  * デコードエラー情報付き文字列{@code DecodedContent}を得るには、
  * 次のようにします。
@@ -40,7 +43,9 @@
  * DecodedContent content = builder.getContent();
  * }
  * </pre>
+ * </p>
  *
+ * <p>
  * このようにして得られた文字列をパースして、
  * あなたの実装したハンドラ{@code YourHandler}に通知するには、
  * 以下のようにします。
@@ -58,9 +63,12 @@
  * }
  * }
  * </pre>
+ * </p>
  *
+ * <p>
  * ハンドラ内部で、パース元となった文字列の一部を切り出したい場合は、
  * {@code EntityConverter}を使うのが便利です。
+ * </p>
  *
  * <hr>
  *
@@ -94,10 +102,12 @@
  *
  * <hr>
  *
- * @see <a href="http://jindolf.sourceforge.jp/">
+ * @see <a href="http://jindolf.osdn.jp/">
  * Jindolfポータルサイト</a>
- * @see <a href="http://sourceforge.jp/projects/jindolf/">
+ * @see <a href="https://osdn.jp/projects/jindolf/devel/">
  * Jindolf開発プロジェクト</a>
  */
 
 package jp.sourceforge.jindolf.parser;
+
+/* EOF */

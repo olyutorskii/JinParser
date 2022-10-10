@@ -1,8 +1,8 @@
 /*
  * decoded source
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: DecodedContent.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -28,6 +28,8 @@ public class DecodedContent
      */
     public static final char ALTCHAR = '?';
 
+    private static final String NULLTEXT = "null";
+
     private static final List<DecodeErrorInfo> EMPTY_LIST =
             Collections.emptyList();
 
@@ -42,13 +44,54 @@ public class DecodedContent
         assert ALTCHAR != '\\';
     }
 
+
+    private final StringBuilder rawContent = new StringBuilder();
+
+    private List<DecodeErrorInfo> decodeError;
+
+
+    /**
+     * コンストラクタ。
+     */
+    public DecodedContent(){
+        this("");
+        return;
+    }
+
+    /**
+     * コンストラクタ。
+     * @param seq 初期化文字列
+     * @throws NullPointerException 引数がnull
+     */
+    public DecodedContent(CharSequence seq) throws NullPointerException{
+        super();
+        if(seq == null) throw new NullPointerException();
+        initImpl();
+        this.rawContent.append(seq);
+        return;
+    }
+
+    /**
+     * コンストラクタ。
+     * @param capacity 文字数の初期容量
+     * @throws NegativeArraySizeException 容量が負の値
+     */
+    public DecodedContent(int capacity) throws NegativeArraySizeException{
+        super();
+        if(capacity < 0) throw new NegativeArraySizeException();
+        initImpl();
+        this.rawContent.ensureCapacity(capacity);
+        return;
+    }
+
+
     /**
      * 与えられた文字位置を含むか、またはそれ以降で最も小さな位置情報を持つ
      * デコードエラーのインデックス位置を返す。※リニアサーチ版。
      * @param errList デコードエラーのリスト
      * @param startPos 文字位置
      * @return 0から始まるリスト内の位置。
-     * 一致する文字位置がなければ挿入ポイント。
+     *     一致する文字位置がなければ挿入ポイント。
      */
     protected static int lsearchErrorIndex(List<DecodeErrorInfo> errList,
                                              int startPos){
@@ -72,7 +115,7 @@ public class DecodedContent
      * @param errList デコードエラーのリスト
      * @param startPos 文字位置
      * @return 0から始まるリスト内の位置。
-     * 一致する文字位置がなければ挿入ポイント。
+     *     一致する文字位置がなければ挿入ポイント。
      */
     protected static int bsearchErrorIndex(List<DecodeErrorInfo> errList,
                                              int startPos){
@@ -102,7 +145,7 @@ public class DecodedContent
      * @param errList デコードエラーのリスト
      * @param startPos 文字位置
      * @return 0から始まるリスト内の位置。
-     * 一致する文字位置がなければ挿入ポイント。
+     *     一致する文字位置がなければ挿入ポイント。
      */
     protected static int searchErrorIndex(List<DecodeErrorInfo> errList,
                                             int startPos){
@@ -164,50 +207,12 @@ public class DecodedContent
      * @return リスト
      */
     private static List<DecodeErrorInfo> createErrorList(){
-        List<DecodeErrorInfo> result = new ArrayList<DecodeErrorInfo>();
+        List<DecodeErrorInfo> result = new ArrayList<>();
         return result;
     }
 
     static{
         assert createErrorList() instanceof RandomAccess;
-    }
-
-    private final StringBuilder rawContent = new StringBuilder();
-
-    private List<DecodeErrorInfo> decodeError;
-
-    /**
-     * コンストラクタ。
-     */
-    public DecodedContent(){
-        this("");
-        return;
-    }
-
-    /**
-     * コンストラクタ。
-     * @param seq 初期化文字列
-     * @throws NullPointerException 引数がnull
-     */
-    public DecodedContent(CharSequence seq) throws NullPointerException{
-        super();
-        if(seq == null) throw new NullPointerException();
-        initImpl();
-        this.rawContent.append(seq);
-        return;
-    }
-
-    /**
-     * コンストラクタ。
-     * @param capacity 文字数の初期容量
-     * @throws NegativeArraySizeException 容量が負の値
-     */
-    public DecodedContent(int capacity) throws NegativeArraySizeException{
-        super();
-        if(capacity < 0) throw new NegativeArraySizeException();
-        initImpl();
-        this.rawContent.ensureCapacity(capacity);
-        return;
     }
 
     /**
@@ -291,6 +296,7 @@ public class DecodedContent
      * @param index {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public char charAt(int index){
         return this.rawContent.charAt(index);
     }
@@ -299,6 +305,7 @@ public class DecodedContent
      * {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public int length(){
         return this.rawContent.length();
     }
@@ -309,6 +316,7 @@ public class DecodedContent
      * @param end {@inheritDoc}
      * @return {@inheritDoc}
      */
+    @Override
     public CharSequence subSequence(int start, int end){
         return this.rawContent.subSequence(start, end);
     }
@@ -320,7 +328,8 @@ public class DecodedContent
      * @param end 終了位置
      * @return サブコンテント
      * @throws IndexOutOfBoundsException start または end が負の値の場合、
-     * end が length() より大きい場合、あるいは start が end より大きい場合
+     *     end が length() より大きい場合、
+     *     あるいは start が end より大きい場合
      */
     public DecodedContent subContent(int start, int end)
             throws IndexOutOfBoundsException{
@@ -336,6 +345,7 @@ public class DecodedContent
      * @param letter 追加する文字
      * @return thisオブジェクト
      */
+    @Override
     public DecodedContent append(char letter){
         this.rawContent.append(letter);
         return this;
@@ -346,11 +356,12 @@ public class DecodedContent
      * @param seq 追加する文字列
      * @return thisオブジェクト
      */
+    @Override
     public DecodedContent append(CharSequence seq){
         if(seq == null){
-            this.rawContent.append("null");
+            this.rawContent.append(NULLTEXT);
         }else if(seq instanceof DecodedContent){
-            append((DecodedContent)seq, 0, seq.length());
+            append((DecodedContent) seq, 0, seq.length());
         }else{
             this.rawContent.append(seq);
         }
@@ -365,13 +376,14 @@ public class DecodedContent
      * @return thisオブジェクト
      * @throws IndexOutOfBoundsException 範囲指定が変。
      */
+    @Override
     public DecodedContent append(CharSequence seq,
                                   int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(seq == null){
-            this.rawContent.append("null", startPos, endPos);
+            this.rawContent.append(NULLTEXT, startPos, endPos);
         }else if(seq instanceof DecodedContent){
-            append((DecodedContent)seq, startPos, endPos);
+            append((DecodedContent) seq, startPos, endPos);
         }else{
             this.rawContent.append(seq, startPos, endPos);
         }
@@ -391,7 +403,7 @@ public class DecodedContent
                                   int startPos, int endPos)
             throws IndexOutOfBoundsException{
         if(source == null){
-            return append("null", startPos, endPos);
+            return append(NULLTEXT, startPos, endPos);
         }
 
         int gap = startPos - this.rawContent.length();
@@ -468,5 +480,4 @@ public class DecodedContent
         return this.rawContent.toString();
     }
 
-    // TODO Windows-31Jへの再デコード処理など
 }

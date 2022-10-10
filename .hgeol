@@ -1,0 +1,19 @@
+[patterns]
+
+**.txt = native
+
+**.java = native
+**.properties = LF
+
+**.xml = LF
+**.xsd = LF
+**.dtd = LF
+
+**.html = LF
+**.htm = LF
+**.css = LF
+
+**.png = BIN
+**.gif = BIN
+**.jpeg = BIN
+**.jpg = BIN

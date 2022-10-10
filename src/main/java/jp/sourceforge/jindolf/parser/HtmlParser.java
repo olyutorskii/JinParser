@@ -1,8 +1,8 @@
 /*
  * XHTML parser
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: HtmlParser.java 1021 2010-03-24 16:03:21Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -15,6 +15,9 @@ import jp.sourceforge.jindolf.corelib.VillageState;
  * 人狼BBS各種XHTML文字列のパースを行いハンドラに通知する。
  */
 public class HtmlParser extends AbstractParser{
+
+    private static final String SP = "\u0020";
+
 
     private BasicHandler basicHandler;
     private final TalkParser     talkParser     = new TalkParser(this);
@@ -103,13 +106,13 @@ public class HtmlParser extends AbstractParser{
             compile(
                   "("
                     +"<form"
-                    +"\u0020" + "action=\"index\\.rb\""
-                    +"\u0020" + "method=\"post\""
-                    +"\u0020" + "class=\"login_form\""
+                    +SP + "action=\"index\\.rb\""
+                    +SP + "method=\"post\""
+                    +SP + "class=\"login_form\""
                     +">"
                 + ")|("
                     +"<div"
-                    +"\u0020" + "class=\"login_form\""
+                    +SP + "class=\"login_form\""
                     +">"
                 + ")"
             );
@@ -123,7 +126,7 @@ public class HtmlParser extends AbstractParser{
     private static final Pattern USERID_PATTERN =
             compile(
                   "name=\"user_id\""
-                + "\u0020"
+                + SP
                 + "value=\"([^\"]*)\""
             );
     private static final Pattern C_FORM_PATTERN =
@@ -177,7 +180,7 @@ public class HtmlParser extends AbstractParser{
                     +"([0-9]+)"                       // 月
                     +"/"
                     +"([0-9]+)"                       // 日
-                    +"\u0020"
+                    +SP
                     +"(?:(?:(午前)|(午後))\u0020)?"  // AMPM
                     +"([0-9]+)"                       // 時
                     +"(?:時\u0020|\\:)"
@@ -229,13 +232,13 @@ public class HtmlParser extends AbstractParser{
             );
     private static final Pattern PERIOD_PATTERN =
             compile(
-                "(プロローグ)" +
-            "|"+
-                "(エピローグ)" +
-            "|"+
-                "(終了)" +
-            "|"+
-                "([0-9]+)日目"
+                  "(プロローグ)"
+            +"|"
+                + "(エピローグ)"
+            +"|"
+                + "(終了)"
+            +"|"
+                + "([0-9]+)日目"
             );
     private static final Pattern C_SPAN_PATTERN   = compile("</span>");
     private static final Pattern C_ANCHOR_PATTERN = compile("</a>");
@@ -331,8 +334,6 @@ public class HtmlParser extends AbstractParser{
     private void parseMessage() throws HtmlParseException{
         setContextErrorMessage("lost message");
 
-        SeqRange nameRange = this.rangepool_1;
-
         boolean skipGarbage = true;
 
         for(;;){
@@ -357,30 +358,7 @@ public class HtmlParser extends AbstractParser{
             }
             shrinkRegion();
 
-            sweepSpace();
-
-            lookingAtAffirm(O_MSGKIND_PATTERN);
-            if(isGroupMatched(1)){
-                shrinkRegion();
-                this.sysEventParser.parseAnnounce();
-            }else if(isGroupMatched(2)){
-                shrinkRegion();
-                this.sysEventParser.parseOrder();
-            }else if(isGroupMatched(3)){
-                shrinkRegion();
-                this.sysEventParser.parseExtra();
-            }else if(isGroupMatched(5)){
-                nameRange.setLastMatchedGroupRange(getMatcher(), 5);
-                int talkNo = -1;
-                if(isGroupMatched(4)){
-                    talkNo = parseGroupedInt(4);
-                }
-                shrinkRegion();
-                this.talkParser.parseTalk(talkNo, nameRange);
-            }else{
-                assert false;
-                throw buildParseException();
-            }
+            dispatchFamily();
 
             lookingAtAffirm(C_DIV_PATTERN);
             shrinkRegion();
@@ -389,8 +367,51 @@ public class HtmlParser extends AbstractParser{
         return;
     }
 
+    /**
+     * イベント種別によって処理を振り分ける。
+     * @throws HtmlParseException パースエラー
+     */
+    private void dispatchFamily() throws HtmlParseException{
+        sweepSpace();
+
+        SeqRange nameRange = this.rangepool_1;
+
+        lookingAtAffirm(O_MSGKIND_PATTERN);
+        if(isGroupMatched(1)){
+            shrinkRegion();
+            this.sysEventParser.parseAnnounce();
+        }else if(isGroupMatched(2)){
+            shrinkRegion();
+            this.sysEventParser.parseOrder();
+        }else if(isGroupMatched(3)){
+            shrinkRegion();
+            this.sysEventParser.parseExtra();
+        }else if(isGroupMatched(5)){
+            nameRange.setLastMatchedGroupRange(getMatcher(), 5);
+            int talkNo = -1;
+            if(isGroupMatched(4)){
+                talkNo = parseGroupedInt(4);
+            }
+            shrinkRegion();
+            this.talkParser.parseTalk(talkNo, nameRange);
+        }else{
+            assert false;
+            throw buildParseException();
+        }
+
+        return;
+    }
+
     private static final Pattern O_LISTTABLE_PATTERN =
-            compile("<table\u0020class=\"list\">");
+            compile("<table\u0020class=\"list\">"
+                   +"(?:"
+                   +  "<tr>"
+                   +    "<th>村名</th>"
+                   +    "<th>Mode</th>"
+                   +    "<th>更新</th>"
+                   +    "<th>状態</th>"
+                   +  "</tr>"
+                   +")?");
     private static final Pattern ACTIVEVILLAGE =
             compile(
              "("
@@ -398,21 +419,25 @@ public class HtmlParser extends AbstractParser{
             +")|(?:"
                 +"<tr><td>"
                 +"<a\u0020href=\"([^\"]*)\">([^<]*)</a>"
-                +"\u0020<strong>\uff08"
-                    +"(?:(?:(午前)|(午後))\u0020)?"  // AMPM
-                    +"([0-9]+)"                       // 時
+                +"(?:\u0020|</td><td>"
+                +"(?:<strong>)?(?:通常|初心者優先|[^<]*)(?:</strong>)?"
+                +"</td><td>)"
+                +"<strong>"
+                    +"(?:\uff08(?:(午前)|(午後))\u0020)?"  // AMPM
+                    +"([0-9]+)"                              // 時
                     +"(?:時\u0020|\\:)"
-                    +"([0-9]+)"                       // 分
-                    +"分?\u0020更新"
-                +"\uff09</strong>"
-                +"</td><td>(?:"
-                +"[^<]*"
-                    + "(参加者募集中です。)"
-                    +"|(開始待ちです。)"
-                    +"|(進行中です。)"
-                    +"|(勝敗が決定しました。)"
+                    +"([0-9]+)"                              // 分
+                    +"(?:\u0020|分\u0020更新\uff09)"
+                +"</strong>"
+                +"</td><td>"
+                +"(?:"
+                    + "(参加者募集中(?:です。)?)"
+                    +"|(開始待ち(?:です。)?)"
+                    +"|(進行中(?:です。)?)"
+                    +"|(勝敗が決定しました。|エピローグ)"
                     +"|(終了・ログ公開中。)"
-                +")</td></tr>"
+                +")"
+                +"</td></tr>"
             +")"
             );
 
@@ -428,6 +453,7 @@ public class HtmlParser extends AbstractParser{
 
         if( ! findProbe(O_LISTTABLE_PATTERN) ) return;
         shrinkRegion();
+        sweepSpace();
 
         for(;;){
             lookingAtAffirm(ACTIVEVILLAGE);

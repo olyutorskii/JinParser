@@ -1,8 +1,8 @@
 /*
  * System event handler
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: SysEventHandler.java 1014 2010-03-16 10:43:28Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -15,8 +15,11 @@ import jp.sourceforge.jindolf.corelib.Team;
 /**
  * システムイベントのパース通知用のハンドラ。
  *
+ * <p>
  * このハンドラの全メソッドはパーサ{@link SysEventParser}から呼び出される。
+ * </p>
  *
+ * <p>
  * パーサがシステムイベントを発見すると、まず最初に
  * {@link #startSysEvent(EventFamily)}がファミリ種別と共に呼び出される。
  * 次にシステムイベントのイベント種別が判明すると、
@@ -24,16 +27,23 @@ import jp.sourceforge.jindolf.corelib.Team;
  * イベント種別に従い、このハンドラの様々なメソッドが0回以上呼び出される。
  * 最後に{@link #endSysEvent()}が呼び出される。
  * その後パーサは次のシステムイベントを探し始める。
+ * </p>
  *
+ * <p>
  * 一部のメソッドに渡される{@link DecodedContent}文字列オブジェクトは
  * mutableである。
  * 後々で内容が必要になるならば、ハンドラはSeqRangeで示されたこの内容の
  * 必要な箇所をコピーして保存しなければならない。
+ * </p>
  *
+ * <p>
  * フラグメントや属性値中の文字参照記号列の解釈はハンドラ側の責務とする。
+ * </p>
  *
+ * <p>
  * 各メソッドは、各々の判断で{@link HtmlParseException}をスローする
  * ことにより、パース作業を中断させることができる。
+ * </p>
  */
 public interface SysEventHandler{
 
@@ -175,7 +185,7 @@ public interface SysEventHandler{
      * @param content パース対象の文字列。
      * @param avatarRange 投票先Avatar名の範囲
      * @param votes 得票数。負の値であれば、
-     * 処刑されたAvatarの通知と見なされる。
+     *     処刑されたAvatarの通知と見なされる。
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#EXECUTION
      */
@@ -193,6 +203,17 @@ public interface SysEventHandler{
      */
     void sysEventVanish(DecodedContent content,
                           SeqRange avatarRange )
+        throws HtmlParseException;
+
+    /**
+     * CHECKOUTイベントの詳細の通知を受け取る。
+     * @param content パース対象の文字列
+     * @param avatarRange 失踪したAvatar名の範囲
+     * @throws HtmlParseException パースエラー
+     * @see jp.sourceforge.jindolf.corelib.SysEventType#CHECKOUT
+     */
+    void sysEventCheckout(DecodedContent content,
+                            SeqRange avatarRange )
         throws HtmlParseException;
 
     /**

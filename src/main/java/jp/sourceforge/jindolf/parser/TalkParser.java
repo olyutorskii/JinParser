@@ -1,8 +1,8 @@
 /*
  * talk-part parser
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: TalkParser.java 1016 2010-03-16 11:31:30Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;

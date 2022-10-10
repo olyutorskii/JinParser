@@ -1,8 +1,8 @@
 /*
  * abstract content builder
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: ContentBuilder.java 1001 2010-03-15 12:09:35Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -15,7 +15,8 @@ import java.nio.charset.CharsetDecoder;
 public abstract class ContentBuilder implements DecodeHandler{
 
     /** 文字列内容。 */
-    protected DecodedContent content;
+    private final DecodedContent content;
+
 
     /**
      * コンストラクタ。
@@ -48,6 +49,7 @@ public abstract class ContentBuilder implements DecodeHandler{
      * @param decoder {@inheritDoc}
      * @throws DecodeException {@inheritDoc}
      */
+    @Override
     public void startDecoding(CharsetDecoder decoder)
             throws DecodeException{
         init();
@@ -58,6 +60,7 @@ public abstract class ContentBuilder implements DecodeHandler{
      * {@inheritDoc}
      * @throws DecodeException {@inheritDoc}
      */
+    @Override
     public void endDecoding()
             throws DecodeException{
         flushError();

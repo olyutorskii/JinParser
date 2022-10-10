@@ -1,8 +1,8 @@
 /*
  * html handler adapter
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: HtmlAdapter.java 1014 2010-03-16 10:43:28Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -22,10 +22,20 @@ import jp.sourceforge.jindolf.corelib.VillageState;
 public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
+     * コンストラクタ。
+     */
+    protected HtmlAdapter(){
+        super();
+        return;
+    }
+
+
+    /**
      * {@inheritDoc}
      * @param content {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void startParse(DecodedContent content)
             throws HtmlParseException{
         return;
@@ -37,6 +47,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param titleRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void pageTitle(DecodedContent content, SeqRange titleRange)
             throws HtmlParseException{
         return;
@@ -48,6 +59,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param loginRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void loginName(DecodedContent content, SeqRange loginRange)
             throws HtmlParseException{
         return;
@@ -58,6 +70,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param type {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void pageType(PageType type)
             throws HtmlParseException{
         return;
@@ -69,6 +82,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param villageRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void villageName(DecodedContent content, SeqRange villageRange)
             throws HtmlParseException{
         return;
@@ -82,6 +96,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param minute {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void commitTime(int month, int day, int hour, int minute)
             throws HtmlParseException{
         return;
@@ -95,6 +110,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param day {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void periodLink(DecodedContent content,
                             SeqRange anchorRange,
                             PeriodType periodType, int day)
@@ -112,6 +128,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param state {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void villageRecord(DecodedContent content,
                                 SeqRange anchorRange,
                                 SeqRange villageRange,
@@ -125,6 +142,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void endParse() throws HtmlParseException{
         return;
     }
@@ -133,6 +151,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void startTalk() throws HtmlParseException{
         return;
     }
@@ -141,6 +160,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void endTalk() throws HtmlParseException{
         return;
     }
@@ -150,6 +170,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param talkNo {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void talkNo(int talkNo) throws HtmlParseException{
         return;
     }
@@ -160,6 +181,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param idRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void talkId(DecodedContent content, SeqRange idRange)
             throws HtmlParseException{
         return;
@@ -171,6 +193,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void talkAvatar(DecodedContent content, SeqRange avatarRange)
             throws HtmlParseException{
         return;
@@ -182,6 +205,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param minute {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void talkTime(int hour, int minute) throws HtmlParseException{
         return;
     }
@@ -192,6 +216,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param urlRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void talkIconUrl(DecodedContent content, SeqRange urlRange)
             throws HtmlParseException{
         return;
@@ -202,6 +227,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param type {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void talkType(TalkType type) throws HtmlParseException{
         return;
     }
@@ -212,6 +238,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param textRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void talkText(DecodedContent content, SeqRange textRange)
             throws HtmlParseException{
         return;
@@ -221,6 +248,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void talkBreak() throws HtmlParseException{
         return;
     }
@@ -230,6 +258,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param eventFamily {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void startSysEvent(EventFamily eventFamily)
             throws HtmlParseException{
         return;
@@ -240,6 +269,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param type {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventType(SysEventType type) throws HtmlParseException{
         return;
     }
@@ -248,6 +278,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void endSysEvent() throws HtmlParseException{
         return;
     }
@@ -259,6 +290,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventOnStage(DecodedContent content,
                                   int entryNo,
                                   SeqRange avatarRange )
@@ -272,6 +304,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param num {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventOpenRole(GameRole role, int num)
             throws HtmlParseException{
         return;
@@ -283,6 +316,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventSurvivor(DecodedContent content,
                                    SeqRange avatarRange)
             throws HtmlParseException{
@@ -296,6 +330,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param voteToRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventCounting(DecodedContent content,
                                    SeqRange voteByRange,
                                    SeqRange voteToRange )
@@ -310,6 +345,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param voteToRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventCounting2(DecodedContent content,
                                     SeqRange voteByRange,
                                     SeqRange voteToRange )
@@ -323,6 +359,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventSuddenDeath(DecodedContent content,
                                        SeqRange avatarRange )
             throws HtmlParseException{
@@ -335,6 +372,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventMurdered(DecodedContent content,
                                    SeqRange avatarRange )
             throws HtmlParseException{
@@ -351,6 +389,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param role {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventPlayerList(DecodedContent content,
                                      SeqRange avatarRange,
                                      SeqRange anchorRange,
@@ -368,6 +407,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param votes {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventExecution(DecodedContent content,
                                     SeqRange avatarRange,
                                     int votes )
@@ -381,8 +421,22 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventVanish(DecodedContent content,
                                  SeqRange avatarRange )
+            throws HtmlParseException{
+        return;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param content {@inheritDoc}
+     * @param avatarRange {@inheritDoc}
+     * @throws HtmlParseException {@inheritDoc}
+     */
+    @Override
+    public void sysEventCheckout(DecodedContent content,
+                                   SeqRange avatarRange )
             throws HtmlParseException{
         return;
     }
@@ -394,6 +448,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param judgeToRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventJudge(DecodedContent content,
                                 SeqRange judgeByRange,
                                 SeqRange judgeToRange )
@@ -408,6 +463,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param guardToRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventGuard(DecodedContent content,
                                 SeqRange guardByRange,
                                 SeqRange guardToRange )
@@ -423,6 +479,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param maxLimit {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventAskEntry(int hour, int minute,
                                    int minLimit, int maxLimit)
             throws HtmlParseException{
@@ -435,6 +492,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param minute {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventAskCommit(int hour, int minute)
             throws HtmlParseException{
         return;
@@ -446,6 +504,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventNoComment(DecodedContent content,
                                     SeqRange avatarRange )
             throws HtmlParseException{
@@ -459,6 +518,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param minute {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventStayEpilogue(Team winner, int hour, int minute)
             throws HtmlParseException{
         return;
@@ -470,6 +530,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param contentRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventContent(DecodedContent content,
                                   SeqRange contentRange )
             throws HtmlParseException{
@@ -480,6 +541,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventContentBreak() throws HtmlParseException{
         return;
     }
@@ -491,6 +553,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
      * @param contentRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
+    @Override
     public void sysEventContentAnchor(DecodedContent content,
                                          SeqRange anchorRange,
                                          SeqRange contentRange )

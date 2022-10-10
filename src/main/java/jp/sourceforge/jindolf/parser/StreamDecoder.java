@@ -1,8 +1,8 @@
 /*
  * stream decoder
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: StreamDecoder.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -34,17 +34,21 @@ public class StreamDecoder{
     /** デフォルト出力バッファサイズ(={@value}chars)。 */
     public static final int CHARBUF_DEFSZ = 4 * 1024;
 
+
     private final CharsetDecoder decoder;
 
     private ReadableByteChannel channel;
     private final ByteBuffer byteBuffer;
     private final CharBuffer charBuffer;
 
-    private boolean isEndOfInput = false;
-    private boolean isFlushing = false;
+    private boolean isEndOfInput;
+    private boolean isFlushing;
 
     private DecodeHandler decodeHandler;
+
+    // エンコーディングによっては長さに見直しが必要
     private byte[] errorData = new byte[4];
+
 
     /**
      * コンストラクタ。
@@ -58,27 +62,27 @@ public class StreamDecoder{
     /**
      * コンストラクタ。
      * @param decoder デコーダ
-     * @param inbuf_sz 入力バッファサイズ
-     * @param outbuf_sz 出力バッファサイズ
+     * @param inbufSz 入力バッファサイズ
+     * @param outbufSz 出力バッファサイズ
      * @throws NullPointerException デコーダにnullを渡した。
      * @throws IllegalArgumentException バッファサイズが負。
      */
     public StreamDecoder(CharsetDecoder decoder,
-                           int inbuf_sz,
-                           int outbuf_sz )
+                           int inbufSz,
+                           int outbufSz )
             throws NullPointerException,
                    IllegalArgumentException {
         super();
 
         if(decoder == null) throw new NullPointerException();
 
-        if(inbuf_sz <= 0 || outbuf_sz <= 0){
+        if(inbufSz <= 0 || outbufSz <= 0){
             throw new IllegalArgumentException();
         }
 
         this.decoder = decoder;
-        this.byteBuffer = ByteBuffer.allocate(inbuf_sz);
-        this.charBuffer = CharBuffer.allocate(outbuf_sz);
+        this.byteBuffer = ByteBuffer.allocate(inbufSz);
+        this.charBuffer = CharBuffer.allocate(outbufSz);
         this.channel = null;
 
         initDecoderImpl();
@@ -100,7 +104,7 @@ public class StreamDecoder{
         this.isEndOfInput = false;
         this.isFlushing = false;
 
-        Arrays.fill(this.errorData, (byte)0x00);
+        Arrays.fill(this.errorData, (byte) 0x00);
 
         return;
     }
@@ -194,8 +198,8 @@ public class StreamDecoder{
      * @param result デコード結果
      * @return 原因バイト列の長さ
      * @throws IOException 入力エラー。
-     * ※このメソッドを継承する場合、必要に応じて先読みをしてもよいし、
-     * その結果生じたIO例外を投げてもよい。
+     *     ※このメソッドを継承する場合、必要に応じて先読みをしてもよいし、
+     *     その結果生じたIO例外を投げてもよい。
      */
     protected int chopErrorSequence(CoderResult result) throws IOException{
         int errorLength = result.length();

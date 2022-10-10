@@ -1,8 +1,8 @@
 /*
  * stream decoder for Shift_JIS
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: SjisDecoder.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -39,14 +39,14 @@ public class SjisDecoder extends StreamDecoder{
 
     /**
      * コンストラクタ。
-     * @param inbuf_sz 入力バッファサイズ
-     * @param outbuf_sz 出力バッファサイズ
+     * @param inbufSz 入力バッファサイズ
+     * @param outbufSz 出力バッファサイズ
      * @throws IllegalArgumentException バッファサイズが小さすぎる。
      */
-    public SjisDecoder(int inbuf_sz, int outbuf_sz)
+    public SjisDecoder(int inbufSz, int outbufSz)
             throws IllegalArgumentException{
-        super(ShiftJis.CHARSET.newDecoder(), inbuf_sz, outbuf_sz);
-        if(inbuf_sz < MIN_INBUFSZ){
+        super(ShiftJis.CHARSET.newDecoder(), inbufSz, outbufSz);
+        if(inbufSz < MIN_INBUFSZ){
             throw new IllegalArgumentException();
         }
         return;

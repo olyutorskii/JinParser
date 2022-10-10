@@ -1,8 +1,8 @@
 /*
  * invalid Shift_JIS decoding information
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: DecodeErrorInfo.java 894 2009-11-04 07:26:59Z olyutorskii $
  */
 
 package jp.sourceforge.jindolf.parser;
@@ -73,7 +73,7 @@ public class DecodeErrorInfo{
     public DecodeErrorInfo(int charPos,
                              byte rawByte1st)
             throws IndexOutOfBoundsException{
-        this(charPos, false, rawByte1st, (byte)0x00);
+        this(charPos, false, rawByte1st, (byte) 0x00);
         return;
     }
 
@@ -160,13 +160,13 @@ public class DecodeErrorInfo{
     /**
      * 出現位置で順序づける比較子。
      */
-    private static class PosComparator
+    private static final class PosComparator
             implements Comparator<DecodeErrorInfo> {
 
         /**
          * コンストラクタ。
          */
-        public PosComparator(){
+        PosComparator(){
             super();
             return;
         }
@@ -177,6 +177,7 @@ public class DecodeErrorInfo{
          * @param info2 {@inheritDoc}
          * @return {@inheritDoc}
          */
+        @Override
         public int compare(DecodeErrorInfo info1, DecodeErrorInfo info2){
             int pos1;
             int pos2;

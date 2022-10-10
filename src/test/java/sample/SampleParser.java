@@ -1,8 +1,8 @@
 /*
  * sample parser
  *
+ * License : The MIT License
  * Copyright(c) 2009 olyutorskii
- * $Id: SampleParser.java 1000 2010-03-15 12:08:42Z olyutorskii $
  */
 
 package sample;
