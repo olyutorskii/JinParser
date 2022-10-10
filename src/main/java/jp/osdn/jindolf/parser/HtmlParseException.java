@@ -18,6 +18,7 @@ package jp.osdn.jindolf.parser;
 @SuppressWarnings("serial")
 public class HtmlParseException extends Exception{
 
+    /** パース中段位置。 */
     private final int charPos;
 
     /**
