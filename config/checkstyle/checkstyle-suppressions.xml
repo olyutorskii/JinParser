@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <!DOCTYPE suppressions PUBLIC
-    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
-    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <!--
     Checkstyle suppressions
-    for Checkstyle 6.19 or later
+    for Checkstyle 8.29 or later
 
-    [ http://checkstyle.sourceforge.net/ ]
+    [ https://checkstyle.org/ ]
 
-    Copyright(c) 2010 olyutorskii
+    Copyright(c) 2019 olyutorskii
 -->
 
 
 <suppressions>
 
+    <!-- Annotations -->
+    <suppress files="" checks="AnnotationOnSameLine" />
+
     <!-- Class Design -->
     <suppress files="" checks="DesignForExtension" />
 
     <!-- Coding -->
+    <suppress files="" checks="AvoidNoArgumentSuperConstructorCall" />
     <suppress files="" checks="ExplicitInitialization" />
     <suppress files="" checks="FinalLocalVariable" />
     <suppress files="" checks="MagicNumber" />
+    <suppress files="" checks="NoArrayTrailingComma" />
+    <suppress files="" checks="NoEnumTrailingComma" />
 
     <!-- Imports -->
     <suppress files="" checks="ImportControl" />
@@ -33,6 +39,10 @@
     <!-- Miscellaneous -->
     <suppress files="" checks="FinalParameters" />
     <suppress files="" checks="TrailingComment" />
+
+    <!-- Modifier -->
+    <suppress files="" checks="InterfaceMemberImpliedModifier" />
+    <suppress files="" checks="RedundantModifier" />
 
     <!-- Whitespace -->
     <suppress files="" checks="SingleSpaceSeparator" />
