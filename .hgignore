@@ -22,15 +22,19 @@ syntax: regexp
 ^nbproject/
 ^\.settings/
 
+\.iml$
+
 
 #####################
 syntax: glob
 
 .DS_Store
-_MACOSX
+__MACOSX
 [Tt]humbs.db
 [Dd]esktop.ini
 core
+
+.idea
 
 
 ### EOF ###
