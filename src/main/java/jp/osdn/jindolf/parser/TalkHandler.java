@@ -47,14 +47,14 @@ public interface TalkHandler{
      * 発言部パース開始の通知を受け取る。
      * @throws HtmlParseException パースエラー
      */
-    void startTalk()
+    public abstract void startTalk()
             throws HtmlParseException;
 
     /**
      * 発言部パース終了の通知を受け取る。
      * @throws HtmlParseException パースエラー
      */
-    void endTalk()
+    public abstract void endTalk()
             throws HtmlParseException;
 
     /**
@@ -63,7 +63,7 @@ public interface TalkHandler{
      * @param talkNo 白発言番号
      * @throws HtmlParseException パースエラー
      */
-    void talkNo(int talkNo)
+    public abstract void talkNo(int talkNo)
             throws HtmlParseException;
 
     /**
@@ -72,7 +72,7 @@ public interface TalkHandler{
      * @param idRange IDの範囲
      * @throws HtmlParseException パースエラー
      */
-    void talkId(DecodedContent content, SeqRange idRange)
+    public abstract void talkId(DecodedContent content, SeqRange idRange)
             throws HtmlParseException;
 
     /**
@@ -81,7 +81,7 @@ public interface TalkHandler{
      * @param avatarRange Avatar名の範囲
      * @throws HtmlParseException パースエラー
      */
-    void talkAvatar(DecodedContent content, SeqRange avatarRange)
+    public abstract void talkAvatar(DecodedContent content, SeqRange avatarRange)
             throws HtmlParseException;
 
     /**
@@ -90,7 +90,7 @@ public interface TalkHandler{
      * @param minute 分
      * @throws HtmlParseException パースエラー
      */
-    void talkTime(int hour, int minute)
+    public abstract void talkTime(int hour, int minute)
             throws HtmlParseException;
 
     /**
@@ -99,7 +99,7 @@ public interface TalkHandler{
      * @param urlRange URLの範囲。
      * @throws HtmlParseException パースエラー
      */
-    void talkIconUrl(DecodedContent content, SeqRange urlRange)
+    public abstract void talkIconUrl(DecodedContent content, SeqRange urlRange)
             throws HtmlParseException;
 
     /**
@@ -107,7 +107,7 @@ public interface TalkHandler{
      * @param type 発言種別
      * @throws HtmlParseException パースエラー
      */
-    void talkType(TalkType type)
+    public abstract void talkType(TalkType type)
             throws HtmlParseException;
 
     /**
@@ -117,7 +117,7 @@ public interface TalkHandler{
      * @param textRange テキストの範囲
      * @throws HtmlParseException パースエラー
      */
-    void talkText(DecodedContent content, SeqRange textRange)
+    public abstract void talkText(DecodedContent content, SeqRange textRange)
             throws HtmlParseException;
 
     /**
@@ -125,7 +125,7 @@ public interface TalkHandler{
      * 1発言のパース中に複数回呼ばれる事もありうる。
      * @throws HtmlParseException パースエラー
      */
-    void talkBreak()
+    public abstract void talkBreak()
             throws HtmlParseException;
 
 }

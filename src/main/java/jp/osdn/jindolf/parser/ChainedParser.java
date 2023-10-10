@@ -21,7 +21,7 @@ public interface ChainedParser{
      * 全てこのメソッドを介してパース対象文字列にアクセスしなければならない。
      * @return パース対象文字列
      */
-    DecodedContent getContent();
+    public abstract DecodedContent getContent();
 
     /**
      * 現時点での正規表現マッチャを得る。
@@ -29,6 +29,6 @@ public interface ChainedParser{
      * 全てこのメソッドを介してマッチャにアクセスしなければならない。
      * @return 正規表現マッチャ
      */
-    Matcher getMatcher();
+    public abstract Matcher getMatcher();
 
 }

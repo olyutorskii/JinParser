@@ -44,7 +44,7 @@ public interface BasicHandler{
      * @param content これからパースを始めるXHTML文字列
      * @throws HtmlParseException パースエラー
      */
-    void startParse(DecodedContent content) throws HtmlParseException;
+    public abstract void startParse(DecodedContent content) throws HtmlParseException;
 
     /**
      * titleタグの内容の通知を受け取る。
@@ -53,7 +53,7 @@ public interface BasicHandler{
      * @param titleRange タイトルの範囲
      * @throws HtmlParseException パースエラー
      */
-    void pageTitle(DecodedContent content, SeqRange titleRange)
+    public abstract void pageTitle(DecodedContent content, SeqRange titleRange)
             throws HtmlParseException;
 
     /**
@@ -64,7 +64,7 @@ public interface BasicHandler{
      * @param loginRange ログイン名の範囲
      * @throws HtmlParseException パースエラー
      */
-    void loginName(DecodedContent content, SeqRange loginRange)
+    public abstract void loginName(DecodedContent content, SeqRange loginRange)
             throws HtmlParseException;
 
     /**
@@ -73,7 +73,7 @@ public interface BasicHandler{
      * @param type ページ種別
      * @throws HtmlParseException パースエラー
      */
-    void pageType(PageType type)
+    public abstract void pageType(PageType type)
             throws HtmlParseException;
 
     /**
@@ -84,7 +84,7 @@ public interface BasicHandler{
      * @param villageRange 村名の範囲
      * @throws HtmlParseException パースエラー
      */
-    void villageName(DecodedContent content, SeqRange villageRange)
+    public abstract void villageName(DecodedContent content, SeqRange villageRange)
             throws HtmlParseException;
 
     /**
@@ -96,7 +96,7 @@ public interface BasicHandler{
      * @param minute 更新分
      * @throws HtmlParseException パースエラー
      */
-    void commitTime(int month, int day, int hour, int minute)
+    public abstract void commitTime(int month, int day, int hour, int minute)
             throws HtmlParseException;
 
     /**
@@ -108,7 +108,7 @@ public interface BasicHandler{
      * @param day 日にち。「プロローグ」、「エピローグ」、「終了」では-1。
      * @throws HtmlParseException パースエラー
      */
-    void periodLink(DecodedContent content,
+    public abstract void periodLink(DecodedContent content,
                      SeqRange anchorRange,
                      PeriodType periodType, int day)
             throws HtmlParseException;
@@ -123,7 +123,7 @@ public interface BasicHandler{
      * @param state 村の状態
      * @throws HtmlParseException パースエラー
      */
-    void villageRecord(DecodedContent content,
+    public abstract void villageRecord(DecodedContent content,
                          SeqRange anchorRange,
                          SeqRange villageRange,
                          int hour, int minute,
@@ -134,6 +134,6 @@ public interface BasicHandler{
      * パースの終了の通知を受け取る。
      * @throws HtmlParseException パースエラー
      */
-    void endParse() throws HtmlParseException;
+    public abstract void endParse() throws HtmlParseException;
 
 }

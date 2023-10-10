@@ -53,7 +53,7 @@ public interface SysEventHandler{
      * @param eventFamily イベントファミリ種別
      * @throws HtmlParseException パースエラー
      */
-    void startSysEvent(EventFamily eventFamily)
+    public abstract void startSysEvent(EventFamily eventFamily)
         throws HtmlParseException;
 
     /**
@@ -61,14 +61,14 @@ public interface SysEventHandler{
      * @param type イベント種別
      * @throws HtmlParseException パースエラー
      */
-    void sysEventType(SysEventType type)
+    public abstract void sysEventType(SysEventType type)
         throws HtmlParseException;
 
     /**
      * システムイベントのパース処理終了の通知を受け取る。
      * @throws HtmlParseException パースエラー
      */
-    void endSysEvent()
+    public abstract void endSysEvent()
         throws HtmlParseException;
 
     /**
@@ -79,7 +79,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#ONSTAGE
      */
-    void sysEventOnStage(DecodedContent content,
+    public abstract void sysEventOnStage(DecodedContent content,
                            int entryNo,
                            SeqRange avatarRange )
         throws HtmlParseException;
@@ -92,7 +92,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#OPENROLE
      */
-    void sysEventOpenRole(GameRole role, int num)
+    public abstract void sysEventOpenRole(GameRole role, int num)
         throws HtmlParseException;
 
     /**
@@ -103,7 +103,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#SURVIVOR
      */
-    void sysEventSurvivor(DecodedContent content,
+    public abstract void sysEventSurvivor(DecodedContent content,
                             SeqRange avatarRange)
         throws HtmlParseException;
 
@@ -118,7 +118,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#COUNTING
      */
-    void sysEventCounting(DecodedContent content,
+    public abstract void sysEventCounting(DecodedContent content,
                             SeqRange voteByRange,
                             SeqRange voteToRange )
         throws HtmlParseException;
@@ -132,7 +132,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#COUNTING2
      */
-    void sysEventCounting2(DecodedContent content,
+    public abstract void sysEventCounting2(DecodedContent content,
                              SeqRange voteByRange,
                              SeqRange voteToRange )
         throws HtmlParseException;
@@ -144,7 +144,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#SUDDENDEATH
      */
-    void sysEventSuddenDeath(DecodedContent content,
+    public abstract void sysEventSuddenDeath(DecodedContent content,
                                SeqRange avatarRange )
         throws HtmlParseException;
 
@@ -156,7 +156,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#MURDERED
      */
-    void sysEventMurdered(DecodedContent content,
+    public abstract void sysEventMurdered(DecodedContent content,
                             SeqRange avatarRange )
         throws HtmlParseException;
 
@@ -172,7 +172,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#PLAYERLIST
      */
-    void sysEventPlayerList(DecodedContent content,
+    public abstract void sysEventPlayerList(DecodedContent content,
                               SeqRange avatarRange,
                               SeqRange anchorRange,
                               SeqRange loginRange,
@@ -190,7 +190,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#EXECUTION
      */
-    void sysEventExecution(DecodedContent content,
+    public abstract void sysEventExecution(DecodedContent content,
                              SeqRange avatarRange,
                              int votes )
         throws HtmlParseException;
@@ -202,7 +202,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#VANISH
      */
-    void sysEventVanish(DecodedContent content,
+    public abstract void sysEventVanish(DecodedContent content,
                           SeqRange avatarRange )
         throws HtmlParseException;
 
@@ -213,7 +213,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#CHECKOUT
      */
-    void sysEventCheckout(DecodedContent content,
+    public abstract void sysEventCheckout(DecodedContent content,
                             SeqRange avatarRange )
         throws HtmlParseException;
 
@@ -225,7 +225,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#JUDGE
      */
-    void sysEventJudge(DecodedContent content,
+    public abstract void sysEventJudge(DecodedContent content,
                          SeqRange judgeByRange,
                          SeqRange judgeToRange )
         throws HtmlParseException;
@@ -238,7 +238,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#GUARD
      */
-    void sysEventGuard(DecodedContent content,
+    public abstract void sysEventGuard(DecodedContent content,
                          SeqRange guardByRange,
                          SeqRange guardToRange )
         throws HtmlParseException;
@@ -252,7 +252,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#ASKENTRY
      */
-    void sysEventAskEntry(int hour, int minute,
+    public abstract void sysEventAskEntry(int hour, int minute,
                             int minLimit, int maxLimit)
         throws HtmlParseException;
 
@@ -263,7 +263,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#ASKCOMMIT
      */
-    void sysEventAskCommit(int hour, int minute)
+    public abstract void sysEventAskCommit(int hour, int minute)
         throws HtmlParseException;
 
     /**
@@ -274,7 +274,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#NOCOMMENT
      */
-    void sysEventNoComment(DecodedContent content,
+    public abstract void sysEventNoComment(DecodedContent content,
                              SeqRange avatarRange )
         throws HtmlParseException;
 
@@ -286,7 +286,7 @@ public interface SysEventHandler{
      * @throws HtmlParseException パースエラー
      * @see jp.sourceforge.jindolf.corelib.SysEventType#STAYEPILOGUE
      */
-    void sysEventStayEpilogue(Team winner, int hour, int minute)
+    public abstract void sysEventStayEpilogue(Team winner, int hour, int minute)
         throws HtmlParseException;
 
     /**
@@ -296,7 +296,7 @@ public interface SysEventHandler{
      * @param contentRange 内容テキストの範囲
      * @throws HtmlParseException パースエラー
      */
-    void sysEventContent(DecodedContent content,
+    public abstract void sysEventContent(DecodedContent content,
                            SeqRange contentRange )
         throws HtmlParseException;
 
@@ -305,7 +305,7 @@ public interface SysEventHandler{
      * イベント種別は問わない。
      * @throws HtmlParseException パースエラー
      */
-    void sysEventContentBreak()
+    public abstract void sysEventContentBreak()
         throws HtmlParseException;
 
     /**
@@ -317,7 +317,7 @@ public interface SysEventHandler{
      * @param contentRange 内容テキストの範囲
      * @throws HtmlParseException パースエラー
      */
-    void sysEventContentAnchor(DecodedContent content,
+    public abstract void sysEventContentAnchor(DecodedContent content,
                                   SeqRange anchorRange,
                                   SeqRange contentRange )
         throws HtmlParseException;
