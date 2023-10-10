@@ -13,13 +13,11 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  *
@@ -27,22 +25,6 @@ import static org.junit.Assert.*;
 public class ContentBuilderTest {
 
     public ContentBuilderTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception{
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception{
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
     }
 
 
