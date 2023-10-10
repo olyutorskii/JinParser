@@ -1,6 +1,5 @@
 # JinParser #
 
-[![Java CI with Maven](https://github.com/olyutorskii/JinParser/actions/workflows/maven.yml/badge.svg)](https://github.com/olyutorskii/JinParser/actions/workflows/maven.yml)
 [![CodeQL](https://github.com/olyutorskii/JinParser/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/olyutorskii/JinParser/actions/workflows/codeql-analysis.yml)
 -----------------------------------------------------------------------
 
