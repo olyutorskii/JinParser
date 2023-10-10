@@ -8,35 +8,17 @@ package jp.osdn.jindolf.parser;
 import java.util.List;
 import jp.osdn.jindolf.parser.content.DecodeErrorInfo;
 import jp.osdn.jindolf.parser.content.DecodedContent;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  */
 public class EntityConverterTest {
 
     public EntityConverterTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception{
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception{
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
     }
 
     /**
