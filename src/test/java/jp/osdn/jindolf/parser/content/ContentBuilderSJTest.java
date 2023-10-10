@@ -10,35 +10,17 @@ import io.bitbucket.olyutorskii.jiocema.DecodeNotifier;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  */
 public class ContentBuilderSJTest {
 
     public ContentBuilderSJTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception{
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception{
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
     }
 
 
