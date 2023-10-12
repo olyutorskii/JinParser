@@ -40,6 +40,9 @@
     <suppress files="" checks="FinalParameters" />
     <suppress files="" checks="TrailingComment" />
 
+    <!-- Modifier -->
+    <suppress files="" checks="RedundantModifier" />
+
     <!-- Whitespace -->
     <suppress files="" checks="SingleSpaceSeparator" />
 
