@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.102.8] - 2023-10-13
+
 ### Changed
 - ホスティングをOSDNからGitHubへ移行。
 - JUnit4からJUnit5へ移行
@@ -42,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## → CHANGELOG.old (2009-2019) へ続く…
 
 
-[Unreleased]: https://github.com/olyutorskii/JinParser/compare/v2.102.6...HEAD
+[Unreleased]: https://github.com/olyutorskii/JinParser/compare/v2.102.8...HEAD
+[2.102.8]: https://github.com/olyutorskii/JinParser/compare/v2.102.6...v2.102.8
 [2.102.6]: https://github.com/olyutorskii/JinParser/compare/release-2.102.4...v2.102.6
 [2.102.4]: https://github.com/olyutorskii/JinParser/compare/release-2.102.2...release-2.102.4
 [2.102.2]: https://github.com/olyutorskii/JinParser/releases/tag/release-2.102.2
