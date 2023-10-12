@@ -1,6 +1,5 @@
 # JinParser #
 
-[![CodeQL](https://github.com/olyutorskii/JinParser/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/olyutorskii/JinParser/actions/workflows/codeql-analysis.yml)
 -----------------------------------------------------------------------
 
 
@@ -12,6 +11,9 @@ Javaライブラリです。
 * Jindolfは、CGIゲーム「[人狼BBS][BBS]」の専用クライアント開発プロジェクトです。
 JinParserは、Jindolf以外の人狼BBSクライアント製作者向けに、
 Jindolfの機能の一部を提供することを目的に発足した、派生プロジェクトです。
+
+* JinParserに人狼BBSから読み込んだ各種XHTML文書を渡すと、
+事前に登録しておいたリスナオブジェクトにパース結果が通知されます。
 
 * JinParser is one of the Java libraries
 that make up the Jindolf chat game browser application for 人狼BBS.
