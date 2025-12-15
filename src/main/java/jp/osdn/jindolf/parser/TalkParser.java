@@ -27,6 +27,7 @@ public class TalkParser extends AbstractParser{
 
     /**
      * コンストラクタ。
+     *
      * @param parent 親パーサ
      */
     public TalkParser(ChainedParser parent){
@@ -36,6 +37,7 @@ public class TalkParser extends AbstractParser{
 
     /**
      * {@link TalkHandler}ハンドラを登録する。
+     *
      * @param talkHandler ハンドラ
      */
     public void setTalkHandler(TalkHandler talkHandler){
@@ -46,6 +48,7 @@ public class TalkParser extends AbstractParser{
     /**
      * 各Avatarの個別の発言をパースする。
      * 最初のAタグは既にパース済みとする。
+     *
      * @param talkNo 白発言番号
      * @param nameRange Aタグのname属性値の範囲
      * @throws HtmlParseException パースエラー
@@ -74,6 +77,7 @@ public class TalkParser extends AbstractParser{
 
     /**
      * 発言者名をパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseName() throws HtmlParseException{
@@ -109,6 +113,7 @@ public class TalkParser extends AbstractParser{
 
     /**
      * 発言時刻をパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseTime() throws HtmlParseException{
@@ -137,6 +142,7 @@ public class TalkParser extends AbstractParser{
 
     /**
      * アイコンのURLをパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseIcon() throws HtmlParseException{
@@ -165,6 +171,7 @@ public class TalkParser extends AbstractParser{
 
     /**
      * 発言種別をパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseType() throws HtmlParseException{
@@ -197,6 +204,7 @@ public class TalkParser extends AbstractParser{
     /**
      * 発言テキストをパースする。
      * 前後のホワイトスペースは無視しない。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseText() throws HtmlParseException{
@@ -238,6 +246,7 @@ public class TalkParser extends AbstractParser{
 
     /**
      * 発言末尾をパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseTail() throws HtmlParseException{

@@ -19,6 +19,7 @@ import jp.sourceforge.jindolf.corelib.GameRole;
  * 正規表現エンジンを実装基盤とする。
  * 親パーサを指定することにより、検索対象文字列とマッチエンジンを
  * 親パーサと共有することができる。
+ *
  * @see Matcher
  */
 public abstract class AbstractParser implements ChainedParser{
@@ -48,6 +49,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * コンストラクタ。
+     *
      * @param parent 親パーサ
      */
     protected AbstractParser(ChainedParser parent){
@@ -62,6 +64,7 @@ public abstract class AbstractParser implements ChainedParser{
      * 正規表現のコンパイルを行う。
      * デフォルトで{@link java.util.regex.Pattern#DOTALL}が
      * オプション指定される。
+     *
      * @param regex 正規表現文字列
      * @return マッチエンジン
      */
@@ -95,6 +98,7 @@ public abstract class AbstractParser implements ChainedParser{
     /**
      * パース対象文字列をセットする。
      * パースが終わるまでこの文字列の内容を変更してはならない。
+     *
      * @param content パース対象文字列
      */
     public void setContent(DecodedContent content){
@@ -112,6 +116,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
@@ -125,6 +130,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
@@ -140,6 +146,7 @@ public abstract class AbstractParser implements ChainedParser{
      * 文脈依存のエラーメッセージを設定する。
      * {@link #buildParseException}で利用される。
      * 設定内容は親へ委譲されない。
+     *
      * @param errorMessage エラーメッセージ。nullも可能。
      */
     protected void setContextErrorMessage(String errorMessage){
@@ -150,6 +157,7 @@ public abstract class AbstractParser implements ChainedParser{
     /**
      * 文脈状況に応じたパース例外を生成する。
      * 例外にはリージョン開始位置が埋め込まれる。
+     *
      * @return パース例外
      */
     protected HtmlParseException buildParseException(){
@@ -161,6 +169,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * パースに使う正規表現パターンを切り替える。
+     *
      * @param pattern 正規表現パターン
      */
     protected void switchPattern(Pattern pattern){
@@ -188,6 +197,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 検査対象の一部が指定パターンにマッチするか判定する。
+     *
      * @param pattern 指定パターン
      * @return マッチすればtrue
      */
@@ -199,6 +209,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 検査対象先頭が指定パターンにマッチするか判定する。
+     *
      * @param pattern 指定パターン
      * @return マッチすればtrue
      */
@@ -210,6 +221,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 検査対象全体が指定パターンにマッチするか判定する。
+     *
      * @param pattern 指定パターン
      * @return マッチすればtrue
      */
@@ -222,6 +234,7 @@ public abstract class AbstractParser implements ChainedParser{
     /**
      * 残りの検索対象領域からパターンがマッチする部分を探す。
      * 見つからなければ例外をスローする。
+     *
      * @param pattern 正規表現パターン
      * @throws HtmlParseException マッチしなかった
      */
@@ -236,6 +249,7 @@ public abstract class AbstractParser implements ChainedParser{
     /**
      * 残りの検索対象領域先頭からパターンがマッチする部分を探す。
      * 見つからなければ例外をスローする。
+     *
      * @param pattern 正規表現パターン
      * @throws HtmlParseException マッチしなかった
      */
@@ -250,6 +264,7 @@ public abstract class AbstractParser implements ChainedParser{
     /**
      * 残りの検索対象領域全体がパターンにマッチするか調べる。
      * マッチしなければ例外をスローする。
+     *
      * @param pattern 正規表現パターン
      * @throws HtmlParseException マッチしなかった
      */
@@ -263,6 +278,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 最後のマッチで任意の前方参照グループがヒットしたか判定する。
+     *
      * @param group グループ番号
      * @return ヒットしていたらtrue
      */
@@ -274,6 +290,7 @@ public abstract class AbstractParser implements ChainedParser{
     /**
      * 最後にマッチした前方参照グループを数値化する。
      * 0以上の整数のみサポート。
+     *
      * @param group グループ番号
      * @return 数値
      */
@@ -294,6 +311,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 最後にマッチした前方参照グループの開始位置を得る。
+     *
      * @param group 前方参照識別番号
      * @return 開始位置
      */
@@ -303,6 +321,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 最後にマッチした全領域の開始位置を得る。
+     *
      * @return 開始位置
      */
     protected int matchStart(){
@@ -311,6 +330,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 最後にマッチした前方参照グループの終了位置を得る。
+     *
      * @param group 前方参照識別番号
      * @return 終了位置
      */
@@ -320,6 +340,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 最後にマッチした全領域の終了位置を得る。
+     *
      * @return 終了位置
      */
     protected int matchEnd(){
@@ -328,6 +349,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 検索領域の先頭位置を返す。
+     *
      * @return 先頭位置
      */
     protected int regionStart(){
@@ -336,6 +358,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 検索領域の末尾位置を返す。
+     *
      * @return 末尾位置
      */
     protected int regionEnd(){
@@ -385,6 +408,7 @@ public abstract class AbstractParser implements ChainedParser{
 
     /**
      * 検索領域の先頭から各種役職名のマッチを試みる。
+     *
      * @return 役職。何もマッチしなければnullを返す。
      */
     protected GameRole lookingAtRole(){

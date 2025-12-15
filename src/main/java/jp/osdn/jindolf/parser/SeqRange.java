@@ -33,6 +33,7 @@ public class SeqRange{
 
     /**
      * コンストラクタ。
+     *
      * @param startPos 開始位置
      * @param endPos 終了位置
      */
@@ -45,6 +46,7 @@ public class SeqRange{
 
     /**
      * 開始位置を設定する。
+     *
      * @param startPos 開始位置
      */
     public void setStartPos(int startPos){
@@ -54,6 +56,7 @@ public class SeqRange{
 
     /**
      * 終了位置を設定する。
+     *
      * @param endPos 終了位置
      */
     public void setEndPos(int endPos){
@@ -63,6 +66,7 @@ public class SeqRange{
 
     /**
      * 開始位置と終了位置を設定する。
+     *
      * @param startPosition 開始位置
      * @param endPosition 終了位置
      */
@@ -74,6 +78,7 @@ public class SeqRange{
 
     /**
      * 最後にマッチした前方参照グループの範囲で設定する。
+     *
      * @param result 正規表現マッチ結果
      * @param groupId グループ番号
      * @throws IllegalStateException マッチしていない
@@ -89,6 +94,7 @@ public class SeqRange{
 
     /**
      * 最後にマッチした範囲全体で設定する。
+     *
      * @param result 正規表現マッチ結果
      * @throws IllegalStateException マッチしていない
      */
@@ -101,6 +107,7 @@ public class SeqRange{
 
     /**
      * 開始位置を取得する。
+     *
      * @return 開始位置
      */
     public int getStartPos(){
@@ -109,6 +116,7 @@ public class SeqRange{
 
     /**
      * 終了位置を取得する。
+     *
      * @return 終了位置
      */
     public int getEndPos(){
@@ -118,6 +126,7 @@ public class SeqRange{
     /**
      * 範囲の長さを得る。
      * 内容が無効な場合、負の値もありえる。
+     *
      * @return 長さ
      */
     public int length(){
@@ -127,6 +136,7 @@ public class SeqRange{
 
     /**
      * 現在の範囲で与えられた文字列を切り出す。
+     *
      * @param seq 切り出し元文字列
      * @return 切り出された文字列
      * @throws IndexOutOfBoundsException 範囲が無効
@@ -148,6 +158,7 @@ public class SeqRange{
 
     /**
      * 範囲指定が有効か判定する。
+     *
      * @return 有効であればtrue
      */
     public boolean isValid(){

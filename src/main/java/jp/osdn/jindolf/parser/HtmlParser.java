@@ -21,7 +21,7 @@ import jp.sourceforge.jindolf.corelib.VillageState;
     "PMD.FieldDeclarationsShouldBeAtStartOfClass",
     "PMD.PrematureDeclaration"
 })
-public class HtmlParser extends AbstractParser{
+public final class HtmlParser extends AbstractParser{
 
     private static final String SP = "\u0020";
 
@@ -43,6 +43,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * {@link BasicHandler}ハンドラを登録する。
+     *
      * @param basicHandler ハンドラ
      */
     public void setBasicHandler(BasicHandler basicHandler){
@@ -52,6 +53,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * {@link TalkHandler}ハンドラを登録する。
+     *
      * @param talkHandler ハンドラ
      */
     public void setTalkHandler(TalkHandler talkHandler){
@@ -61,6 +63,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * {@link SysEventHandler}ハンドラを登録する。
+     *
      * @param handler ハンドラ
      */
     public void setSysEventHandler(SysEventHandler handler){
@@ -81,6 +84,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * XHTML先頭部分のパース。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseHead() throws HtmlParseException{
@@ -142,6 +146,7 @@ public class HtmlParser extends AbstractParser{
     /**
      * ログインフォームのパース。
      * ログイン名までの認識を確認したのはF国のみ。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseLoginForm() throws HtmlParseException{
@@ -199,6 +204,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * 村に関する各種情報をパース。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseVillageInfo() throws HtmlParseException{
@@ -252,6 +258,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * Period間リンクをパース。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parsePeriodLink() throws HtmlParseException{
@@ -336,6 +343,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * 各種メッセージをパース。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseMessage() throws HtmlParseException{
@@ -376,6 +384,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * イベント種別によって処理を振り分ける。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void dispatchFamily() throws HtmlParseException{
@@ -450,6 +459,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * トップページの村一覧表のパース。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseTopList() throws HtmlParseException{
@@ -512,6 +522,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * 村一覧ページのパース。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseLogList() throws HtmlParseException{
@@ -553,6 +564,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * XHTML末尾のパース。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseTail() throws HtmlParseException{
@@ -572,6 +584,7 @@ public class HtmlParser extends AbstractParser{
 
     /**
      * 人狼BBSのページ種別を自動認識しつつパースする。
+     *
      * @param content パース対象の文字列
      * @throws HtmlParseException パースエラー
      */
