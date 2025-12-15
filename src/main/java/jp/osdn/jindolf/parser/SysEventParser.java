@@ -45,6 +45,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * コンストラクタ。
+     *
      * @param parent 親パーサ
      */
     public SysEventParser(ChainedParser parent){
@@ -54,6 +55,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * {@link SysEventHandler}ハンドラを登録する。
+     *
      * @param sysEventHandler ハンドラ
      */
     public void setSysEventHandler(SysEventHandler sysEventHandler){
@@ -63,6 +65,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * Announceメッセージをパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     public void parseAnnounce() throws HtmlParseException{
@@ -166,6 +169,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * 文字列が固定されたシンプルなAnnounceメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -207,6 +211,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * OPENROLEメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -265,6 +270,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * SURVIVORメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -323,6 +329,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * MURDEREDメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -398,6 +405,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * ONSTAGEメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -442,6 +450,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * SUDDENDEATHメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -485,6 +494,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * COUNTINGメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -549,6 +559,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * COUNTING2メッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -608,6 +619,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * PLAYERLISTメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -702,6 +714,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * EXECUTIONメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -762,6 +775,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * VANISHメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -811,6 +825,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * CHECKOUTメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -852,6 +867,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * Orderメッセージをパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     public void parseOrder() throws HtmlParseException{
@@ -898,6 +914,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * ASKENTRYメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -942,6 +959,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * ASKCOMMITメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -994,6 +1012,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * NOCOMMENTメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -1051,6 +1070,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * STAYEPILOGUEメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -1091,6 +1111,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * GAMEOVERメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -1115,6 +1136,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * Extraメッセージをパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     public void parseExtra() throws HtmlParseException{
@@ -1151,6 +1173,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * JUDGEメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -1205,6 +1228,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * GUARDメッセージのパースを試みる。
+     *
      * @return マッチしたらtrue
      * @throws HtmlParseException パースエラー
      */
@@ -1264,6 +1288,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * システムイベントの内容文字列をパースする。
+     *
      * @throws HtmlParseException パースエラー
      */
     private void parseContent() throws HtmlParseException{
@@ -1303,6 +1328,7 @@ public class SysEventParser extends AbstractParser{
     /**
      * 一時的に現在の検索領域を待避する。
      * 待避できるのは1回のみ。複数回スタックはできない。
+     *
      * @see #popRegion()
      */
     private void pushRegion(){
@@ -1313,6 +1339,7 @@ public class SysEventParser extends AbstractParser{
 
     /**
      * 一時的に待避した検索領域を復活させる。
+     *
      * @throws IllegalStateException まだ何も待避していない。
      * @see #pushRegion()
      */

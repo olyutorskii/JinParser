@@ -15,9 +15,9 @@ import java.nio.charset.Charset;
  * <p>JIS X0208:1997 準拠。（Windows-31Jではない！）
  *
  * @see <a href="http://www.iana.org/assignments/character-sets">
- * CHARACTER SETS</a>
+ *     CHARACTER SETS</a>
  * @see <a href="http://ja.wikipedia.org/wiki/Shift_JIS">
- * Wikipedia: Shift_JIS</a>
+ *     Wikipedia: Shift_JIS</a>
  */
 public final class ShiftJis{
 

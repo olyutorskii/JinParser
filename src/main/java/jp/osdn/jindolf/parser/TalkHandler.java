@@ -45,6 +45,7 @@ public interface TalkHandler{
 
     /**
      * 発言部パース開始の通知を受け取る。
+     *
      * @throws HtmlParseException パースエラー
      */
     public abstract void startTalk()
@@ -52,6 +53,7 @@ public interface TalkHandler{
 
     /**
      * 発言部パース終了の通知を受け取る。
+     *
      * @throws HtmlParseException パースエラー
      */
     public abstract void endTalk()
@@ -60,6 +62,7 @@ public interface TalkHandler{
     /**
      * 白発言番号を受け取る。※G国only。
      * 負の値が渡ってきた場合は白発言でないので無視してよい。
+     *
      * @param talkNo 白発言番号
      * @throws HtmlParseException パースエラー
      */
@@ -68,6 +71,7 @@ public interface TalkHandler{
 
     /**
      * 発言部ID(Aタグのname属性)の通知を受け取る。
+     *
      * @param content パース対象文字列
      * @param idRange IDの範囲
      * @throws HtmlParseException パースエラー
@@ -77,6 +81,7 @@ public interface TalkHandler{
 
     /**
      * 発言したAvatar名の通知を受け取る。
+     *
      * @param content パース対象文字列
      * @param avatarRange Avatar名の範囲
      * @throws HtmlParseException パースエラー
@@ -86,6 +91,7 @@ public interface TalkHandler{
 
     /**
      * 発言時刻の通知を受け取る。
+     *
      * @param hour 時間(24時間制)
      * @param minute 分
      * @throws HtmlParseException パースエラー
@@ -95,6 +101,7 @@ public interface TalkHandler{
 
     /**
      * 発言者の顔アイコンURLの通知を受け取る。
+     *
      * @param content パース対象文字列
      * @param urlRange URLの範囲。
      * @throws HtmlParseException パースエラー
@@ -104,6 +111,7 @@ public interface TalkHandler{
 
     /**
      * 発言種別の通知を受け取る。
+     *
      * @param type 発言種別
      * @throws HtmlParseException パースエラー
      */
@@ -113,6 +121,7 @@ public interface TalkHandler{
     /**
      * 発言テキスト内容の通知を受け取る。
      * 1発言のパース中に複数回呼ばれる事もありうる。
+     *
      * @param content パース対象文字列
      * @param textRange テキストの範囲
      * @throws HtmlParseException パースエラー
@@ -123,6 +132,7 @@ public interface TalkHandler{
     /**
      * 発言テキスト内のBRタグ出現の通知を受け取る。
      * 1発言のパース中に複数回呼ばれる事もありうる。
+     *
      * @throws HtmlParseException パースエラー
      */
     public abstract void talkBreak()

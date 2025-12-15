@@ -19,6 +19,7 @@ public interface ChainedParser{
      * パース対象文字列を取得する。
      * このクラスおよびこのクラスを継承するものは、
      * 全てこのメソッドを介してパース対象文字列にアクセスしなければならない。
+     *
      * @return パース対象文字列
      */
     public abstract DecodedContent getContent();
@@ -27,6 +28,7 @@ public interface ChainedParser{
      * 現時点での正規表現マッチャを得る。
      * このクラスおよびこのクラスを継承するものは、
      * 全てこのメソッドを介してマッチャにアクセスしなければならない。
+     *
      * @return 正規表現マッチャ
      */
     public abstract Matcher getMatcher();

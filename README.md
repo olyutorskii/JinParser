@@ -55,8 +55,8 @@ JinParserに関する問い合わせををninjin氏へ投げかけないよう�
 * 2009年に [Olyutorskii](https://github.com/olyutorskii) によってプロジェクトが発足しました。
 
 
-[JINDOLF]: http://jindolf.sourceforge.jp/
-[BBS]: http://ninjinix.com/
+[JINDOLF]: https://github.com/olyutorskii/Jindolf
+[BBS]: https://ninjinix.com/
 [OSDN]: https://ja.osdn.net/projects/jindolf/scm/git/JinCore/
 [MIT]: https://opensource.org/licenses/MIT
 

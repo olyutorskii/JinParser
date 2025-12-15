@@ -33,6 +33,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
@@ -44,6 +45,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param titleRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -56,6 +58,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param loginRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -68,6 +71,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param type {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
@@ -79,6 +83,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param villageRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -91,6 +96,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param month {@inheritDoc}
      * @param day {@inheritDoc}
      * @param hour {@inheritDoc}
@@ -105,6 +111,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param anchorRange {@inheritDoc}
      * @param periodType {@inheritDoc}
@@ -121,6 +128,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param anchorRange {@inheritDoc}
      * @param villageRange {@inheritDoc}
@@ -141,6 +149,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @throws HtmlParseException {@inheritDoc}
      */
     @Override
@@ -150,6 +159,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @throws HtmlParseException {@inheritDoc}
      */
     @Override
@@ -159,6 +169,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @throws HtmlParseException {@inheritDoc}
      */
     @Override
@@ -168,6 +179,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param talkNo {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
@@ -178,6 +190,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param idRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -190,6 +203,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -202,6 +216,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param hour {@inheritDoc}
      * @param minute {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -213,6 +228,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param urlRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -225,6 +241,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param type {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
@@ -235,6 +252,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param textRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -247,6 +265,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @throws HtmlParseException {@inheritDoc}
      */
     @Override
@@ -256,6 +275,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param eventFamily {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
@@ -267,6 +287,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param type {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
      */
@@ -277,6 +298,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @throws HtmlParseException {@inheritDoc}
      */
     @Override
@@ -286,6 +308,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param entryNo {@inheritDoc}
      * @param avatarRange {@inheritDoc}
@@ -301,6 +324,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param role {@inheritDoc}
      * @param num {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -313,6 +337,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -326,6 +351,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param voteByRange {@inheritDoc}
      * @param voteToRange {@inheritDoc}
@@ -341,6 +367,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param voteByRange {@inheritDoc}
      * @param voteToRange {@inheritDoc}
@@ -356,6 +383,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -369,6 +397,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -382,6 +411,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @param anchorRange {@inheritDoc}
@@ -403,6 +433,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @param votes {@inheritDoc}
@@ -418,6 +449,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -431,6 +463,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -444,6 +477,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param judgeByRange {@inheritDoc}
      * @param judgeToRange {@inheritDoc}
@@ -459,6 +493,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param guardByRange {@inheritDoc}
      * @param guardToRange {@inheritDoc}
@@ -474,6 +509,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param hour {@inheritDoc}
      * @param minute {@inheritDoc}
      * @param minLimit {@inheritDoc}
@@ -489,6 +525,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param hour {@inheritDoc}
      * @param minute {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -501,6 +538,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param avatarRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -514,6 +552,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param winner {@inheritDoc}
      * @param hour {@inheritDoc}
      * @param minute {@inheritDoc}
@@ -527,6 +566,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param contentRange {@inheritDoc}
      * @throws HtmlParseException {@inheritDoc}
@@ -540,6 +580,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @throws HtmlParseException {@inheritDoc}
      */
     @Override
@@ -549,6 +590,7 @@ public abstract class HtmlAdapter implements HtmlHandler{
 
     /**
      * {@inheritDoc}
+     *
      * @param content {@inheritDoc}
      * @param anchorRange {@inheritDoc}
      * @param contentRange {@inheritDoc}

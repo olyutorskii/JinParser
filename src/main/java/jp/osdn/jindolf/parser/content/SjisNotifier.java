@@ -102,11 +102,10 @@ public class SjisNotifier extends DecodeNotifier{
      *
      * <p>必要に応じて1バイト以上の追加先読みを行う。
      *
-     * <p>{@inheritDoc}
-     *
-     * @param errInfo {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws IOException {@inheritDoc}
+     * @param errInfo error info before modifying.
+     * @return modified error info.
+     *     If nothing modified, errInfo will return.
+     * @throws IOException I/O error if look-ahead I/O failed.
      */
     @Override
     protected CoderResult modifyErrorResult(CoderResult errInfo)

@@ -31,6 +31,7 @@ public class HtmlParseException extends Exception{
 
     /**
      * コンストラクタ。
+     *
      * @param message メッセージ
      */
     public HtmlParseException(String message){
@@ -40,6 +41,7 @@ public class HtmlParseException extends Exception{
 
     /**
      * コンストラクタ。
+     *
      * @param charPos パース中断位置
      */
     public HtmlParseException(int charPos){
@@ -49,6 +51,7 @@ public class HtmlParseException extends Exception{
 
     /**
      * コンストラクタ。
+     *
      * @param message メッセージ
      * @param charPos パース中断位置
      */
@@ -60,6 +63,7 @@ public class HtmlParseException extends Exception{
 
     /**
      * パース中断位置を返す。
+     *
      * @return パース中断位置
      */
     public int getCharPos(){
@@ -68,6 +72,7 @@ public class HtmlParseException extends Exception{
 
     /**
      * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override

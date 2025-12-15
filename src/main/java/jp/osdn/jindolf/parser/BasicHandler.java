@@ -41,6 +41,7 @@ public interface BasicHandler{
 
     /**
      * パース開始の通知を受け取る。
+     *
      * @param content これからパースを始めるXHTML文字列
      * @throws HtmlParseException パースエラー
      */
@@ -49,6 +50,7 @@ public interface BasicHandler{
     /**
      * titleタグの内容の通知を受け取る。
      * 例：「人狼BBS:F F2019 新緑の村」。
+     *
      * @param content パース対象文字列
      * @param titleRange タイトルの範囲
      * @throws HtmlParseException パースエラー
@@ -60,6 +62,7 @@ public interface BasicHandler{
      * ログイン名(ID)の通知を受け取る。
      * ログインせずに得られたページがパース対象であるなら、呼ばれない。
      * F国のみで動作確認。
+     *
      * @param content パース対象文字列
      * @param loginRange ログイン名の範囲
      * @throws HtmlParseException パースエラー
@@ -70,6 +73,7 @@ public interface BasicHandler{
     /**
      * 読み込んだページ種別を自動認識した結果を伝える。
      * ページタイトルもしくはログイン名の通知の後に呼ばれうる。
+     *
      * @param type ページ種別
      * @throws HtmlParseException パースエラー
      */
@@ -80,6 +84,7 @@ public interface BasicHandler{
      * 村の名前の通知を受け取る。
      * 国名と番号と愛称に分解するのはハンドラ側の責務。
      * 例：「F2019 新緑の村」。
+     *
      * @param content パース対象文字列
      * @param villageRange 村名の範囲
      * @throws HtmlParseException パースエラー
@@ -90,6 +95,7 @@ public interface BasicHandler{
     /**
      * 次回更新時刻の通知を受け取る。
      * 既に終了した村がパース対象の場合、あまり月日に意味はないかも。
+     *
      * @param month 更新月
      * @param day 更新日
      * @param hour 更新時
@@ -102,6 +108,7 @@ public interface BasicHandler{
     /**
      * 他の日へのリンクの通知を受け取る。
      * 複数回呼ばれる場合がある。
+     *
      * @param content パース対象文字列
      * @param anchorRange aタグhref属性値の範囲
      * @param periodType 日のタイプ。「終了」ならnull。
@@ -115,6 +122,7 @@ public interface BasicHandler{
 
     /**
      * 村一覧リスト内の個別の村情報の通知を受け取る。
+     *
      * @param content パース対象文字列
      * @param anchorRange URLの範囲
      * @param villageRange 村名の範囲
@@ -132,6 +140,7 @@ public interface BasicHandler{
 
     /**
      * パースの終了の通知を受け取る。
+     *
      * @throws HtmlParseException パースエラー
      */
     public abstract void endParse() throws HtmlParseException;

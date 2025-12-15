@@ -54,10 +54,11 @@ public class ContentBuilder implements CharDecodeListener{
     }
 
     /**
-     * {@inheritDoc}
+     * Receive notification of the beginning of decoding.
      *
-     * @param decoder {@inheritDoc}
-     * @throws DecodeBreakException {@inheritDoc}
+     * @param decoder character decoder
+     * @throws DecodeBreakException DecodeBreakException Throw
+     *     if you want to break decoding immediately.
      */
     @Override
     public void startDecoding(CharsetDecoder decoder)
@@ -67,9 +68,10 @@ public class ContentBuilder implements CharDecodeListener{
     }
 
     /**
-     * {@inheritDoc}
+     * Receive notification of the end of decoding.
      *
-     * @throws DecodeBreakException {@inheritDoc}
+     * @throws DecodeBreakException Throw if you want to break
+     *     decoding immediately.
      */
     @Override
     public void endDecoding()
@@ -79,11 +81,17 @@ public class ContentBuilder implements CharDecodeListener{
     }
 
     /**
-     * {@inheritDoc}
+     * Receive notification
+     * that raw bytes on input-byte-buffer has been consumed.
      *
-     * @param byteArray {@inheritDoc}
-     * @param offset {@inheritDoc}
-     * @param length {@inheritDoc}
+     * <p>Error byte sequence is not included.
+     *
+     * <p>If you want to use byte sequence later,
+     * you must copy it before return.
+     *
+     * @param byteArray byte array containing raw bytes
+     * @param offset raw bytes start position
+     * @param length raw bytes length
      */
     @Override
     public void rawBytes(byte[] byteArray, int offset, int length){
@@ -92,12 +100,16 @@ public class ContentBuilder implements CharDecodeListener{
     }
 
     /**
-     * {@inheritDoc}
+     * Receive notification of decoded character sequence.
      *
-     * @param charArray {@inheritDoc}
-     * @param offset {@inheritDoc}
-     * @param length {@inheritDoc}
-     * @throws DecodeBreakException {@inheritDoc}
+     * <p>If you want to use character sequence later,
+     * you must copy it before return.
+     *
+     * @param charArray char array containing character sequence
+     * @param offset character sequence start position
+     * @param length character sequence length
+     * @throws DecodeBreakException Throw if you want to break
+     *      decoding immediately.
      */
     @Override
     public void charContent(char[] charArray, int offset, int length)
@@ -116,12 +128,16 @@ public class ContentBuilder implements CharDecodeListener{
     }
 
     /**
-     * {@inheritDoc}
+     * Receive notification of malformed-sequence error.
      *
-     * @param errorArray {@inheritDoc}
-     * @param offset {@inheritDoc}
-     * @param length {@inheritDoc}
-     * @throws DecodeBreakException {@inheritDoc}
+     * <p>If you want to use error sequence later,
+     * you must copy it before return.
+     *
+     * @param errorArray byte array containing error sequence
+     * @param offset error sequence start position
+     * @param length error sequence length
+     * @throws DecodeBreakException Throw if you want to break
+     *      decoding immediately.
      */
     @Override
     public void malformedError(byte[] errorArray, int offset, int length)
@@ -131,12 +147,16 @@ public class ContentBuilder implements CharDecodeListener{
     }
 
     /**
-     * {@inheritDoc}
+     * Receive notification of character-set unmapping error.
      *
-     * @param errorArray {@inheritDoc}
-     * @param offset {@inheritDoc}
-     * @param length {@inheritDoc}
-     * @throws DecodeBreakException {@inheritDoc}
+     * <p>If you want to use error sequence later,
+     * you must copy it before return.
+     *
+     * @param errorArray byte array containing error sequence
+     * @param offset error sequence start position
+     * @param length error sequence length
+     * @throws DecodeBreakException Throw if you want to break
+     *      decoding immediately.
      */
     @Override
     public void unmapError(byte[] errorArray, int offset, int length)

@@ -465,9 +465,9 @@ public class DecodedContent
             return append(NULLTEXT, startCharPt, endCharPt);
         }
 
-        if(   startCharPt < 0
-           || startCharPt > endCharPt
-           || endCharPt > source.length()){
+        if(    startCharPt < 0
+            || startCharPt > endCharPt
+            || endCharPt > source.length()){
             throw new IndexOutOfBoundsException();
         }else if(startCharPt == endCharPt){
             return this;

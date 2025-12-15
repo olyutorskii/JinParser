@@ -50,6 +50,7 @@ public interface SysEventHandler{
 
     /**
      * システムイベントのパース開始の通知を受け取る。
+     *
      * @param eventFamily イベントファミリ種別
      * @throws HtmlParseException パースエラー
      */
@@ -58,6 +59,7 @@ public interface SysEventHandler{
 
     /**
      * システムイベント種別の通知を受け取る。
+     *
      * @param type イベント種別
      * @throws HtmlParseException パースエラー
      */
@@ -66,6 +68,7 @@ public interface SysEventHandler{
 
     /**
      * システムイベントのパース処理終了の通知を受け取る。
+     *
      * @throws HtmlParseException パースエラー
      */
     public abstract void endSysEvent()
@@ -73,6 +76,7 @@ public interface SysEventHandler{
 
     /**
      * ONSTAGEイベントの詳細の通知を受け取る。
+     *
      * @param content パース対象の文字列
      * @param entryNo エントリ番号
      * @param avatarRange Avatar名の範囲
@@ -87,6 +91,7 @@ public interface SysEventHandler{
     /**
      * OPENROLEイベントの詳細の通知を受け取る。
      * 複数回連続して呼ばれる。
+     *
      * @param role 役職
      * @param num 役職の人数
      * @throws HtmlParseException パースエラー
@@ -98,6 +103,7 @@ public interface SysEventHandler{
     /**
      * SURVIVORイベントの詳細の通知を受け取る。
      * 複数回連続して呼ばれる。
+     *
      * @param content パース対象の文字列
      * @param avatarRange Avatar名の範囲
      * @throws HtmlParseException パースエラー
@@ -112,6 +118,7 @@ public interface SysEventHandler{
      * 複数回連続して呼ばれる。
      * 最後の呼び出しで投票元Avatar名の位置情報が負だった場合、
      * 投票先Avatar名は処刑が実行されたAvatarを表す。
+     *
      * @param content パース対象の文字列。
      * @param voteByRange 投票元Avatar名の範囲
      * @param voteToRange 投票先Avatar名の範囲
@@ -126,6 +133,7 @@ public interface SysEventHandler{
     /**
      * COUNTING2イベントの詳細の通知を受け取る。※G国のみ
      * 複数回連続して呼ばれる。
+     *
      * @param content パース対象の文字列。
      * @param voteByRange 投票元Avatar名の範囲
      * @param voteToRange 投票先Avatar名の範囲
@@ -139,6 +147,7 @@ public interface SysEventHandler{
 
     /**
      * SUDDENDEATHイベントの詳細の通知を受け取る。
+     *
      * @param content パース対象の文字列
      * @param avatarRange Avatar名の範囲
      * @throws HtmlParseException パースエラー
@@ -151,6 +160,7 @@ public interface SysEventHandler{
     /**
      * MURDEREDイベントの詳細の通知を受け取る。
      * ハム溶けの時など、連続して複数回呼ばれる事がある。
+     *
      * @param content パース対象の文字列
      * @param avatarRange Avatar名の範囲
      * @throws HtmlParseException パースエラー
@@ -163,6 +173,7 @@ public interface SysEventHandler{
     /**
      * PLAYERLISTイベントの詳細の通知を受け取る。
      * 複数回連続して呼ばれる。
+     *
      * @param content パース対象の文字列
      * @param avatarRange Avatar名の範囲
      * @param anchorRange URLの範囲。無ければ無効。
@@ -183,6 +194,7 @@ public interface SysEventHandler{
     /**
      * EXECUTIONイベントの詳細の通知を受け取る。※G国のみ
      * 複数回連続して呼ばれる。
+     *
      * @param content パース対象の文字列。
      * @param avatarRange 投票先Avatar名の範囲
      * @param votes 得票数。負の値であれば、
@@ -197,6 +209,7 @@ public interface SysEventHandler{
 
     /**
      * VANISHイベントの詳細の通知を受け取る。
+     *
      * @param content パース対象の文字列
      * @param avatarRange 失踪したAvatar名の範囲
      * @throws HtmlParseException パースエラー
@@ -208,6 +221,7 @@ public interface SysEventHandler{
 
     /**
      * CHECKOUTイベントの詳細の通知を受け取る。
+     *
      * @param content パース対象の文字列
      * @param avatarRange 失踪したAvatar名の範囲
      * @throws HtmlParseException パースエラー
@@ -219,6 +233,7 @@ public interface SysEventHandler{
 
     /**
      * JUDGEイベントの詳細の通知を受け取る。
+     *
      * @param content パース対象の文字列。
      * @param judgeByRange 占師Avatar名の範囲
      * @param judgeToRange 占われたAvatar名の範囲
@@ -232,6 +247,7 @@ public interface SysEventHandler{
 
     /**
      * GUARDイベントの詳細の通知を受け取る。
+     *
      * @param content パース対象の文字列。
      * @param guardByRange 狩人Avatar名の範囲
      * @param guardToRange 護られたAvatar名の範囲
@@ -245,6 +261,7 @@ public interface SysEventHandler{
 
     /**
      * ASKENTRYイベントの詳細の通知を受け取る。
+     *
      * @param hour 時間
      * @param minute 分
      * @param minLimit 最小構成人数
@@ -258,6 +275,7 @@ public interface SysEventHandler{
 
     /**
      * ASKCOMMITイベントの詳細の通知を受け取る。
+     *
      * @param hour 時間(24時間制)
      * @param minute 分
      * @throws HtmlParseException パースエラー
@@ -269,6 +287,7 @@ public interface SysEventHandler{
     /**
      * NOCOMMENTイベントの詳細の通知を受け取る。
      * 複数回連続して呼ばれる可能性がある。
+     *
      * @param content パース対象文字列
      * @param avatarRange Avatar名の範囲
      * @throws HtmlParseException パースエラー
@@ -280,6 +299,7 @@ public interface SysEventHandler{
 
     /**
      * STAYEPILOGUEイベントの詳細の通知を受け取る。
+     *
      * @param winner 勝利陣営
      * @param hour 時間(24時間制)
      * @param minute 分
@@ -292,6 +312,7 @@ public interface SysEventHandler{
     /**
      * イベントの内容(DIV要素)の一般文字列出現の通知を受け取る。
      * イベント種別は問わない。
+     *
      * @param content パース対象文字列
      * @param contentRange 内容テキストの範囲
      * @throws HtmlParseException パースエラー
@@ -303,6 +324,7 @@ public interface SysEventHandler{
     /**
      * イベントの内容(DIV要素)のBRタグ出現の通知を受け取る。
      * イベント種別は問わない。
+     *
      * @throws HtmlParseException パースエラー
      */
     public abstract void sysEventContentBreak()
@@ -312,6 +334,7 @@ public interface SysEventHandler{
      * イベントの内容(DIV要素)のAタグ出現の通知を受け取る。
      * イベント種別は問わない。
      * href属性によるURL記述も通知される。
+     *
      * @param content パース対象文字列
      * @param anchorRange URLの範囲
      * @param contentRange 内容テキストの範囲
