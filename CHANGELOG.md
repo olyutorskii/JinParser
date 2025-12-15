@@ -7,13 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- 人狼BBSのURLを http: から https: へ変更。
+
 ### Fixed
 - Update Jacoco, SpotBugs, and PMD for JDK25
 - Update Checkstyle
 - Update Maven plugins
 
 ### Build
-- Bump Jiocema to 1.101.12
+- Bump JinCore to 1.207.10
+- Bump Jiocema to 1.101.14
 
 
 ## [2.102.8] - 2023-10-13
