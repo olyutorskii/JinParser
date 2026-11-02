@@ -29,12 +29,14 @@
     <suppress files="" checks="MagicNumber" />
     <suppress files="" checks="NoArrayTrailingComma" />
     <suppress files="" checks="NoEnumTrailingComma" />
+    <suppress files="" checks="UnusedCatchParameterShouldBeUnnamed" />
+    <suppress files="" checks="UnusedLambdaParameterShouldBeUnnamed" />
 
     <!-- Imports -->
     <suppress files="" checks="ImportControl" />
 
     <!-- Javadoc Comments -->
-    <suppress files="" checks="SummaryJavadocCheck" />
+    <suppress files="" checks="SummaryJavadoc" />
 
     <!-- Miscellaneous -->
     <suppress files="" checks="FinalParameters" />
@@ -45,6 +47,7 @@
     <suppress files="" checks="RedundantModifier" />
 
     <!-- Whitespace -->
+    <suppress files="" checks="ParenPad" />
     <suppress files="" checks="SingleSpaceSeparator" />
 
 </suppressions>
